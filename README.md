@@ -1,5 +1,7 @@
 # k-ID CDK Explorer
 
+[日本語版はこちら](./README-ja.md) | [한국어 버전](./README-ko.md) | [中文版](./README-zh.md)
+
 An interactive developer tool for exploring and testing k-ID Compliance Developer Kit (CDK) flows. Built with Next.js, this tool provides a visual interface to test all CDK flow types, observe API traffic in real-time, and understand how to integrate k-ID's age verification and compliance flows into your application.
 
 ![CDK Explorer Screenshot](./cdk-screenshot.png)
