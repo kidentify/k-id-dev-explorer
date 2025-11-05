@@ -109,6 +109,7 @@ export enum CDKFlow {
   END_TO_END = 'VPC End-to-End',
   DIRECT_NOTICES = 'Direct Notices',
   MANAGE_SESSION_PERMISSIONS = 'Manage Session Permissions',
+  AGE_APPEAL = 'Age Appeal',
 }
 
 export type RequestBodyCriteria = {

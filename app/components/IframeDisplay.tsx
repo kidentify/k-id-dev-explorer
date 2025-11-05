@@ -6,17 +6,39 @@ interface IframeDisplayProps {
   iframeUrl: string;
 }
 
+/**
+ * Component that displays the CDK flow in an iframe.
+ * 
+ * This component embeds the URL returned from the k-ID API into an iframe element.
+ * The URL is obtained from the API response after calling performCDKFlow() and
+ * contains the k-ID verification interface that users interact with.
+ * 
+ * The iframe includes necessary permissions (camera, autoplay, payment, etc.) that
+ * may be required during the verification process.
+ * 
+ * @param iframeUrl - The URL returned from the k-ID CDK flow API response
+ * 
+ * 
+ * The iframe height is set to 850px when a URL is provided. You may need to adjust
+ * this based on your application's layout requirements.
+ */
 export default function IframeDisplay({ iframeUrl }: IframeDisplayProps) {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
       <h2 className="text-lg font-semibold text-gray-900 mb-4">CDK Flow Iframe</h2>
       {iframeUrl ? (
-        <div className="w-full h-[800px] border border-gray-300 rounded-lg overflow-hidden">
+        // Embed the CDK flow URL in an iframe
+        // The URL is obtained from the API response (see performCDKFlow in serverActions.ts)
+        <div className="w-full h-[850px] border border-gray-300 rounded-lg overflow-hidden">
           <iframe
             src={iframeUrl}
             title="CDK Flow"
             className="w-full h-full"
-            frameBorder="0"
+            // Required permissions for CDK flows
+            // Camera: For facial age estimation and ID verification
+            // Autoplay: For media playback during verification
+            // Payment: For payment processing if required
+            // Public key credentials: For WebAuthn authentication
             allow="camera;autoplay;payment;publickey-credentials-get;publickey-credentials-create"
           />
         </div>

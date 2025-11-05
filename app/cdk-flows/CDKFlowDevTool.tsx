@@ -177,6 +177,23 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
     return () => clearInterval(interval)
   }, [fetchNgrokInfo])
 
+  /**
+   * Handles form submission for CDK flow execution.
+   * 
+   * This function:
+   * 1. Extracts the selected flow type from the form
+   * 2. Calls performCDKFlow() to make the API request to k-ID
+   * 3. Receives the URL from the API response
+   * 4. Updates the iframe URL via onIframeUrlUpdate callback
+   * 
+   * The URL returned from the API is embedded in an iframe to display
+   * the verification interface to the user.
+   * 
+   * @param formData - Form data containing flow type and parameters
+   * 
+   * @see https://docs.k-id.com/cdk/overview - CDK Overview
+   * @see https://docs.k-id.com/cdk/age-verification#embedding-the-verification-interface - Embedding the CDK Flow
+   */
   const handleSubmit = async (formData: FormData) => {
     setIsLoading(true)
     setError('')
@@ -188,6 +205,9 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
         throw new Error('API key not configured. Please set K_ID_API_KEY in your .env.local file.')
       }
 
+      // Call the server action to perform the CDK flow
+      // This makes the API request to k-ID and returns a URL for iframe embedding
+      // Documentation: https://docs.k-id.com/reference/api/overview
       const result = await performCDKFlow(flow, formData)
 
       // Log the actual API request from the server action
@@ -201,6 +221,9 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
           url: result.url,
           responseData: result.responseData
         })
+        // The API response includes a URL that should be embedded in an iframe
+        // This URL points to the k-ID CDK flow interface
+        // Documentation: https://docs.k-id.com/cdk/age-verification#embedding-the-verification-interface
         onIframeUrlUpdate?.(result.url)
       } else {
         const errorData = { error: result.error }
@@ -380,6 +403,17 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
           )}
           {selectedFlow === CDKFlow.MANAGE_SESSION_PERMISSIONS && (
             <ManagePermissionsForm />
+          )}
+          {selectedFlow === CDKFlow.AGE_APPEAL && (
+            <VerificationForm
+              ageCriteria={{}}
+              kuid={{ required: false }}
+              dob={{ required: false }}
+              age={{ required: false }}
+              email={{ required: false }}
+              id={{ required: false }}
+              locale={{ required: false }}
+            />
           )}
           {/* Submit Button */}
           <button

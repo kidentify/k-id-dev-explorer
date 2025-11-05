@@ -36,18 +36,36 @@ export default function CDKDevToolWrapper({ apiKeyStatus }: CDKDevToolWrapperPro
     addEventFnRef.current = fn
   }, [])
 
+  /**
+   * Listen for postMessage events from the embedded CDK flow iframe.
+   * 
+   * The k-ID CDK flow iframe sends postMessage events to communicate with the
+   * parent page. These messages can contain challengeId, sessionId, and other
+   * verification state information.
+   * 
+   * This is important for:
+   * - Tracking verification progress
+   * - Querying challenge/session status
+   * - Handling verification completion
+   * 
+   */
   useEffect(() => {
     // Listen for messages from the iframe
+    // The iframe sends postMessage events during the verification process
+    // Documentation: https://docs.k-id.com/docs/cdk/postmessage
     const handleMessage = (event: MessageEvent) => {
+      // Verify the message is from a k-id.com domain for security
       if (new URL(event.origin).hostname === 'k-id.com' || new URL(event.origin).hostname.endsWith('.k-id.com')) {
         try {
-          // Check for challengeId in the message
+          // Extract challengeId from the message
+          // The challengeId can be used to query verification status via the API
           if (event.data?.data?.challengeId !== undefined) {
             const challengeId = event.data.data.challengeId
             setChallengeId(challengeId)
           }
 
-          // Check for sessionId in the message
+          // Extract sessionId from the message
+          // The sessionId can be used to query session status via the API
           if (event.data?.data?.sessionId !== undefined) {
             const sessionId = event.data.data.sessionId
             setSessionId(sessionId)
@@ -64,6 +82,15 @@ export default function CDKDevToolWrapper({ apiKeyStatus }: CDKDevToolWrapperPro
     }
   }, [])
 
+  /**
+   * Callback to handle when a new CDK flow URL is received from the API.
+   * 
+   * This is called after performCDKFlow() successfully returns a URL from the
+   * k-ID API. The URL is then embedded in the IframeDisplay component.
+   * 
+   * @param url - The CDK flow URL returned from the API response
+   * 
+   */
   const handleIframeUrlUpdate = (url: string) => {
     setIframeUrl(url)
     // Reset information when iframe URL changes

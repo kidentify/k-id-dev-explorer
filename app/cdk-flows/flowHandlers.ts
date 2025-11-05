@@ -2,6 +2,23 @@ import { AgeType, CDKFlow, FlowHandler, FormEntryKey, RequestBody, RequestBodySu
 import { API_CONFIG } from '../utils/constants'
 import { performVerification } from './verificationActions'
 
+/**
+ * Builds the request body for CDK flow API calls from form data.
+ * 
+ * This function extracts form fields and constructs the JSON body that will be sent
+ * to the k-ID API. The body structure varies by flow type but typically includes:
+ * - jurisdiction: The user's jurisdiction (e.g., "US-CA")
+ * - locale: The locale for localization (e.g., "en-GB")
+ * - criteria: Age verification criteria (age number or age category)
+ * - subject: User information (email, ID, claimed age/DOB)
+ * - kuid: k-ID user identifier (if available)
+ * - options: Flow-specific options (for end-to-end flows)
+ * 
+ * @param formData - FormData object containing user input
+ * @returns RequestBody object to be sent to the k-ID API
+ * 
+ * @see https://docs.k-id.com/docs/cdk/api-reference - API Request Structure
+ */
 function getBody(formData: FormData): RequestBody {
   const jurisdiction = formData.get(FormEntryKey.JURISDICTION) as string
   const locale = formData.get(FormEntryKey.LOCALE) as string
@@ -86,7 +103,26 @@ function getManagePermissionsBody(formData: FormData): { sessionId: string; emai
   }
 }
 
+/**
+ * Flow handlers for different CDK flow types.
+ * 
+ * Each flow type has a handler that:
+ * 1. Builds the appropriate API request (URL, headers, body)
+ * 2. Performs the API call using performVerification()
+ * 
+ * The API response contains a URL that should be embedded in an iframe to display
+ * the verification interface to the user.
+ * 
+ * @see https://docs.k-id.com/docs/cdk/flows - Available CDK Flows
+ * @see https://docs.k-id.com/docs/cdk/api-reference - API Endpoints
+ */
 export const flowHandlers: Record<CDKFlow, FlowHandler> = {
+  /**
+   * Age Gate flow handler.
+   * 
+   * Generates a URL for the age gate widget that can be embedded in an iframe.
+   * The age gate presents age verification options to users.
+   */
   [CDKFlow.AGE_GATE]: {
     buildRequestData: (formData: FormData, apiUrl: string, apiKey: string) => {
       return {
@@ -101,6 +137,12 @@ export const flowHandlers: Record<CDKFlow, FlowHandler> = {
     },
     performAction: performVerification,
   },
+  /**
+   * Access Age Verification flow handler.
+   * 
+   * Performs age verification and returns a URL for the verification interface.
+   * This flow is used to verify a user's age before granting access.
+   */
   [CDKFlow.ACCESS_AGE_VERIFICATION]: {
     buildRequestData: (formData: FormData, apiUrl: string, apiKey: string) => {
       return {
@@ -115,6 +157,12 @@ export const flowHandlers: Record<CDKFlow, FlowHandler> = {
     },
     performAction: performVerification,
   },
+  /**
+   * Facial Age Estimation flow handler.
+   * 
+   * Estimates a user's age using facial recognition technology. This flow returns
+   * a URL for the facial age estimation interface that can be embedded in an iframe.
+   */
   [CDKFlow.FACIAL_AGE_ESTIMATION]: {
     buildRequestData(formData: FormData, apiUrl: string, apiKey: string) {
       return {
@@ -129,6 +177,13 @@ export const flowHandlers: Record<CDKFlow, FlowHandler> = {
     },
     performAction: performVerification,
   },
+  /**
+   * ID Verification flow handler.
+   * 
+   * Verifies a user's identity using government-issued identification documents.
+   * This flow returns a URL for the ID verification interface that can be embedded
+   * in an iframe.
+   */
   [CDKFlow.ID_VERIFICATION]: {
     buildRequestData(formData: FormData, apiUrl: string, apiKey: string) {
       return {
@@ -143,6 +198,13 @@ export const flowHandlers: Record<CDKFlow, FlowHandler> = {
     },
     performAction: performVerification,
   },
+  /**
+   * Trusted Adult Verification flow handler.
+   * 
+   * Verifies a trusted adult (parent or guardian) for consent purposes. This flow
+   * requires an email address for the trusted adult and returns a URL for the
+   * verification interface that can be embedded in an iframe.
+   */
   [CDKFlow.TRUSTED_ADULT_VERIFICATION]: {
     buildRequestData: (formData: FormData, apiUrl: string, apiKey: string) => {
       return {
@@ -157,6 +219,13 @@ export const flowHandlers: Record<CDKFlow, FlowHandler> = {
     },
     performAction: performVerification,
   },
+  /**
+   * End-to-End (VPC) flow handler.
+   * 
+   * Provides a complete verification, consent, and permission flow in a single
+   * widget. This flow can be configured with various options to skip certain steps.
+   * Returns a URL for the end-to-end interface that can be embedded in an iframe.
+   */
   [CDKFlow.END_TO_END]: {
     buildRequestData: (formData: FormData, apiUrl: string, apiKey: string) => {
       return {
@@ -171,6 +240,13 @@ export const flowHandlers: Record<CDKFlow, FlowHandler> = {
     },
     performAction: performVerification,
   },
+  /**
+   * Direct Notices flow handler.
+   * 
+   * Displays compliance notices directly to users without requiring full verification.
+   * This flow returns a URL for the direct notices interface that can be embedded
+   * in an iframe.
+   */
   [CDKFlow.DIRECT_NOTICES]: {
     buildRequestData: (formData: FormData, apiUrl: string, apiKey: string) => {
       return {
@@ -185,6 +261,13 @@ export const flowHandlers: Record<CDKFlow, FlowHandler> = {
     },
     performAction: performVerification,
   },
+  /**
+   * Manage Session Permissions flow handler.
+   * 
+   * Allows users to manage permissions for an existing session. This flow requires
+   * a session ID and email address. Returns a URL for the permission management
+   * interface that can be embedded in an iframe.
+   */
   [CDKFlow.MANAGE_SESSION_PERMISSIONS]: {
     buildRequestData: (formData: FormData, apiUrl: string, apiKey: string) => {
       return {
@@ -195,6 +278,26 @@ export const flowHandlers: Record<CDKFlow, FlowHandler> = {
           Authorization: `Bearer ${apiKey}`,
         },
         body: getManagePermissionsBody(formData),
+      }
+    },
+    performAction: performVerification,
+  },
+  /**
+   * Age Appeal flow handler.
+   * 
+   * Allows users to appeal an age verification decision. This flow requires
+   * age criteria (age or age category) to be specified in the request body.
+   */
+  [CDKFlow.AGE_APPEAL]: {
+    buildRequestData: (formData: FormData, apiUrl: string, apiKey: string) => {
+      return {
+        method: 'POST',
+        url: `${apiUrl}${API_CONFIG.endpoints.ageAppeal}`,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: getBody(formData),
       }
     },
     performAction: performVerification,
