@@ -1,8 +1,8 @@
-# k-ID CDK Explorer
+# k-ID Dev Explorer
 
 k-ID 컴플라이언스 개발 키트(CDK) 플로우를 탐색하고 테스트하기 위한 대화형 개발자 도구입니다. Next.js로 구축되었으며, 모든 CDK 플로우 타입을 테스트하고, API 트래픽을 실시간으로 관찰하며, k-ID의 연령 확인 및 컴플라이언스 플로우를 애플리케이션에 통합하는 방법을 이해할 수 있는 시각적 인터페이스를 제공합니다.
 
-![CDK Explorer Screenshot](./cdk-screenshot.png)
+![k-ID Dev Explorer Screenshot](./cdk-screenshot.png)
 
 ## k-ID CDK란?
 
@@ -72,7 +72,7 @@ npm run dev:remote
 
 **참고**: ngrok 계정 및 인증 토큰이 없는 한, 원격 개발 서버를 재시작할 때마다 ngrok URL이 변경됩니다.
 
-**📱 모바일 액세스를 위한 QR 코드**: ngrok(옵션 2)으로 실행할 때, QR 코드가 자동으로 생성되어 "Public Tunnel Access" 섹션에 표시됩니다. 휴대폰으로 이 QR 코드를 스캔하면 모바일 기기에서 CDK Explorer에 액세스할 수 있어 모바일 기기에서 직접 CDK 플로우를 테스트할 수 있습니다.
+**📱 모바일 액세스를 위한 QR 코드**: ngrok(옵션 2)으로 실행할 때, QR 코드가 자동으로 생성되어 "Public Tunnel Access" 섹션에 표시됩니다. 휴대폰으로 이 QR 코드를 스캔하면 모바일 기기에서 k-ID Dev Explorer에 액세스할 수 있어 모바일 기기에서 직접 CDK 플로우를 테스트할 수 있습니다.
 
 ### ⚠️ 중요: WebAuthn 요구사항
 
@@ -80,7 +80,7 @@ npm run dev:remote
 
 ## 사용 방법
 
-CDK Explorer는 k-ID CDK 플로우를 테스트하는 대화형 방법을 제공합니다:
+k-ID Dev Explorer는 k-ID CDK 플로우를 테스트하는 대화형 방법을 제공합니다:
 
 1. **플로우 선택**: 드롭다운 메뉴에서 CDK 플로우 타입을 선택합니다(예: Age Gate, Access Age Verification, Age Appeal 등)
 
@@ -176,4 +176,6 @@ CDK Explorer는 k-ID CDK 플로우를 테스트하는 대화형 방법을 제공
 - **[k-ID CDK Documentation](https://docs.k-id.com/docs/cdk/intro)** - CDK 개요 및 시작하기
 - **[Next.js Documentation](https://nextjs.org/docs)** - Next.js 프레임워크 문서
 - **[Ngrok Documentation](https://ngrok.com/docs)** - Ngrok 터널링 문서
+
+
 

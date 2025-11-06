@@ -24,7 +24,7 @@ export default function Home() {
               priority
             />
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">CDK Explorer</h1>
+              <h1 className="text-3xl font-bold text-gray-900">k-ID Dev Explorer</h1>
               <p className="text-gray-600 mt-2">
               Interactive learning tool for k-ID's Compliance Development Kit.
                 <a 

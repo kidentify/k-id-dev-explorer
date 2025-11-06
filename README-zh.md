@@ -1,8 +1,8 @@
-# k-ID CDK Explorer
+# k-ID Dev Explorer
 
 用于探索和测试 k-ID 合规开发工具包 (CDK) 流程的交互式开发者工具。使用 Next.js 构建，该工具提供了一个可视化界面，用于测试所有 CDK 流程类型、实时观察 API 流量，并了解如何将 k-ID 的年龄验证和合规流程集成到您的应用程序中。
 
-![CDK Explorer Screenshot](./cdk-screenshot.png)
+![k-ID Dev Explorer Screenshot](./cdk-screenshot.png)
 
 ## 什么是 k-ID CDK？
 
@@ -72,7 +72,7 @@ npm run dev:remote
 
 **注意**：除非您有 ngrok 账户和认证令牌，否则每次重启远程开发服务器时，ngrok URL 都会更改。
 
-**📱 移动访问的 QR 码**：使用 ngrok（选项 2）运行时，QR 码会自动生成并显示在"Public Tunnel Access"部分。用手机扫描此 QR 码可以访问移动设备上的 CDK Explorer，从而直接在移动设备上测试 CDK 流程。
+**📱 移动访问的 QR 码**：使用 ngrok（选项 2）运行时，QR 码会自动生成并显示在"Public Tunnel Access"部分。用手机扫描此 QR 码可以访问移动设备上的 k-ID Dev Explorer，从而直接在移动设备上测试 CDK 流程。
 
 ### ⚠️ 重要：WebAuthn 要求
 
@@ -80,7 +80,7 @@ npm run dev:remote
 
 ## 使用方法
 
-CDK Explorer 提供了一种交互式方法来测试 k-ID CDK 流程：
+k-ID Dev Explorer 提供了一种交互式方法来测试 k-ID CDK 流程：
 
 1. **选择流程**：从下拉菜单中选择 CDK 流程类型（例如：Age Gate、Access Age Verification、Age Appeal 等）
 
@@ -176,4 +176,6 @@ CDK Explorer 提供了一种交互式方法来测试 k-ID CDK 流程：
 - **[k-ID CDK Documentation](https://docs.k-id.com/docs/cdk/intro)** - CDK 概述和入门
 - **[Next.js Documentation](https://nextjs.org/docs)** - Next.js 框架文档
 - **[Ngrok Documentation](https://ngrok.com/docs)** - Ngrok 隧道文档
+
+
 

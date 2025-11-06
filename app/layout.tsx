@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CDK Explorer",
+  title: "k-ID Dev Explorer",
   description: "Interactive learning tool for k-ID's Compliance Development Kit",
   icons: {
     icon: '/favicon.svg',

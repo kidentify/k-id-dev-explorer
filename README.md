@@ -1,10 +1,10 @@
-# k-ID CDK Explorer
+# k-ID Dev Explorer
 
 [日本語版はこちら](./README-ja.md) | [한국어 버전](./README-ko.md) | [中文版](./README-zh.md)
 
 An interactive developer tool for exploring and testing k-ID Compliance Developer Kit (CDK) flows. Built with Next.js, this tool provides a visual interface to test all CDK flow types, observe API traffic in real-time, and understand how to integrate k-ID's age verification and compliance flows into your application.
 
-![CDK Explorer Screenshot](./cdk-screenshot.png)
+![k-ID Dev Explorer Screenshot](./cdk-screenshot.png)
 
 ## What is the k-ID CDK?
 
@@ -74,7 +74,7 @@ npm run dev:remote
 
 **Note**: The ngrok URL will change each time you restart the remote development server unless you have an ngrok account and auth token.
 
-**📱 QR Code for Mobile Access**: When running with ngrok (Option 2), a QR code is automatically generated and displayed in the "Public Tunnel Access" section. Scanning this QR code with your phone allows you to access the CDK Explorer on your mobile device, enabling you to test CDK flows on mobile devices directly.
+**📱 QR Code for Mobile Access**: When running with ngrok (Option 2), a QR code is automatically generated and displayed in the "Public Tunnel Access" section. Scanning this QR code with your phone allows you to access the k-ID Dev Explorer on your mobile device, enabling you to test CDK flows on mobile devices directly.
 
 ### ⚠️ Important: WebAuthn Requirements
 
@@ -82,7 +82,7 @@ When developing locally, **age key creation and validation will not work** unles
 
 ## How to Use
 
-The CDK Explorer provides an interactive way to test k-ID CDK flows:
+The k-ID Dev Explorer provides an interactive way to test k-ID CDK flows:
 
 1. **Select a Flow**: Choose a CDK flow type from the dropdown menu (e.g., Age Gate, Access Age Verification, Age Appeal, etc.)
 

@@ -21,7 +21,7 @@ export const API_CONFIG = {
   endpoints: {
     // Access Age Verification endpoint
     // Documentation: https://docs.k-id.com/reference/api/endpoints/access-age-verification
-    accessAgeVerification: '/api/v1/age-verification/perform-access-age-verification',
+    accessAgeVerification: '/api/v1/age-verification/perform',
     
     // Trusted Adult Verification endpoint
     // Documentation: https://docs.k-id.com/reference/api/endpoints/trusted-adult-verification
