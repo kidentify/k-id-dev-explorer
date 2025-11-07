@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "k-ID Dev Explorer",
-  description: "Interactive learning tool for k-ID's Compliance Development Kit",
+  description: "Interactive learning tool for k-ID's CDK and AgeKit+ Flows",
   icons: {
     icon: '/favicon.svg',
     shortcut: '/favicon.svg',

@@ -2,13 +2,13 @@
 
 [日本語版はこちら](./README-ja.md) | [한국어 버전](./README-ko.md) | [中文版](./README-zh.md)
 
-An interactive developer tool for exploring and testing k-ID Compliance Developer Kit (CDK) flows. Built with Next.js, this tool provides a visual interface to test all CDK flow types, observe API traffic in real-time, and understand how to integrate k-ID's age verification and compliance flows into your application.
+An interactive developer tool for exploring and testing k-ID's Compliance Developer Kit (CDK) and AgeKit+ flows. Built with Next.js, this tool provides a visual interface to test all CDK flow types, observe API traffic in real-time, and understand how to integrate k-ID's age verification and compliance flows into your application.
 
-![k-ID Dev Explorer Screenshot](./cdk-screenshot.png)
+![k-ID Dev Explorer Screenshot](./screenshot.png)
 
-## What is the k-ID CDK?
+## What is the k-ID CDK and AgeKit+?
 
-The k-ID Compliance Developer Kit provides a set of pre-built flows for age verification, parental consent, and compliance management. This tool helps developers understand how to integrate these flows by providing:
+The k-ID Compliance Developer Kit (CDK) and AgeKit+ provide a set of pre-built flows for age verification, parental consent, and compliance management. This tool helps developers understand how to integrate these flows by providing:
 
 - **Visual Flow Testing**: Test all CDK flow types with real API calls
 - **Real-time API Traffic**: Observe requests and responses as flows execute

@@ -25,7 +25,7 @@ interface IframeDisplayProps {
 export default function IframeDisplay({ iframeUrl }: IframeDisplayProps) {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">CDK Flow Iframe</h2>
+      <h2 className="text-lg font-semibold text-gray-900 mb-4">Widget iframe</h2>
       {iframeUrl ? (
         // Embed the CDK flow URL in an iframe
         // The URL is obtained from the API response (see performCDKFlow in serverActions.ts)

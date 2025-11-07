@@ -2,7 +2,7 @@
 
 k-ID コンプライアンス開発キット（CDK）フローを探索・テストするためのインタラクティブな開発者ツールです。Next.jsで構築されており、すべてのCDKフロータイプをテストし、APIトラフィックをリアルタイムで観察し、k-IDの年齢確認およびコンプライアンスフローをアプリケーションに統合する方法を理解するためのビジュアルインターフェースを提供します。
 
-![k-ID Dev Explorer Screenshot](./cdk-screenshot.png)
+![k-ID Dev Explorer Screenshot](./screenshot.png)
 
 ## k-ID CDKとは？
 

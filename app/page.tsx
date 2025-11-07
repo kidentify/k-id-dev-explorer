@@ -26,9 +26,9 @@ export default function Home() {
             <div>
               <h1 className="text-3xl font-bold text-gray-900">k-ID Dev Explorer</h1>
               <p className="text-gray-600 mt-2">
-              Interactive learning tool for k-ID's Compliance Development Kit.
+              Interactive learning tool for k-ID's CDK and AgeKit+ Flows.
                 <a 
-                  href="https://docs.k-id.com/docs/cdk/intro" 
+                  href="https://docs.k-id.com" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-blue-600 hover:text-blue-800 ml-1 underline"

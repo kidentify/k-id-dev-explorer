@@ -2,7 +2,7 @@
 
 k-ID 컴플라이언스 개발 키트(CDK) 플로우를 탐색하고 테스트하기 위한 대화형 개발자 도구입니다. Next.js로 구축되었으며, 모든 CDK 플로우 타입을 테스트하고, API 트래픽을 실시간으로 관찰하며, k-ID의 연령 확인 및 컴플라이언스 플로우를 애플리케이션에 통합하는 방법을 이해할 수 있는 시각적 인터페이스를 제공합니다.
 
-![k-ID Dev Explorer Screenshot](./cdk-screenshot.png)
+![k-ID Dev Explorer Screenshot](./screenshot.png)
 
 ## k-ID CDK란?
 

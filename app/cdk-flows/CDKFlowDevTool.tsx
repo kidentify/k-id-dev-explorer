@@ -341,7 +341,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
     <div className="space-y-6">
       {/* Combined Flow Selection and Configuration Form */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">CDK Flow Input Fields</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Widget input fields</h2>
         <form action={handleSubmit} className="space-y-4">
           {/* Flow Selection */}
           <div>

@@ -2,7 +2,7 @@
 
 用于探索和测试 k-ID 合规开发工具包 (CDK) 流程的交互式开发者工具。使用 Next.js 构建，该工具提供了一个可视化界面，用于测试所有 CDK 流程类型、实时观察 API 流量，并了解如何将 k-ID 的年龄验证和合规流程集成到您的应用程序中。
 
-![k-ID Dev Explorer Screenshot](./cdk-screenshot.png)
+![k-ID Dev Explorer Screenshot](./screenshot.png)
 
 ## 什么是 k-ID CDK？
 
