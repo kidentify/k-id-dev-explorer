@@ -439,7 +439,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
                 Loading...
               </>
             ) : (
-              'Embed CDK Flow'
+              'Embed widget'
             )}
           </button>
         </form>
