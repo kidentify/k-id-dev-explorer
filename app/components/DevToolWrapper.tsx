@@ -5,7 +5,7 @@ import CDKFlowDevTool from '../cdk-flows/CDKFlowDevTool'
 import IframeDisplay from './IframeDisplay'
 import ChallengeControls from './ChallengeControls'
 import SessionControls from './SessionControls'
-import EventLogDisplay from './EventLogDisplay'
+import EventsTraffic from './EventsTraffic'
 import { AddEventMethod, EventLog, RequestType } from '../cdk-flows/types'
 
 interface ApiKeyStatus {
@@ -13,16 +13,21 @@ interface ApiKeyStatus {
   apiUrl: string
 }
 
-interface CDKDevToolWrapperProps {
+interface DevToolWrapperProps {
   apiKeyStatus: ApiKeyStatus
 }
 
-export default function CDKDevToolWrapper({ apiKeyStatus }: CDKDevToolWrapperProps) {
+export default function DevToolWrapper({ apiKeyStatus }: DevToolWrapperProps) {
   const [iframeUrl, setIframeUrl] = useState('')
   const [challengeId, setChallengeId] = useState<string | null>(null)
   const [sessionId, setSessionId] = useState<string | null>(null)
+  const [eventLogs, setEventLogs] = useState<EventLog[]>([])
   // Store the addEvent function using useRef to avoid re-renders
   const addEventFnRef = useRef<AddEventMethod | undefined>(undefined)
+  // Store refs to event handler functions from CDKFlowDevTool
+  const downloadEventLogRef = useRef<(() => void) | undefined>(undefined)
+  const clearLogsRef = useRef<(() => void) | undefined>(undefined)
+  const copyEventRef = useRef<((event: EventLog) => void) | undefined>(undefined)
 
   // Create a stable event handler function with useCallback
   const addEvent = useCallback((event: string, type?: any, details?: unknown) => {
@@ -98,23 +103,56 @@ export default function CDKDevToolWrapper({ apiKeyStatus }: CDKDevToolWrapperPro
     setSessionId(null)
   }
 
+  // Event handlers for EventsTraffic component
+  const handleEventLogsChange = useCallback((logs: EventLog[]) => {
+    setEventLogs(logs)
+  }, [])
+
+  const handleDownloadEventLog = useCallback(() => {
+    downloadEventLogRef.current?.()
+  }, [])
+
+  const handleClearLogs = useCallback(() => {
+    clearLogsRef.current?.()
+  }, [])
+
+  const handleCopyEvent = useCallback((event: EventLog) => {
+    copyEventRef.current?.(event)
+  }, [])
+
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {/* Left Column - All Configuration and Form Elements */}
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Left Column - Form and Configuration */}
       <div>
         <CDKFlowDevTool
           onIframeUrlUpdate={handleIframeUrlUpdate}
           apiKeyStatus={apiKeyStatus}
           onAddEvent={handleAddEvent}
+          onEventLogsChange={handleEventLogsChange}
+          onDownloadEventLogRef={(fn) => { downloadEventLogRef.current = fn; }}
+          onClearLogsRef={(fn) => { clearLogsRef.current = fn; }}
+          onCopyEventRef={(fn) => { copyEventRef.current = fn; }}
         />
       </div>
 
-      {/* Right Column - Iframe Only */}
+      {/* Middle Column - Iframe */}
       <div className="flex flex-col gap-4">
         <IframeDisplay iframeUrl={iframeUrl} />
         <ChallengeControls challengeId={challengeId} apiKeyStatus={apiKeyStatus} addEvent={addEvent} />
         <SessionControls sessionId={sessionId} apiKeyStatus={apiKeyStatus} addEvent={addEvent} />
       </div>
+
+      {/* Right Column - Events & API Traffic */}
+      <div className="flex flex-col">
+        <EventsTraffic
+          eventLogs={eventLogs}
+          onDownload={handleDownloadEventLog}
+          onClear={handleClearLogs}
+          onCopy={handleCopyEvent}
+        />
+      </div>
     </div>
   )
 }
+

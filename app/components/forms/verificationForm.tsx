@@ -2,6 +2,7 @@ import { AgeType, FormEntryKey } from "@/app/cdk-flows/types"
 import { useState } from "react"
 import Jurisdiction from "./jurisdictionForm"
 import AgeForm from "./ageForm"
+import { useTranslation } from "../../utils/translations"
 
 export type FormEntry = {
   required?: boolean,
@@ -19,6 +20,7 @@ export type VerificationFormProps = {
 }
 
 export default function VerificationForm(props: VerificationFormProps) {
+  const { t } = useTranslation();
   const [ageType, setAgeType] = useState<AgeType>(AgeType.CATEGORY)
 
   return (
@@ -28,14 +30,14 @@ export default function VerificationForm(props: VerificationFormProps) {
       {props.dob && (
         <div className="mb-2">
           <label htmlFor={FormEntryKey.DOB} className="block text-sm font-medium text-gray-700 mb-2">
-            {(props.dob.title ?? 'Claimed Date of Birth') + (!props.dob.required ? ' (optional)' : '')}
+            {(props.dob.title ?? t('fields.claimedDateOfBirth')) + (!props.dob.required ? ` ${t('common.optional')}` : '')}
           </label>
           <input
             type="date"
             id={FormEntryKey.DOB}
             name={FormEntryKey.DOB}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            placeholder="YYYY-MM-DD"
+            placeholder={t('placeholders.dateFormat')}
             onChange={(e) => {
               const ageInput = document.getElementById('age') as HTMLInputElement | null
               if (ageInput) {
@@ -51,7 +53,7 @@ export default function VerificationForm(props: VerificationFormProps) {
       {props.age && (
         <div className="mb-2">
           <label htmlFor={FormEntryKey.AGE} className="block text-sm font-medium text-gray-700 mb-2">
-            {(props.age.title ?? 'Claimed Age') + (!props.age.required ? ' (optional)' : '')}
+            {(props.age.title ?? t('fields.claimedAge')) + (!props.age.required ? ` ${t('common.optional')}` : '')}
           </label>
           <input
             type="number"
@@ -60,7 +62,7 @@ export default function VerificationForm(props: VerificationFormProps) {
             min="0"
             max="120"
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter claimed age"
+            placeholder={t('placeholders.enterClaimedAge')}
             onChange={(e) => {
               const dobInput = document.getElementById('dob') as HTMLInputElement | null
               if (dobInput) {
@@ -75,14 +77,14 @@ export default function VerificationForm(props: VerificationFormProps) {
       {props.email && (
         <div className="mb-2">
           <label htmlFor={FormEntryKey.EMAIL} className="block text-sm font-medium text-gray-700 mb-2">
-            {(props.email.title ?? 'Subject Email') + (!props.email.required ? ' (optional)' : '')}
+            {(props.email.title ?? t('fields.subjectEmail')) + (!props.email.required ? ` ${t('common.optional')}` : '')}
           </label>
           <input
             type="email"
             id={FormEntryKey.EMAIL}
             name={FormEntryKey.EMAIL}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter subject email"
+            placeholder={t('placeholders.enterSubjectEmail')}
             required={props.email.required}
           />
         </div>
@@ -90,14 +92,14 @@ export default function VerificationForm(props: VerificationFormProps) {
       {props.id && (
         <div className="mb-2">
           <label htmlFor={FormEntryKey.ID} className="block text-sm font-medium text-gray-700 mb-2">
-            {(props.id.title ?? 'Subject ID') + (!props.id.required ? ' (optional)' : '')}
+            {(props.id.title ?? t('fields.subjectId')) + (!props.id.required ? ` ${t('common.optional')}` : '')}
           </label>
           <input
             type="text"
             id={FormEntryKey.ID}
             name={FormEntryKey.ID}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter subject id"
+            placeholder={t('placeholders.enterSubjectId')}
             required={props.id.required}
           />
         </div>
@@ -105,14 +107,14 @@ export default function VerificationForm(props: VerificationFormProps) {
       {props.kuid && (
         <div className="mb-2">
           <label htmlFor={FormEntryKey.KUID} className="block text-sm font-medium text-gray-700 mb-2">
-            {(props.kuid.title ?? 'KUID') + (!props.kuid.required ? ' (optional)' : '')}
+            {(props.kuid.title ?? t('fields.kuid')) + (!props.kuid.required ? ` ${t('common.optional')}` : '')}
           </label>
           <input
             type="text"
             id={FormEntryKey.KUID}
             name={FormEntryKey.KUID}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter KUID"
+            placeholder={t('placeholders.enterKuid')}
             required={props.kuid.required}
           />
         </div>
@@ -120,14 +122,14 @@ export default function VerificationForm(props: VerificationFormProps) {
       {props.locale && (
         <div className="mb-2">
           <label htmlFor={FormEntryKey.LOCALE} className="block text-sm font-medium text-gray-700 mb-2">
-            {(props.locale.title ?? 'Locale') + (!props.locale.required ? ' (optional)' : '')}
+            {(props.locale.title ?? t('fields.locale')) + (!props.locale.required ? ` ${t('common.optional')}` : '')}
           </label>
           <input
             type="text"
             id={FormEntryKey.LOCALE}
             name={FormEntryKey.LOCALE}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            placeholder="e.g. en-GB"
+            placeholder={t('placeholders.localeExample')}
             required={props.locale.required}
           />
         </div>

@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack -p 3100",
-    "dev:remote": "concurrently --raw --kill-others-on-fail \"npm run dev\" \"ngrok http 3100 --log=stdout\"",
+    "dev": "concurrently --raw --kill-others-on-fail \"next dev --turbopack -p 3100\" \"ngrok http 3100 --log=stdout\"",
     "dev:ngrok": "ngrok http 3100",
     "build": "next build --turbopack",
     "start": "next start",

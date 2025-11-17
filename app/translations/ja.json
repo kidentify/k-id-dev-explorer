@@ -1,0 +1,100 @@
+{
+  "common": {
+    "optional": "（任意）",
+    "required": "（必須）",
+    "loading": "読み込み中...",
+    "download": "ダウンロード",
+    "clear": "クリア",
+    "copy": "コピー",
+    "error": "エラー",
+    "submit": "送信"
+  },
+  "header": {
+    "title": "k-ID Dev Explorer",
+    "subtitle": "k-IDのCDKとAgeKit+フローのインタラクティブな学習ツール。",
+    "viewDocumentation": "ドキュメントを見る →"
+  },
+  "widget": {
+    "inputFields": "ウィジェット入力フィールド",
+    "iframe": "ウィジェット iframe",
+    "embed": "ウィジェットを埋め込む",
+    "selectFlow": "フローを選択"
+  },
+  "fields": {
+    "jurisdiction": "管轄区域",
+    "verificationCriteria": "検証基準",
+    "age": "年齢",
+    "ageCategory": "年齢カテゴリ",
+    "claimedDateOfBirth": "申告された生年月日",
+    "claimedAge": "申告された年齢",
+    "subjectEmail": "対象者のメールアドレス",
+    "subjectId": "対象者ID",
+    "kuid": "KUID",
+    "locale": "ロケール",
+    "sessionId": "セッションID",
+    "trustedAdultEmail": "信頼できる大人のメールアドレス"
+  },
+  "placeholders": {
+    "enterAge": "年齢を入力",
+    "enterClaimedAge": "申告された年齢を入力",
+    "enterSubjectEmail": "対象者のメールアドレスを入力",
+    "enterSubjectId": "対象者IDを入力",
+    "enterKuid": "KUIDを入力",
+    "localeExample": "例: ja-JP",
+    "sessionIdExample": "例: b1a6482d-5242-4b4a-aa88-3fa52595a672",
+    "trustedAdultEmailExample": "例: parent@example.com",
+    "dateFormat": "YYYY-MM-DD"
+  },
+  "ageTypes": {
+    "age": "年齢",
+    "category": "カテゴリ"
+  },
+  "ageCategories": {
+    "adult": "ADULT",
+    "digitalYouthOrAdult": "DIGITAL_YOUTH_OR_ADULT"
+  },
+  "flows": {
+    "accessAgeVerification": "アクセス年齢確認",
+    "facialAgeEstimation": "顔認証による年齢推定",
+    "trustedAdultVerification": "信頼できる大人の確認",
+    "ageGate": "年齢ゲート",
+    "idVerification": "ID確認",
+    "endToEnd": "VPCエンドツーエンド",
+    "directNotices": "直接通知",
+    "manageSessionPermissions": "セッション権限の管理",
+    "ageAppeal": "年齢申し立て"
+  },
+  "widgetOptions": {
+    "title": "ウィジェットオプション",
+    "skipSteps": "ステップをスキップ",
+    "skipDataNotices": "データ通知をスキップ",
+    "skipVerification": "検証をスキップ",
+    "skipPermissions": "権限をスキップ",
+    "skipPreferences": "設定をスキップ"
+  },
+  "tunnel": {
+    "title": "パブリックトンネルアクセス",
+    "ngrokActive": "Ngrokトンネルがアクティブ",
+    "ngrokNotRunning": "Ngrokが実行されていません",
+    "externalUrl": "外部URL:",
+    "copyNgrokUrl": "Ngrok URLをコピー",
+    "startNgrok": "開始: npm run dev",
+    "scanToAccess": "モバイルデバイスでアクセスするためにスキャン:",
+    "webhookReceiverUrl": "Webhook受信URL",
+    "copyWebhookUrl": "Webhook受信URLをコピー",
+    "configureWebhook": "このWebhook URLを以下のk-ID製品設定で設定してください",
+    "complianceStudio": "k-ID Compliance Studio"
+  },
+  "events": {
+    "title": "イベントとAPIトラフィック",
+    "downloadLog": "イベントログをテキストファイルとしてダウンロード",
+    "clearLogs": "ログをクリア",
+    "noEvents": "イベントはまだありません...",
+    "submitFormToLoad": "左側のフォームを送信してCDK iframeを読み込む"
+  },
+  "errors": {
+    "apiKeyNotConfigured": "APIキーが設定されていません。.env.localファイルでK_ID_API_KEYを設定してください。",
+    "anErrorOccurred": "エラーが発生しました"
+  }
+}
+

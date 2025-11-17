@@ -9,7 +9,7 @@ export async function GET() {
     if (!response.ok) {
       return NextResponse.json<NgrokInfo>({
         success: false,
-        error: 'Ngrok not running. Run `npm run dev:remote` to enable ngrok tunnel',
+        error: 'Ngrok not running. Run `npm run dev` to enable ngrok tunnel',
         localUrl: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3100'
       });
     }
@@ -27,7 +27,7 @@ export async function GET() {
     if (!tunnel) {
       return NextResponse.json<NgrokInfo>({
         success: false,
-        error: `No tunnel found for port ${port}. Run \`npm run dev:remote\` to enable ngrok tunnel`,
+        error: `No tunnel found for port ${port}. Run \`npm run dev\` to enable ngrok tunnel`,
         localUrl: process.env.NEXT_PUBLIC_APP_URL || `http://localhost:${port}`
       });
     }
@@ -45,7 +45,7 @@ export async function GET() {
     const port = process.env.PORT || '3100';
     return NextResponse.json<NgrokInfo>({
       success: false,
-      error: 'Failed to fetch ngrok tunnel information. Run `npm run dev:remote` to enable ngrok tunnel',
+      error: 'Failed to fetch ngrok tunnel information. Run `npm run dev` to enable ngrok tunnel',
       localUrl: process.env.NEXT_PUBLIC_APP_URL || `http://localhost:${port}`
     });
   }

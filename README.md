@@ -49,36 +49,42 @@ npm install
    ```bash
    K_ID_API_KEY=your_actual_api_key_here
    K_ID_API_URL=https://game-api.test.k-id.com
+   NEXT_PUBLIC_LOCALE=en
    ```
 
    Replace `your_actual_api_key_here` with your actual API key from the Compliance Studio. The `K_ID_API_URL` defaults to the test environment. Change this to the live mode URL when ready.
+
+   **Setting the UI Language**: The `NEXT_PUBLIC_LOCALE` variable controls the language of the user interface. Set it to:
+   - `en` for English (default)
+   - `ja` for Japanese
+   - `ko` for Korean
+   - `zh` for Chinese
+   
+   After changing the locale, restart the development server for the changes to take effect.
 
 For more information on getting started with k-ID, see the [k-ID Developer Hub](https://docs.k-id.com).
 
 ## Running the Application
 
-### Option 1: Local Development Only
+### Development Server
+
 ```bash
 npm run dev
 ```
-- Server runs on `http://localhost:3100`
-- Webhook URL: `http://localhost:3100/api/webhook`
 
-### Option 2: Local + External Access (Recommended)
-```bash
-npm run dev:remote
-```
+This command starts both the Next.js development server and an ngrok tunnel:
+
 - Server runs on `http://localhost:3100`
 - Ngrok tunnel creates external HTTPS URL
 - Webhook URL: `https://[random].ngrok-free.app/api/webhook`
 
-**Note**: The ngrok URL will change each time you restart the remote development server unless you have an ngrok account and auth token.
+**Note**: The ngrok URL will change each time you restart the development server unless you have an ngrok account and auth token.
 
-**📱 QR Code for Mobile Access**: When running with ngrok (Option 2), a QR code is automatically generated and displayed in the "Public Tunnel Access" section. Scanning this QR code with your phone allows you to access the k-ID Dev Explorer on your mobile device, enabling you to test CDK flows on mobile devices directly.
+**📱 QR Code for Mobile Access**: A QR code is automatically generated and displayed in the "Public Tunnel Access" section. Scanning this QR code with your phone allows you to access the k-ID Dev Explorer on your mobile device, enabling you to test CDK flows on mobile devices directly.
 
 ### ⚠️ Important: WebAuthn Requirements
 
-When developing locally, **age key creation and validation will not work** unless running over HTTPS, as this is a requirement of WebAuthn. This is another important use case for the ngrok tunnel (Option 2). If you're testing flows that involve age key creation or validation, you must use `npm run dev:remote` to ensure the application is accessible via HTTPS.
+When developing locally, **age key creation and validation will not work** unless running over HTTPS, as this is a requirement of WebAuthn. The ngrok tunnel provides HTTPS access, which is required for testing flows that involve age key creation or validation.
 
 ## How to Use
 
@@ -150,12 +156,13 @@ Copy `.env.example` to `.env.local` and configure:
 - `K_ID_API_URL` - k-ID API base URL (defaults to https://game-api.test.k-id.com)
   - Test environment: `https://game-api.test.k-id.com`
   - Production environment: `https://game-api.k-id.com`
+- `NEXT_PUBLIC_LOCALE` - Language code for the UI (optional, defaults to 'en')
+  - Supported values: `en` (English), `ja` (Japanese), `ko` (Korean), `zh` (Chinese)
 - `PORT` - Server port (defaults to 3100, optional)
 - `NEXT_PUBLIC_APP_URL` - Override local URL (optional)
 
 ### Scripts
-- `npm run dev` - Start development server only
-- `npm run dev:remote` - Start development server with ngrok tunnel
+- `npm run dev` - Start development server with ngrok tunnel
 - `npm run dev:ngrok` - Start ngrok tunnel only
 - `npm run build` - Build for production
 - `npm run start` - Start production server

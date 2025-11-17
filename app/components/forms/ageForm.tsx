@@ -1,5 +1,6 @@
 import { AgeCategory, AgeType, FormEntryKey } from "@/app/cdk-flows/types"
 import { useEffect, useState } from "react"
+import { useTranslation } from "../../utils/translations"
 
 export type AgeTypeFormProps = {
   value: AgeType,
@@ -8,6 +9,7 @@ export type AgeTypeFormProps = {
 }
 
 export default function AgeForm({value, onChange, title}: AgeTypeFormProps) {
+  const { t } = useTranslation();
   const [ageType, setAgeType] = useState<AgeType>(value)
 
   useEffect(() => {
@@ -17,7 +19,7 @@ export default function AgeForm({value, onChange, title}: AgeTypeFormProps) {
   return (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-2">
-        {title ?? 'Verification Criteria'}
+        {title ?? t('fields.verificationCriteria')}
       </label>
       <div className="flex space-x-4 mb-2">
         {Object.values(AgeType).map((value, index )=> {
@@ -31,14 +33,14 @@ export default function AgeForm({value, onChange, title}: AgeTypeFormProps) {
                 onChange={(e) => onChange(e.target.value as AgeType)}
                 className="mr-2"
               />
-              <span className="text-sm">{value}</span>
+              <span className="text-sm">{t(`ageTypes.${value === AgeType.AGE ? 'age' : 'category'}`)}</span>
             </label>
           )
         })}
       </div>
       <div className="mb-2">
         <label htmlFor={FormEntryKey.AGE_CRITERIA} className="block text-sm font-medium text-gray-700 mb-2">
-          Age
+          {t('fields.age')}
         </label>
         <input
           type="number"
@@ -50,13 +52,13 @@ export default function AgeForm({value, onChange, title}: AgeTypeFormProps) {
           className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
             ageType !== AgeType.AGE ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : ''
           }`}
-          placeholder="Enter age"
+          placeholder={t('placeholders.enterAge')}
           required={ageType === AgeType.AGE}
         />
       </div>
       <div className="mb-2">
         <label htmlFor={FormEntryKey.AGE_CATEGORY} className="block text-sm font-medium text-gray-700 mb-2">
-          Age Category
+          {t('fields.ageCategory')}
         </label>
         <select
           id={FormEntryKey.AGE_CATEGORY}
