@@ -4,10 +4,10 @@ import { performCDKFlow } from './serverActions'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import QRCode from 'qrcode'
 import { NgrokInfo } from '../types/webhook'
-import EventLogDisplay from '../components/EventLogDisplay'
 import VerificationForm from '../components/forms/verificationForm'
 import E2EOptionsForm from '../components/forms/e2eOptionsForm'
 import ManagePermissionsForm from '../components/forms/managePermissionsForm'
+import { useTranslation } from '../utils/translations'
 
 interface ApiKeyStatus {
   isConfigured: boolean
@@ -18,9 +18,14 @@ interface CDKFlowDevToolProps {
   onIframeUrlUpdate?: (url: string) => void
   apiKeyStatus: ApiKeyStatus
   onAddEvent?: (addEventFn: AddEventMethod) => void
+  onEventLogsChange?: (eventLogs: EventLog[]) => void
+  onDownloadEventLogRef?: (fn: () => void) => void
+  onClearLogsRef?: (fn: () => void) => void
+  onCopyEventRef?: (fn: (event: EventLog) => void) => void
 }
 
-export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddEvent }: CDKFlowDevToolProps) {
+export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddEvent, onEventLogsChange, onDownloadEventLogRef, onClearLogsRef, onCopyEventRef }: CDKFlowDevToolProps) {
+  const { t } = useTranslation();
   const [selectedFlow, setSelectedFlow] = useState(CDKFlow.ACCESS_AGE_VERIFICATION)
   const [ageType, setAgeType] = useState<AgeType>(AgeType.CATEGORY)
   const [isLoading, setIsLoading] = useState(false)
@@ -37,8 +42,12 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
       type,
       details,
     }
-    setEventLogs((prev) => [newEvent, ...prev.slice(0, 49)]) // Keep last 50 events
-  }, [])
+    setEventLogs((prev) => {
+      const updated = [newEvent, ...prev.slice(0, 49)]; // Keep last 50 events
+      onEventLogsChange?.(updated);
+      return updated;
+    });
+  }, [onEventLogsChange])
 
   // Share addEvent function with parent component - use a ref to track if we've already shared it
   const hasSharedEvent = useRef(false)
@@ -202,7 +211,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
       const flow = formData.get('flow') as CDKFlow
 
       if (!apiKeyStatus.isConfigured) {
-        throw new Error('API key not configured. Please set K_ID_API_KEY in your .env.local file.')
+        throw new Error(t('errors.apiKeyNotConfigured'))
       }
 
       // Call the server action to perform the CDK flow
@@ -228,10 +237,10 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
       } else {
         const errorData = { error: result.error }
         addEvent('api-error', RequestType.ERROR, errorData)
-        setError(formatErrorForDisplay(result.error || 'An error occurred'))
+        setError(formatErrorForDisplay(result.error || t('errors.anErrorOccurred')))
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'An error occurred'
+      const errorMessage = err instanceof Error ? err.message : t('errors.anErrorOccurred')
       addEvent('api-error', RequestType.ERROR, { error: errorMessage })
       setError(errorMessage)
     } finally {
@@ -239,12 +248,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
     }
   }
 
-  const clearLogs = () => {
-    setEventLogs([])
-    addEvent('logs-cleared', RequestType.INFO)
-  }
-
-  const downloadEventLog = () => {
+  const downloadEventLog = useCallback(() => {
     if (eventLogs.length === 0) {
       return
     }
@@ -289,9 +293,15 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
     a.click()
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
-  }
+  }, [eventLogs])
 
-  const copyEventToClipboard = (event: EventLog) => {
+  const clearLogs = useCallback(() => {
+    setEventLogs([])
+    onEventLogsChange?.([]);
+    addEvent('logs-cleared', RequestType.INFO)
+  }, [onEventLogsChange, addEvent])
+
+  const copyEventToClipboard = useCallback((event: EventLog) => {
     let textToCopy = ''
 
     // Build the text that matches what's displayed in the event box
@@ -335,18 +345,25 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
       .catch((err) => {
         console.error('Failed to copy to clipboard:', err)
       })
-  }
+  }, [])
+
+  // Expose functions via refs
+  useEffect(() => {
+    onDownloadEventLogRef?.(downloadEventLog)
+    onClearLogsRef?.(clearLogs)
+    onCopyEventRef?.(copyEventToClipboard)
+  }, [downloadEventLog, clearLogs, copyEventToClipboard, onDownloadEventLogRef, onClearLogsRef, onCopyEventRef])
 
   return (
     <div className="space-y-6">
       {/* Combined Flow Selection and Configuration Form */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Widget input fields</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('widget.inputFields')}</h2>
         <form action={handleSubmit} className="space-y-4">
           {/* Flow Selection */}
           <div>
             <label htmlFor="flow" className="block text-sm font-medium text-gray-700 mb-2">
-              Select CDK Flow
+              {t('widget.selectFlow')}
             </label>
             <select
               id="flow"
@@ -356,11 +373,18 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               required
             >
-              {Object.values(CDKFlow).sort().map((value, index) => (
-                <option key={index} value={value}>
-                  {value}
-                </option>
-              ))}
+              {Object.values(CDKFlow).sort().map((value, index) => {
+                const flowKey = Object.keys(CDKFlow).find(key => CDKFlow[key as keyof typeof CDKFlow] === value);
+                // Convert ACCESS_AGE_VERIFICATION to accessAgeVerification (camelCase)
+                const translationKey = flowKey 
+                  ? flowKey.toLowerCase().split('_').map((word, i) => i === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)).join('')
+                  : '';
+                return (
+                  <option key={index} value={value}>
+                    {t(`flows.${translationKey}`) || value}
+                  </option>
+                );
+              })}
             </select>
           </div>
           {selectedFlow === CDKFlow.ACCESS_AGE_VERIFICATION && <VerificationForm ageCriteria={{}} />}
@@ -376,7 +400,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
             />
           )}
           {selectedFlow === CDKFlow.TRUSTED_ADULT_VERIFICATION && (
-            <VerificationForm email={{ title: 'Trusted Adult Email', required: true }} id={{ required: false }} />
+            <VerificationForm email={{ title: t('fields.trustedAdultEmail'), required: true }} id={{ required: false }} />
           )}
           {selectedFlow === CDKFlow.ID_VERIFICATION && (
             <VerificationForm
@@ -436,10 +460,10 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-                Loading...
+                {t('common.loading')}
               </>
             ) : (
-              'Embed widget'
+              t('widget.embed')
             )}
           </button>
         </form>
@@ -462,7 +486,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
 
       {/* Webhook URL Section */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Public Tunnel Access</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('tunnel.title')}</h2>
         <div className="space-y-4">
           {/* Ngrok Status */}
           {ngrokInfo && (
@@ -474,12 +498,12 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
                   className={`w-2 h-2 rounded-full mr-2 ${ngrokInfo.success ? 'bg-green-500' : 'bg-yellow-500'}`}
                 ></div>
                 <span className={`text-sm font-medium ${ngrokInfo.success ? 'text-green-800' : 'text-yellow-800'}`}>
-                  {ngrokInfo.success ? 'Ngrok tunnel active' : 'Ngrok not running'}
+                  {ngrokInfo.success ? t('tunnel.ngrokActive') : t('tunnel.ngrokNotRunning')}
                 </span>
               </div>
               {ngrokInfo.success && (
               <p className="text-xs text-green-700 mt-1 flex items-center gap-2">
-                External URL: <a href={ngrokInfo.ngrokUrl} target="_blank" rel="noopener noreferrer" className="font-mono text-green-700 hover:text-green-900 underline">{ngrokInfo.ngrokUrl}</a>
+                {t('tunnel.externalUrl')} <a href={ngrokInfo.ngrokUrl} target="_blank" rel="noopener noreferrer" className="font-mono text-green-700 hover:text-green-900 underline">{ngrokInfo.ngrokUrl}</a>
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(ngrokInfo.ngrokUrl!).then(() => {
@@ -489,7 +513,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
                       })
                     }}
                     className="text-green-600 hover:text-green-800 transition-colors"
-                    title="Copy Ngrok URL"
+                    title={t('tunnel.copyNgrokUrl')}
                   >
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -499,7 +523,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
               )}
               {!ngrokInfo.success && (
                 <p className="text-xs text-yellow-700 mt-1">
-                  {ngrokInfo.error || 'Start ngrok with: npm run dev:remote'}
+                  {ngrokInfo.error || t('tunnel.startNgrok')}
                 </p>
               )}
             </div>
@@ -509,7 +533,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
           {ngrokInfo?.success && qrCodeDataUrl && (
             <div className="p-3 rounded-md bg-white border border-gray-200">
               <div className="text-center">
-                <p className="text-xs text-gray-600 mb-2">Scan to access on mobile device:</p>
+                <p className="text-xs text-gray-600 mb-2">{t('tunnel.scanToAccess')}</p>
                 <div className="flex justify-center relative">
                   <img src={qrCodeDataUrl} alt="QR Code for ngrok URL" className="border border-gray-300 rounded" />
                   {/* k-ID Logo overlay */}
@@ -531,7 +555,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
               <div className="flex items-center">
                 <div className="w-2 h-2 rounded-full mr-2 bg-green-500"></div>
                 <span className="text-sm font-medium text-green-800">
-                  Webhook Receiver URL
+                  {t('tunnel.webhookReceiverUrl')}
                 </span>
               </div>
               <p className="text-xs text-green-700 mt-1 flex items-center gap-2">
@@ -548,7 +572,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
                       })
                   }}
                   className="text-green-600 hover:text-green-800 transition-colors"
-                  title="Copy Webhook Receiver URL"
+                  title={t('tunnel.copyWebhookUrl')}
                 >
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -557,14 +581,14 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
               </p>
               <div className="mt-2 text-xs text-green-600">
                 <p>
-                  Configure this webhook URL in your k-ID product settings via the{' '}
+                  {t('tunnel.configureWebhook')}{' '}
                   <a
                     href="https://portal.k-id.com"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-green-700 hover:text-green-900 underline"
                   >
-                    k-ID Compliance Studio
+                    {t('tunnel.complianceStudio')}
                   </a>
                   .
                 </p>
@@ -574,41 +598,6 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
         </div>
       </div>
 
-      {/* Combined Events & API Traffic Section */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Events & API Traffic</h2>
-          <div className="flex items-center gap-3">
-            {eventLogs.length > 0 && (
-              <button
-                onClick={downloadEventLog}
-                className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
-                title="Download event log as text file"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  />
-                </svg>
-                Download
-              </button>
-            )}
-            <button onClick={clearLogs} className="text-sm text-gray-600 hover:text-gray-800">
-              Clear Logs
-            </button>
-          </div>
-        </div>
-        <div className="h-96 overflow-y-auto bg-gray-50 rounded border p-3 space-y-2">
-          {eventLogs.length === 0 ? (
-            <p className="text-gray-500 text-sm">No events yet...</p>
-          ) : (
-            eventLogs.map((event, index) => <EventLogDisplay key={index} event={event} onCopy={copyEventToClipboard} />)
-          )}
-        </div>
-      </div>
     </div>
   )
 }

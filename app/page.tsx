@@ -1,5 +1,6 @@
-import CDKDevToolWrapper from './components/CDKDevToolWrapper';
+import DevToolWrapper from './components/DevToolWrapper';
 import Image from 'next/image';
+import { t } from './utils/translations';
 
 export default function Home() {
   // Server-side environment variable check
@@ -10,7 +11,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-[1920px] mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-4">
@@ -24,16 +25,16 @@ export default function Home() {
               priority
             />
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">k-ID Dev Explorer</h1>
+              <h1 className="text-3xl font-bold text-gray-900">{t('header.title')}</h1>
               <p className="text-gray-600 mt-2">
-              Interactive learning tool for k-ID's CDK and AgeKit+ Flows.
+              {t('header.subtitle')}
                 <a 
                   href="https://docs.k-id.com" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-blue-600 hover:text-blue-800 ml-1 underline"
                 >
-                  View Documentation →
+                  {t('header.viewDocumentation')}
                 </a>
               </p>
             </div>
@@ -41,7 +42,7 @@ export default function Home() {
         </div>
 
         {/* Main Developer Tool */}
-        <CDKDevToolWrapper apiKeyStatus={apiKeyStatus} />
+        <DevToolWrapper apiKeyStatus={apiKeyStatus} />
       </div>
     </div>
   );

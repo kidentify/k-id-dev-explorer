@@ -2,12 +2,14 @@ import { useMemo, useState } from "react"
 
 import jurisdictions from "../../data/jurisdictions.json"
 import { FormEntryKey } from "@/app/cdk-flows/types";
+import { useTranslation } from "../../utils/translations";
 
 function getLabelFromEntry(entry: [string, string | string[]]): string {
   return typeof entry[1] === 'string' ? entry[1] : entry[1][0]
 }
 
 export default function Jurisdiction() {
+  const { t } = useTranslation();
   const [value, setValue] = useState<string>("US")
 
   const sortedJurisdictions = useMemo(() => {
@@ -22,7 +24,7 @@ export default function Jurisdiction() {
   return (
     <div className="mb-2">
       <label htmlFor={FormEntryKey.JURISDICTION} className="block text-sm font-medium text-gray-700 mb-2">
-        Jurisdiction
+        {t('fields.jurisdiction')}
       </label>
       <select
         id={FormEntryKey.JURISDICTION}

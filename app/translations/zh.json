@@ -1,0 +1,100 @@
+{
+  "common": {
+    "optional": "（可选）",
+    "required": "（必需）",
+    "loading": "加载中...",
+    "download": "下载",
+    "clear": "清除",
+    "copy": "复制",
+    "error": "错误",
+    "submit": "提交"
+  },
+  "header": {
+    "title": "k-ID Dev Explorer",
+    "subtitle": "k-ID的CDK和AgeKit+流程的交互式学习工具。",
+    "viewDocumentation": "查看文档 →"
+  },
+  "widget": {
+    "inputFields": "小部件输入字段",
+    "iframe": "小部件 iframe",
+    "embed": "嵌入小部件",
+    "selectFlow": "选择流程"
+  },
+  "fields": {
+    "jurisdiction": "管辖区",
+    "verificationCriteria": "验证标准",
+    "age": "年龄",
+    "ageCategory": "年龄类别",
+    "claimedDateOfBirth": "声明的出生日期",
+    "claimedAge": "声明的年龄",
+    "subjectEmail": "主体电子邮件",
+    "subjectId": "主体ID",
+    "kuid": "KUID",
+    "locale": "语言环境",
+    "sessionId": "会话ID",
+    "trustedAdultEmail": "可信成人电子邮件"
+  },
+  "placeholders": {
+    "enterAge": "输入年龄",
+    "enterClaimedAge": "输入声明的年龄",
+    "enterSubjectEmail": "输入主体电子邮件",
+    "enterSubjectId": "输入主体ID",
+    "enterKuid": "输入KUID",
+    "localeExample": "例如: zh-CN",
+    "sessionIdExample": "例如: b1a6482d-5242-4b4a-aa88-3fa52595a672",
+    "trustedAdultEmailExample": "例如: parent@example.com",
+    "dateFormat": "YYYY-MM-DD"
+  },
+  "ageTypes": {
+    "age": "年龄",
+    "category": "类别"
+  },
+  "ageCategories": {
+    "adult": "ADULT",
+    "digitalYouthOrAdult": "DIGITAL_YOUTH_OR_ADULT"
+  },
+  "flows": {
+    "accessAgeVerification": "访问年龄验证",
+    "facialAgeEstimation": "面部年龄估计",
+    "trustedAdultVerification": "可信成人验证",
+    "ageGate": "年龄门控",
+    "idVerification": "ID验证",
+    "endToEnd": "VPC端到端",
+    "directNotices": "直接通知",
+    "manageSessionPermissions": "管理会话权限",
+    "ageAppeal": "年龄申诉"
+  },
+  "widgetOptions": {
+    "title": "小部件选项",
+    "skipSteps": "跳过步骤",
+    "skipDataNotices": "跳过数据通知",
+    "skipVerification": "跳过验证",
+    "skipPermissions": "跳过权限",
+    "skipPreferences": "跳过首选项"
+  },
+  "tunnel": {
+    "title": "公共隧道访问",
+    "ngrokActive": "Ngrok隧道已激活",
+    "ngrokNotRunning": "Ngrok未运行",
+    "externalUrl": "外部URL:",
+    "copyNgrokUrl": "复制Ngrok URL",
+    "startNgrok": "启动: npm run dev",
+    "scanToAccess": "扫描以在移动设备上访问:",
+    "webhookReceiverUrl": "Webhook接收器URL",
+    "copyWebhookUrl": "复制Webhook接收器URL",
+    "configureWebhook": "在以下位置配置此Webhook URL",
+    "complianceStudio": "k-ID合规工作室"
+  },
+  "events": {
+    "title": "事件和API流量",
+    "downloadLog": "将事件日志下载为文本文件",
+    "clearLogs": "清除日志",
+    "noEvents": "还没有事件...",
+    "submitFormToLoad": "提交左侧表单以加载CDK iframe"
+  },
+  "errors": {
+    "apiKeyNotConfigured": "未配置API密钥。请在.env.local文件中设置K_ID_API_KEY。",
+    "anErrorOccurred": "发生错误"
+  }
+}
+

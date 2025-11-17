@@ -1,0 +1,100 @@
+{
+  "common": {
+    "optional": "(optional)",
+    "required": "(required)",
+    "loading": "Loading...",
+    "download": "Download",
+    "clear": "Clear",
+    "copy": "Copy",
+    "error": "Error",
+    "submit": "Submit"
+  },
+  "header": {
+    "title": "k-ID Dev Explorer",
+    "subtitle": "Interactive learning tool for k-ID's CDK and AgeKit+ Flows.",
+    "viewDocumentation": "View Documentation →"
+  },
+  "widget": {
+    "inputFields": "Widget input fields",
+    "iframe": "Widget iframe",
+    "embed": "Embed widget",
+    "selectFlow": "Select flow"
+  },
+  "fields": {
+    "jurisdiction": "Jurisdiction",
+    "verificationCriteria": "Verification criteria",
+    "age": "Age",
+    "ageCategory": "Age Category",
+    "claimedDateOfBirth": "Claimed Date of Birth",
+    "claimedAge": "Claimed Age",
+    "subjectEmail": "Subject Email",
+    "subjectId": "Subject ID",
+    "kuid": "KUID",
+    "locale": "Locale",
+    "sessionId": "Session ID",
+    "trustedAdultEmail": "Trusted Adult Email"
+  },
+  "placeholders": {
+    "enterAge": "Enter age",
+    "enterClaimedAge": "Enter claimed age",
+    "enterSubjectEmail": "Enter subject email",
+    "enterSubjectId": "Enter subject id",
+    "enterKuid": "Enter KUID",
+    "localeExample": "e.g. en-GB",
+    "sessionIdExample": "e.g. b1a6482d-5242-4b4a-aa88-3fa52595a672",
+    "trustedAdultEmailExample": "e.g. parent@example.com",
+    "dateFormat": "YYYY-MM-DD"
+  },
+  "ageTypes": {
+    "age": "Age",
+    "category": "Category"
+  },
+  "ageCategories": {
+    "adult": "ADULT",
+    "digitalYouthOrAdult": "DIGITAL_YOUTH_OR_ADULT"
+  },
+  "flows": {
+    "accessAgeVerification": "Access Age Verification",
+    "facialAgeEstimation": "Facial Age Estimation",
+    "trustedAdultVerification": "Trusted Adult Verification",
+    "ageGate": "Age Gate",
+    "idVerification": "ID Verification",
+    "endToEnd": "VPC End-to-End",
+    "directNotices": "Direct Notices",
+    "manageSessionPermissions": "Manage Session Permissions",
+    "ageAppeal": "Age Appeal"
+  },
+  "widgetOptions": {
+    "title": "Widget Options",
+    "skipSteps": "Skip Steps",
+    "skipDataNotices": "Skip Data Notices",
+    "skipVerification": "Skip Verification",
+    "skipPermissions": "Skip Permissions",
+    "skipPreferences": "Skip Preferences"
+  },
+  "tunnel": {
+    "title": "Public Tunnel Access",
+    "ngrokActive": "Ngrok tunnel active",
+    "ngrokNotRunning": "Ngrok not running",
+    "externalUrl": "External URL:",
+    "copyNgrokUrl": "Copy Ngrok URL",
+    "startNgrok": "Start ngrok with: npm run dev",
+    "scanToAccess": "Scan to access on mobile device:",
+    "webhookReceiverUrl": "Webhook Receiver URL",
+    "copyWebhookUrl": "Copy Webhook Receiver URL",
+    "configureWebhook": "Configure this webhook URL in your k-ID product settings via the",
+    "complianceStudio": "k-ID Compliance Studio"
+  },
+  "events": {
+    "title": "Events & API Traffic",
+    "downloadLog": "Download event log as text file",
+    "clearLogs": "Clear Logs",
+    "noEvents": "No events yet...",
+    "submitFormToLoad": "Submit the form on the left to load the CDK iframe"
+  },
+  "errors": {
+    "apiKeyNotConfigured": "API key not configured. Please set K_ID_API_KEY in your .env.local file.",
+    "anErrorOccurred": "An error occurred"
+  }
+}
+

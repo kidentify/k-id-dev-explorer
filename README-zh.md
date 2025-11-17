@@ -47,36 +47,42 @@ npm install
    ```bash
    K_ID_API_KEY=your_actual_api_key_here
    K_ID_API_URL=https://game-api.test.k-id.com
+   NEXT_PUBLIC_LOCALE=zh
    ```
 
    将 `your_actual_api_key_here` 替换为从 Compliance Studio 获取的实际 API 密钥。`K_ID_API_URL` 默认设置为测试环境。准备就绪后，将其更改为生产环境 URL。
+
+   **设置 UI 语言**: `NEXT_PUBLIC_LOCALE` 变量控制用户界面的语言。可以设置为：
+   - `en` - 英语（默认）
+   - `ja` - 日语
+   - `ko` - 韩语
+   - `zh` - 中文
+   
+   更改语言环境后，请重新启动开发服务器以使更改生效。
 
 有关 k-ID 入门的更多信息，请参阅 [k-ID Developer Hub](https://docs.k-id.com)。
 
 ## 运行应用程序
 
-### 选项 1：仅本地开发
+### 开发服务器
+
 ```bash
 npm run dev
 ```
-- 服务器在 `http://localhost:3100` 上运行
-- Webhook URL: `http://localhost:3100/api/webhook`
 
-### 选项 2：本地 + 外部访问（推荐）
-```bash
-npm run dev:remote
-```
+此命令同时启动 Next.js 开发服务器和 ngrok 隧道：
+
 - 服务器在 `http://localhost:3100` 上运行
 - Ngrok 隧道创建外部 HTTPS URL
 - Webhook URL: `https://[random].ngrok-free.app/api/webhook`
 
-**注意**：除非您有 ngrok 账户和认证令牌，否则每次重启远程开发服务器时，ngrok URL 都会更改。
+**注意**：除非您有 ngrok 账户和认证令牌，否则每次重启开发服务器时，ngrok URL 都会更改。
 
-**📱 移动访问的 QR 码**：使用 ngrok（选项 2）运行时，QR 码会自动生成并显示在"Public Tunnel Access"部分。用手机扫描此 QR 码可以访问移动设备上的 k-ID Dev Explorer，从而直接在移动设备上测试 CDK 流程。
+**📱 移动访问的 QR 码**：QR 码会自动生成并显示在"Public Tunnel Access"部分。用手机扫描此 QR 码可以访问移动设备上的 k-ID Dev Explorer，从而直接在移动设备上测试 CDK 流程。
 
 ### ⚠️ 重要：WebAuthn 要求
 
-在本地开发时，**除非通过 HTTPS 运行，否则年龄密钥创建和验证将无法工作**，这是 WebAuthn 的要求。这是 ngrok 隧道（选项 2）的另一个重要用例。如果您正在测试涉及年龄密钥创建或验证的流程，必须使用 `npm run dev:remote` 以确保应用程序可通过 HTTPS 访问。
+在本地开发时，**除非通过 HTTPS 运行，否则年龄密钥创建和验证将无法工作**，这是 WebAuthn 的要求。ngrok 隧道提供 HTTPS 访问，这对于测试涉及年龄密钥创建或验证的流程是必需的。
 
 ## 使用方法
 
@@ -148,13 +154,14 @@ k-ID Dev Explorer 提供了一种交互式方法来测试 k-ID CDK 流程：
 - `K_ID_API_URL` - k-ID API 基础 URL（默认值：https://game-api.test.k-id.com）
   - 测试环境：`https://game-api.test.k-id.com`
   - 生产环境：`https://game-api.k-id.com`
+- `NEXT_PUBLIC_LOCALE` - UI 语言代码（可选，默认值：'en'）
+  - 支持的值：`en`（英语）、`ja`（日语）、`ko`（韩语）、`zh`（中文）
 - `PORT` - 服务器端口（默认值：3100，可选）
 - `NEXT_PUBLIC_APP_URL` - 覆盖本地 URL（可选）
 
 ### 脚本
 
-- `npm run dev` - 仅启动开发服务器
-- `npm run dev:remote` - 使用 ngrok 隧道启动开发服务器
+- `npm run dev` - 使用 ngrok 隧道启动开发服务器
 - `npm run dev:ngrok` - 仅启动 ngrok 隧道
 - `npm run build` - 构建生产版本
 - `npm run start` - 启动生产服务器
