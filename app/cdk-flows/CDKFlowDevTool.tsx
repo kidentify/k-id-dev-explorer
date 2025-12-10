@@ -113,7 +113,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
     const handleMessage = (event: MessageEvent) => {
       // Check if the message is from a k-id.com domain
       const hostname = new URL(event.origin).hostname;
-      if (hostname === 'localhost' || hostname.endsWith('.k-id.com')) {
+      if (hostname.endsWith('.k-id.com')) {
         addEvent('js-message', RequestType.INFO, event.data)
       }
     }
