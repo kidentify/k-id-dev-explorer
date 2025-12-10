@@ -37,6 +37,10 @@ export const API_CONFIG = {
     // Documentation: https://docs.k-id.com/api/endpoints/perform-age-key-verification
     ageKeyVerification: '/api/v1/age-verification/perform-age-key-verification',
     
+    // Connect ID Verification endpoint
+    // Documentation: https://docs.k-id.com/api/endpoints/perform-connect-id-verification
+    connectIdVerification: '/api/v1/age-verification/perform-connect-id-verification',
+    
     // Email Age Estimation endpoint - performs email inference with background check via VerifyMy
     // Documentation: https://docs.k-id.com/api/endpoints/perform-inference
     emailInference: '/api/v1/age-verification/perform-inference',

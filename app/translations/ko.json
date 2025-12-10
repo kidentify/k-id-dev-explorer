@@ -60,6 +60,7 @@
     "ageGate": "연령 게이트",
     "idVerification": "ID 확인",
     "ageKeyVerification": "AgeKey 확인",
+    "connectIdVerification": "ConnectID 확인",
     "emailEstimation": "이메일 연령 추정",
     "endToEnd": "VPC 종단간",
     "directNotices": "직접 알림",

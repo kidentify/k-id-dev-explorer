@@ -64,6 +64,7 @@ export enum CDKFlow {
   AGE_GATE = 'Age Gate',
   ID_VERIFICATION = 'ID Verification',
   AGE_KEY_VERIFICATION = 'AgeKey Verification',
+  CONNECT_ID_VERIFICATION = 'ConnectID Verification',
   EMAIL_ESTIMATION = 'Email Age Estimation',
   END_TO_END = 'VPC End-to-End',
   DIRECT_NOTICES = 'Direct Notices',

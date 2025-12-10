@@ -34,6 +34,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
     CDKFlow.FACIAL_AGE_ESTIMATION,
     CDKFlow.ID_VERIFICATION,
     CDKFlow.AGE_KEY_VERIFICATION,
+    CDKFlow.CONNECT_ID_VERIFICATION,
     CDKFlow.EMAIL_ESTIMATION,
     CDKFlow.AGE_APPEAL,
   ])

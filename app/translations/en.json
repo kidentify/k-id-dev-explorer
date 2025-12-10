@@ -60,6 +60,7 @@
     "ageGate": "Age Gate",
     "idVerification": "ID Verification",
     "ageKeyVerification": "AgeKey Verification",
+    "connectIdVerification": "ConnectID Verification",
     "emailEstimation": "Email Age Estimation",
     "endToEnd": "VPC End-to-End",
     "directNotices": "Direct Notices",

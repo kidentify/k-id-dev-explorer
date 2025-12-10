@@ -60,6 +60,7 @@
     "ageGate": "年龄门控",
     "idVerification": "ID验证",
     "ageKeyVerification": "AgeKey验证",
+    "connectIdVerification": "ConnectID验证",
     "emailEstimation": "电子邮件年龄估计",
     "endToEnd": "VPC端到端",
     "directNotices": "直接通知",
