@@ -145,7 +145,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
         try {
           const data = JSON.parse(event.data)
           if (data.type === 'webhook') {
-            addEvent('webhook-received', RequestType.INFO, {
+            addEvent('webhook-received', RequestType.WEBHOOK, {
               method: data.data.method,
               url: data.data.url,
               headers: data.data.headers,

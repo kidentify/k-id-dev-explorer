@@ -3,6 +3,7 @@ export enum RequestType {
   RESPONSE = 'response',
   ERROR = 'error',
   INFO = 'info',
+  WEBHOOK = 'webhook',
 }
 
 export interface EventLog {
