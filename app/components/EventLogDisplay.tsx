@@ -34,6 +34,22 @@ export default function EventLogDisplay({ event, onCopy }: EventLogProps) {
             {event.details.method} {new URL(event.details.url).pathname}
           </span>
         )}
+        {event.event === 'webhook-received' && event.details?.signatureStatus && (
+          <span className={`text-xs px-2 py-1 rounded font-medium ${
+            event.details.signatureStatus === 'valid' 
+              ? 'bg-green-100 text-green-800' 
+              : event.details.signatureStatus === 'invalid'
+              ? 'bg-red-100 text-red-800'
+              : event.details.signatureStatus === 'missing'
+              ? 'bg-yellow-100 text-yellow-800'
+              : 'bg-gray-100 text-gray-800'
+          }`}>
+            {event.details.signatureStatus === 'valid' && '✓ Signed'}
+            {event.details.signatureStatus === 'invalid' && '✗ Invalid signature'}
+            {event.details.signatureStatus === 'missing' && '⚠ No signature'}
+            {event.details.signatureStatus === 'not_configured' && '○ Signature validation not configured'}
+          </span>
+        )}
         <button
           onClick={() => onCopy(event)}
           className="ml-auto text-gray-400 hover:text-gray-600 transition-colors duration-200"

@@ -7,6 +7,7 @@ export interface WebhookEvent {
   body: unknown;
   method: string;
   url: string;
+  signatureStatus?: 'valid' | 'invalid' | 'missing' | 'not_configured';
 }
 
 export interface NgrokInfo {

@@ -59,6 +59,8 @@
     "trustedAdultVerification": "신뢰할 수 있는 성인 확인",
     "ageGate": "연령 게이트",
     "idVerification": "ID 확인",
+    "ageKeyVerification": "AgeKey 확인",
+    "emailEstimation": "이메일 연령 추정",
     "endToEnd": "VPC 종단간",
     "directNotices": "직접 알림",
     "manageSessionPermissions": "세션 권한 관리",

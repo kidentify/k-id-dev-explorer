@@ -59,6 +59,8 @@
     "trustedAdultVerification": "Trusted Adult Verification",
     "ageGate": "Age Gate",
     "idVerification": "ID Verification",
+    "ageKeyVerification": "AgeKey Verification",
+    "emailEstimation": "Email Age Estimation",
     "endToEnd": "VPC End-to-End",
     "directNotices": "Direct Notices",
     "manageSessionPermissions": "Manage Session Permissions",

@@ -62,6 +62,8 @@ npm install
    
    After changing the locale, restart the development server for the changes to take effect.
 
+   **Webhook Signature Validation** (optional): The `WEBHOOK_SECRET` variable enables webhook signature validation using HMAC-SHA256. If provided, all incoming webhook requests will be validated against this secret. Get your webhook secret from the k-ID Compliance Studio product settings. If not provided, webhook signature validation will be skipped (useful for testing without signature validation).
+
 For more information on getting started with k-ID, see the [k-ID Developer Hub](https://docs.k-id.com).
 
 ## Running the Application
@@ -143,7 +145,30 @@ The application automatically detects and displays the external URL when ngrok i
 - **Event Window**: All webhook events appear in real-time in the main interface
 - **Server-Sent Events**: Automatic updates when webhooks are received
 - **Event Details**: Full request information including headers, body, method, and timestamp
+- **Signature Validation**: Webhook signature validation status is displayed for each webhook event:
+  - ✓ **Signed**: Webhook signature is valid (green badge)
+  - ✗ **Invalid signature**: Webhook signature does not match (red badge)
+  - ⚠ **No signature**: Webhook request has no signature header (yellow badge)
+  - ○ **Signature validation not configured**: `WEBHOOK_SECRET` is not set (gray badge)
 - **Copy Functionality**: Click the copy button to copy webhook data to clipboard
+
+### Webhook Signature Validation
+
+The application supports webhook signature validation using HMAC-SHA256. To enable signature validation:
+
+1. Get your webhook secret from the [k-ID Compliance Studio](https://portal.k-id.com) product settings
+2. Add `WEBHOOK_SECRET` to your `.env.local` file:
+   ```bash
+   WEBHOOK_SECRET=your_webhook_secret_here
+   ```
+3. Restart the development server
+
+When `WEBHOOK_SECRET` is configured, the application will:
+- Validate webhook signatures using HMAC-SHA256
+- Check for signature headers: `x-k-id-signature`, `x-signature`, or `k-id-signature`
+- Display signature validation status in the event log for each webhook event
+
+If `WEBHOOK_SECRET` is not provided, webhook signature validation will be skipped (useful for testing without signature validation).
 
 ## 🛠️ Development
 
@@ -160,6 +185,10 @@ Copy `.env.example` to `.env.local` and configure:
   - Supported values: `en` (English), `ja` (Japanese), `ko` (Korean), `zh` (Chinese)
 - `PORT` - Server port (defaults to 3100, optional)
 - `NEXT_PUBLIC_APP_URL` - Override local URL (optional)
+- `WEBHOOK_SECRET` - Webhook secret for signature validation (optional)
+  - If provided, webhook requests will be validated using HMAC-SHA256 signature verification
+  - Get your webhook secret from the [k-ID Compliance Studio](https://portal.k-id.com) product settings
+  - If not provided, signature validation will be skipped (useful for testing)
 
 ### Scripts
 - `npm run dev` - Start development server with ngrok tunnel

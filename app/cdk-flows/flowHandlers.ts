@@ -199,6 +199,46 @@ export const flowHandlers: Record<CDKFlow, FlowHandler> = {
     performAction: performVerification,
   },
   /**
+   * AgeKey Verification flow handler.
+   * 
+   * Performs an AgeKey verification for a user. This flow returns a URL for the
+   * AgeKey verification interface that can be embedded in an iframe.
+   */
+  [CDKFlow.AGE_KEY_VERIFICATION]: {
+    buildRequestData(formData: FormData, apiUrl: string, apiKey: string) {
+      return {
+        method: 'POST',
+        url: `${apiUrl}${API_CONFIG.endpoints.ageKeyVerification}`,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: getBody(formData),
+      }
+    },
+    performAction: performVerification,
+  },
+  /**
+   * Email Age Estimation flow handler.
+   * 
+   * Performs email inference with background check via VerifyMy. This flow returns
+   * a URL for the email age estimation interface that can be embedded in an iframe.
+   */
+  [CDKFlow.EMAIL_ESTIMATION]: {
+    buildRequestData(formData: FormData, apiUrl: string, apiKey: string) {
+      return {
+        method: 'POST',
+        url: `${apiUrl}${API_CONFIG.endpoints.emailInference}`,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: getBody(formData),
+      }
+    },
+    performAction: performVerification,
+  },
+  /**
    * Trusted Adult Verification flow handler.
    * 
    * Verifies a trusted adult (parent or guardian) for consent purposes. This flow

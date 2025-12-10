@@ -59,6 +59,8 @@
     "trustedAdultVerification": "信頼できる大人の確認",
     "ageGate": "年齢ゲート",
     "idVerification": "ID確認",
+    "ageKeyVerification": "AgeKey確認",
+    "emailEstimation": "メール年齢推定",
     "endToEnd": "VPCエンドツーエンド",
     "directNotices": "直接通知",
     "manageSessionPermissions": "セッション権限の管理",
