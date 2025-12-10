@@ -1,5 +1,5 @@
 import { formatErrorForDisplay } from '../utils/errorUtils'
-import { AddEventMethod, AgeType, CDKFlow, EventLog, RequestType } from './types'
+import { AddEventMethod, CDKFlow, EventLog, RequestType } from './types'
 import { performCDKFlow } from './serverActions'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import QRCode from 'qrcode'
@@ -27,7 +27,17 @@ interface CDKFlowDevToolProps {
 export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddEvent, onEventLogsChange, onDownloadEventLogRef, onClearLogsRef, onCopyEventRef }: CDKFlowDevToolProps) {
   const { t } = useTranslation();
   const [selectedFlow, setSelectedFlow] = useState(CDKFlow.ACCESS_AGE_VERIFICATION)
-  const [ageType, setAgeType] = useState<AgeType>(AgeType.CATEGORY)
+
+  // Flows that use the standard age criteria form (jurisdiction + age/ageCategory)
+  const ageCriteriaFlows = new Set([
+    CDKFlow.ACCESS_AGE_VERIFICATION,
+    CDKFlow.FACIAL_AGE_ESTIMATION,
+    CDKFlow.ID_VERIFICATION,
+    CDKFlow.AGE_KEY_VERIFICATION,
+    CDKFlow.CONNECT_ID_VERIFICATION,
+    CDKFlow.EMAIL_ESTIMATION,
+    CDKFlow.AGE_APPEAL,
+  ])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [eventLogs, setEventLogs] = useState<EventLog[]>([])
@@ -43,11 +53,14 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
       details,
     }
     setEventLogs((prev) => {
-      const updated = [newEvent, ...prev.slice(0, 49)]; // Keep last 50 events
-      onEventLogsChange?.(updated);
-      return updated;
+      return [newEvent, ...prev.slice(0, 49)]; // Keep last 50 events
     });
-  }, [onEventLogsChange])
+  }, [])
+
+  // Sync eventLogs to parent component whenever they change
+  useEffect(() => {
+    onEventLogsChange?.(eventLogs)
+  }, [eventLogs, onEventLogsChange])
 
   // Share addEvent function with parent component - use a ref to track if we've already shared it
   const hasSharedEvent = useRef(false)
@@ -101,7 +114,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
     const handleMessage = (event: MessageEvent) => {
       // Check if the message is from a k-id.com domain
       const hostname = new URL(event.origin).hostname;
-      if (hostname === 'k-id.com' || hostname.endsWith('.k-id.com')) {
+      if (hostname.endsWith('.k-id.com')) {
         addEvent('js-message', RequestType.INFO, event.data)
       }
     }
@@ -133,13 +146,14 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
         try {
           const data = JSON.parse(event.data)
           if (data.type === 'webhook') {
-            addEvent('webhook-received', RequestType.INFO, {
+            addEvent('webhook-received', RequestType.WEBHOOK, {
               method: data.data.method,
               url: data.data.url,
               headers: data.data.headers,
               body: data.data.body,
               timestamp: data.data.timestamp,
               id: data.data.id,
+              signatureStatus: data.data.signatureStatus,
             })
           }
           // Silently handle 'connected', 'heartbeat', and 'test' events - don't add to event log
@@ -297,9 +311,8 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
 
   const clearLogs = useCallback(() => {
     setEventLogs([])
-    onEventLogsChange?.([]);
     addEvent('logs-cleared', RequestType.INFO)
-  }, [onEventLogsChange, addEvent])
+  }, [addEvent])
 
   const copyEventToClipboard = useCallback((event: EventLog) => {
     let textToCopy = ''
@@ -387,30 +400,10 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
               })}
             </select>
           </div>
-          {selectedFlow === CDKFlow.ACCESS_AGE_VERIFICATION && <VerificationForm ageCriteria={{}} />}
+          {ageCriteriaFlows.has(selectedFlow) && <VerificationForm ageCriteria={{}} />}
           {selectedFlow === CDKFlow.AGE_GATE && <VerificationForm kuid={{ required: false }} />}
-          {selectedFlow === CDKFlow.FACIAL_AGE_ESTIMATION && (
-            <VerificationForm
-              ageCriteria={{}}
-              dob={{ required: false }}
-              age={{ required: false }}
-              id={{ required: false }}
-              email={{ required: false }}
-              locale={{ required: false }}
-            />
-          )}
           {selectedFlow === CDKFlow.TRUSTED_ADULT_VERIFICATION && (
             <VerificationForm email={{ title: t('fields.trustedAdultEmail'), required: true }} id={{ required: false }} />
-          )}
-          {selectedFlow === CDKFlow.ID_VERIFICATION && (
-            <VerificationForm
-              ageCriteria={{}}
-              dob={{ required: false }}
-              age={{ required: false }}
-              id={{ required: false }}
-              email={{ required: false }}
-              locale={{ required: false }}
-            />
           )}
           {selectedFlow === CDKFlow.END_TO_END && (
             <div className="space-y-4">
@@ -422,23 +415,8 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
               <E2EOptionsForm />
             </div>
           )}
-          {selectedFlow === CDKFlow.DIRECT_NOTICES && (
-            <VerificationForm />
-          )}
-          {selectedFlow === CDKFlow.MANAGE_SESSION_PERMISSIONS && (
-            <ManagePermissionsForm />
-          )}
-          {selectedFlow === CDKFlow.AGE_APPEAL && (
-            <VerificationForm
-              ageCriteria={{}}
-              kuid={{ required: false }}
-              dob={{ required: false }}
-              age={{ required: false }}
-              email={{ required: false }}
-              id={{ required: false }}
-              locale={{ required: false }}
-            />
-          )}
+          {selectedFlow === CDKFlow.DIRECT_NOTICES && <VerificationForm />}
+          {selectedFlow === CDKFlow.MANAGE_SESSION_PERMISSIONS && <ManagePermissionsForm />}
           {/* Submit Button */}
           <button
             type="submit"

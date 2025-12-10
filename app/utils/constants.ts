@@ -1,9 +1,3 @@
-export const BUTTON_COLORS = {
-  primary: '#745eee',
-  hover: '#6a4fd8',
-  disabled: '#a08ff0',
-} as const
-
 /**
  * Configuration for k-ID CDK API endpoints.
  * 
@@ -39,6 +33,18 @@ export const API_CONFIG = {
     // Documentation: https://docs.k-id.com/reference/api/endpoints/id-verification
     idVerification: '/api/v1/age-verification/perform-id-verification',
     
+    // AgeKey Verification endpoint
+    // Documentation: https://docs.k-id.com/api/endpoints/perform-age-key-verification
+    ageKeyVerification: '/api/v1/age-verification/perform-age-key-verification',
+    
+    // Connect ID Verification endpoint
+    // Documentation: https://docs.k-id.com/api/endpoints/perform-connect-id-verification
+    connectIdVerification: '/api/v1/age-verification/perform-connect-id-verification',
+    
+    // Email Age Estimation endpoint - performs email inference with background check via VerifyMy
+    // Documentation: https://docs.k-id.com/api/endpoints/perform-inference
+    emailInference: '/api/v1/age-verification/perform-inference',
+    
     // End-to-End widget endpoint - generates a URL for full E2E flow
     // Documentation: https://docs.k-id.com/reference/api/endpoints/end-to-end
     endToEnd: '/api/v1/widget/generate-e2e-url',
@@ -55,9 +61,4 @@ export const API_CONFIG = {
     // Documentation: https://docs.k-id.com/reference/api/endpoints/age-appeal
     ageAppeal: '/api/v1/age-verification/perform-age-appeal',
   },
-} as const
-
-export const FORM_CLASSES = {
-  base: 'w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500',
-  disabled: 'bg-gray-100 text-gray-500 cursor-not-allowed',
 } as const

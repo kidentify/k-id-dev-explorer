@@ -3,6 +3,7 @@ export enum RequestType {
   RESPONSE = 'response',
   ERROR = 'error',
   INFO = 'info',
+  WEBHOOK = 'webhook',
 }
 
 export interface EventLog {
@@ -10,40 +11,6 @@ export interface EventLog {
   event: string
   type?: RequestType
   details?: any
-}
-
-export interface CDKFlowConfig {
-  id: string
-  name: string
-  endpoint: string
-  fields: FormField[]
-}
-
-export interface FormField {
-  name: string
-  label: string
-  type: 'text' | 'email' | 'number' | 'select' | 'radio'
-  required?: boolean
-  defaultValue?: string
-  placeholder?: string
-  options?: { value: string; label: string }[]
-  dependsOn?: {
-    field: string
-    value: any
-  }
-  disabled?: boolean
-  min?: number
-  max?: number
-}
-
-export interface ApiKeyStatus {
-  isConfigured: boolean
-  apiUrl: string
-}
-
-export interface CDKFlowDevToolProps {
-  onIframeUrlUpdate?: (url: string) => void
-  apiKeyStatus: ApiKeyStatus
 }
 
 export interface FlowRequestData {
@@ -90,22 +57,15 @@ export enum FormEntryKey {
   SKIP_PREFERENCES = 'skipPreferences',
 }
 
-export interface Subject {
-  email?: string
-  id?: string
-}
-
-export interface TrustedAdultSubject {
-  email: string // Required for trusted adult verification
-  id?: string
-}
-
 export enum CDKFlow {
   ACCESS_AGE_VERIFICATION = 'Access Age Verification',
   FACIAL_AGE_ESTIMATION = 'Facial Age Estimation',
   TRUSTED_ADULT_VERIFICATION = 'Trusted Adult Verification',
   AGE_GATE = 'Age Gate',
   ID_VERIFICATION = 'ID Verification',
+  AGE_KEY_VERIFICATION = 'AgeKey Verification',
+  CONNECT_ID_VERIFICATION = 'ConnectID Verification',
+  EMAIL_ESTIMATION = 'Email Age Estimation',
   END_TO_END = 'VPC End-to-End',
   DIRECT_NOTICES = 'Direct Notices',
   MANAGE_SESSION_PERMISSIONS = 'Manage Session Permissions',

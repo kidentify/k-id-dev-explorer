@@ -60,6 +60,8 @@ npm install
    
    更改语言环境后，请重新启动开发服务器以使更改生效。
 
+   **Webhook 签名验证**（可选）: `WEBHOOK_SECRET` 变量使用 HMAC-SHA256 启用 Webhook 签名验证。如果提供，所有传入的 Webhook 请求将针对此密钥进行验证。从 k-ID Compliance Studio 产品设置中获取您的 Webhook 密钥。如果未提供，将跳过 Webhook 签名验证（对于无需签名验证的测试很有用）。
+
 有关 k-ID 入门的更多信息，请参阅 [k-ID Developer Hub](https://docs.k-id.com)。
 
 ## 运行应用程序
@@ -141,7 +143,30 @@ k-ID Dev Explorer 提供了一种交互式方法来测试 k-ID CDK 流程：
 - **事件窗口**：所有 Webhook 事件都会在主界面中实时显示
 - **Server-Sent Events**：接收 Webhook 时自动更新
 - **事件详细信息**：包括标头、正文、方法和时间戳的完整请求信息
+- **签名验证**：为每个 Webhook 事件显示 Webhook 签名验证状态：
+  - ✓ **已签名**：Webhook 签名有效（绿色徽章）
+  - ✗ **无效签名**：Webhook 签名不匹配（红色徽章）
+  - ⚠ **无签名**：Webhook 请求没有签名标头（黄色徽章）
+  - ○ **未配置签名验证**：未设置 `WEBHOOK_SECRET`（灰色徽章）
 - **复制功能**：点击复制按钮将 Webhook 数据复制到剪贴板
+
+### Webhook 签名验证
+
+应用程序支持使用 HMAC-SHA256 进行 Webhook 签名验证。要启用签名验证：
+
+1. 从 [k-ID Compliance Studio](https://portal.k-id.com) 的产品设置中获取您的 Webhook 密钥
+2. 在 `.env.local` 文件中添加 `WEBHOOK_SECRET`：
+   ```bash
+   WEBHOOK_SECRET=your_webhook_secret_here
+   ```
+3. 重新启动开发服务器
+
+配置 `WEBHOOK_SECRET` 后，应用程序将：
+- 使用 HMAC-SHA256 验证 Webhook 签名
+- 检查签名标头：`x-k-id-signature`、`x-signature` 或 `k-id-signature`
+- 在事件日志中为每个 Webhook 事件显示签名验证状态
+
+如果未提供 `WEBHOOK_SECRET`，将跳过 Webhook 签名验证（对于无需签名验证的测试很有用）。
 
 ## 🛠️ 开发
 
@@ -158,6 +183,10 @@ k-ID Dev Explorer 提供了一种交互式方法来测试 k-ID CDK 流程：
   - 支持的值：`en`（英语）、`ja`（日语）、`ko`（韩语）、`zh`（中文）
 - `PORT` - 服务器端口（默认值：3100，可选）
 - `NEXT_PUBLIC_APP_URL` - 覆盖本地 URL（可选）
+- `WEBHOOK_SECRET` - 用于签名验证的 Webhook 密钥（可选）
+  - 如果提供，将使用 HMAC-SHA256 签名验证来验证 Webhook 请求
+  - 从 [k-ID Compliance Studio](https://portal.k-id.com) 的产品设置中获取您的 Webhook 密钥
+  - 如果未提供，将跳过签名验证（对测试很有用）
 
 ### 脚本
 

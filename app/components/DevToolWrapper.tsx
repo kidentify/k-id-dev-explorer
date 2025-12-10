@@ -60,7 +60,7 @@ export default function DevToolWrapper({ apiKeyStatus }: DevToolWrapperProps) {
     // Documentation: https://docs.k-id.com/docs/cdk/postmessage
     const handleMessage = (event: MessageEvent) => {
       // Verify the message is from a k-id.com domain for security
-      if (new URL(event.origin).hostname === 'k-id.com' || new URL(event.origin).hostname.endsWith('.k-id.com')) {
+      if (new URL(event.origin).hostname === 'localhost' || new URL(event.origin).hostname.endsWith('.k-id.com')) {
         try {
           // Extract challengeId from the message
           // The challengeId can be used to query verification status via the API
