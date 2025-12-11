@@ -37,8 +37,8 @@ export default function EventLogDisplay({ event, onCopy }: EventLogProps) {
         )}
         {event.event === 'webhook-received' && event.details?.signatureStatus && (
           <span className={`text-xs px-2 py-1 rounded font-medium ${
-            event.details.signatureStatus === 'valid' 
-              ? 'bg-green-100 text-green-800' 
+            event.details.signatureStatus === 'valid'
+              ? 'bg-green-100 text-green-800'
               : event.details.signatureStatus === 'invalid'
               ? 'bg-red-100 text-red-800'
               : event.details.signatureStatus === 'missing'
@@ -63,7 +63,7 @@ export default function EventLogDisplay({ event, onCopy }: EventLogProps) {
       </div>
       {event.details && !(event.event === 'api-request' && !event.details.body) && (
         <pre className="bg-white p-2 rounded border text-xs overflow-x-auto">
-          {event.event === 'api-request' 
+          {event.event === 'api-request'
             ? JSON.stringify(event.details.body, null, 2)
             : event.event === 'api-response'
             ? JSON.stringify(event.details.responseData, null, 2)

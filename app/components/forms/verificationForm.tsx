@@ -49,7 +49,7 @@ export default function VerificationForm(props: VerificationFormProps) {
           />
         </div>
       )}
-      
+
       {props.age && (
         <div className="mb-2">
           <label htmlFor={FormEntryKey.AGE} className="block text-sm font-medium text-gray-700 mb-2">

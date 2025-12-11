@@ -16,7 +16,7 @@ export function broadcastWebhookEvent(webhookEvent: unknown) {
     type: 'webhook',
     data: webhookEvent
   };
-  
+
   connections.forEach(controller => {
     try {
       controller.enqueue(`data: ${JSON.stringify(eventData)}\n\n`);

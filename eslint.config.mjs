@@ -20,6 +20,11 @@ const eslintConfig = [
       "next-env.d.ts",
     ],
   },
+  {
+    rules: {
+      "no-trailing-spaces": "error",
+    },
+  },
 ];
 
 export default eslintConfig;

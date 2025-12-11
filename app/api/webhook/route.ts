@@ -62,7 +62,7 @@ async function processWebhook(request: NextRequest, method: string) {
     // Clone the request to avoid consuming the body stream
     const clonedRequest = request.clone();
     const rawBody = await clonedRequest.text();
-    
+
     let body;
     // Try to parse as JSON, fallback to keeping as text
     try {
@@ -70,7 +70,7 @@ async function processWebhook(request: NextRequest, method: string) {
     } catch {
       body = rawBody || null;
     }
-    
+
     const headers: Record<string, string> = {};
     request.headers.forEach((value, key) => {
       headers[key] = value;
@@ -78,7 +78,7 @@ async function processWebhook(request: NextRequest, method: string) {
 
     // Get webhook secret from environment variable
     const webhookSecret = process.env.WEBHOOK_SECRET;
-    
+
     // Get signature headers according to k-ID specification
     // https://docs.k-id.com/events/webhooks/overview#signature-validation
     const signatureHeader = request.headers.get('x-signature-hmac-sha256');
@@ -115,12 +115,12 @@ async function processWebhook(request: NextRequest, method: string) {
       broadcastWebhookEvent(webhookEvent);
 
       return NextResponse.json(
-        { 
-          success: false, 
-          error: signatureStatus === 'invalid' 
-            ? 'Invalid webhook signature' 
+        {
+          success: false,
+          error: signatureStatus === 'invalid'
+            ? 'Invalid webhook signature'
             : 'Missing webhook signature',
-          eventId: webhookEvent.id 
+          eventId: webhookEvent.id
         },
         { status: 401 }
       );
@@ -145,10 +145,10 @@ async function processWebhook(request: NextRequest, method: string) {
     // Broadcast to all connected SSE clients
     broadcastWebhookEvent(webhookEvent);
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       message: 'Webhook received successfully',
-      eventId: webhookEvent.id 
+      eventId: webhookEvent.id
     });
   } catch (error) {
     console.error(`Error processing ${method} webhook:`, error);

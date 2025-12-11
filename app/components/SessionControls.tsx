@@ -9,12 +9,6 @@ interface ApiKeyStatus {
   apiUrl: string
 }
 
-interface ApiResponse {
-  status: string
-  data?: any
-  message?: string
-}
-
 interface SessionControlsProps {
   sessionId: string | null
   apiKeyStatus: ApiKeyStatus

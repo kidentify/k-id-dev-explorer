@@ -3,20 +3,6 @@ import jaTranslations from '../translations/ja.json';
 import koTranslations from '../translations/ko.json';
 import zhTranslations from '../translations/zh.json';
 
-type TranslationKey = 
-  | 'common'
-  | 'header'
-  | 'widget'
-  | 'fields'
-  | 'placeholders'
-  | 'ageTypes'
-  | 'ageCategories'
-  | 'flows'
-  | 'widgetOptions'
-  | 'tunnel'
-  | 'events'
-  | 'errors';
-
 type Translations = typeof enTranslations;
 
 const translations: Record<string, Translations> = {
@@ -53,15 +39,15 @@ export function getTranslations(locale?: string): Translations {
 export function t(keyPath: string, locale?: string): string {
   const translations = getTranslations(locale);
   const keys = keyPath.split('.');
-  let value: any = translations;
-  
+  let value: unknown = translations;
+
   for (const key of keys) {
     if (value && typeof value === 'object' && key in value) {
       value = value[key as keyof typeof value];
     } else {
       // Fallback to English if key not found
       const enValue = getTranslations('en');
-      let fallback: any = enValue;
+      let fallback: unknown = enValue;
       for (const fallbackKey of keys) {
         if (fallback && typeof fallback === 'object' && fallbackKey in fallback) {
           fallback = fallback[fallbackKey as keyof typeof fallback];
@@ -72,7 +58,7 @@ export function t(keyPath: string, locale?: string): string {
       return typeof fallback === 'string' ? fallback : keyPath;
     }
   }
-  
+
   return typeof value === 'string' ? value : keyPath;
 }
 
@@ -82,7 +68,7 @@ export function t(keyPath: string, locale?: string): string {
 export function useTranslation() {
   const locale = getLocale();
   const translations = getTranslations(locale);
-  
+
   return {
     t: (keyPath: string) => t(keyPath, locale),
     locale,
