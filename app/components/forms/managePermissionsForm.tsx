@@ -3,7 +3,7 @@ import { useTranslation } from '../../utils/translations'
 
 export default function ManagePermissionsForm() {
   const { t } = useTranslation();
-  
+
   return (
     <div className="space-y-4">
       <div>
@@ -19,7 +19,7 @@ export default function ManagePermissionsForm() {
           required
         />
       </div>
-      
+
       <div>
         <label htmlFor={FormEntryKey.EMAIL} className="block text-sm font-medium text-gray-700 mb-2">
           {t('fields.trustedAdultEmail')}

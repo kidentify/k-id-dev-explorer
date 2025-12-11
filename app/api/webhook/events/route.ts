@@ -4,20 +4,20 @@ import { connections } from '../connections';
 export async function GET(request: NextRequest) {
   const encoder = new TextEncoder();
   let controller: ReadableStreamDefaultController;
-  
+
   const stream = new ReadableStream({
     start(ctrl) {
       controller = ctrl;
       // Add this connection to the set
       connections.add(controller);
-      
+
       // Send initial connection message
       const initialMessage = {
         type: 'connected',
         data: { message: 'Connected to webhook events stream' }
       };
       controller.enqueue(encoder.encode(`data: ${JSON.stringify(initialMessage)}\n\n`));
-      
+
       // Send heartbeat every 30 seconds to keep connection alive
       const heartbeat = setInterval(() => {
         try {
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
           connections.delete(controller);
         }
       }, 30000);
-      
+
       // Clean up on connection close
       request.signal.addEventListener('abort', () => {
         clearInterval(heartbeat);
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
         }
       });
     },
-    
+
     cancel() {
       if (controller) {
         connections.delete(controller);

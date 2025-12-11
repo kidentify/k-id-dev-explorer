@@ -30,9 +30,9 @@ export default function DevToolWrapper({ apiKeyStatus }: DevToolWrapperProps) {
   const copyEventRef = useRef<((event: EventLog) => void) | undefined>(undefined)
 
   // Create a stable event handler function with useCallback
-  const addEvent = useCallback((event: string, type?: any, details?: unknown) => {
+  const addEvent = useCallback((event: string, type?: string, details?: unknown) => {
     if (addEventFnRef.current) {
-      addEventFnRef.current(event, type || 'info', details)
+      addEventFnRef.current(event, (type as RequestType) || RequestType.INFO, details)
     }
   }, [])
 
@@ -43,16 +43,16 @@ export default function DevToolWrapper({ apiKeyStatus }: DevToolWrapperProps) {
 
   /**
    * Listen for postMessage events from the embedded CDK flow iframe.
-   * 
+   *
    * The k-ID CDK flow iframe sends postMessage events to communicate with the
    * parent page. These messages can contain challengeId, sessionId, and other
    * verification state information.
-   * 
+   *
    * This is important for:
    * - Tracking verification progress
    * - Querying challenge/session status
    * - Handling verification completion
-   * 
+   *
    */
   useEffect(() => {
     // Listen for messages from the iframe
@@ -89,12 +89,12 @@ export default function DevToolWrapper({ apiKeyStatus }: DevToolWrapperProps) {
 
   /**
    * Callback to handle when a new CDK flow URL is received from the API.
-   * 
+   *
    * This is called after performCDKFlow() successfully returns a URL from the
    * k-ID API. The URL is then embedded in the IframeDisplay component.
-   * 
+   *
    * @param url - The CDK flow URL returned from the API response
-   * 
+   *
    */
   const handleIframeUrlUpdate = (url: string) => {
     setIframeUrl(url)

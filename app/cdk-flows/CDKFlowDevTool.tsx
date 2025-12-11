@@ -8,6 +8,7 @@ import VerificationForm from '../components/forms/verificationForm'
 import E2EOptionsForm from '../components/forms/e2eOptionsForm'
 import ManagePermissionsForm from '../components/forms/managePermissionsForm'
 import { useTranslation } from '../utils/translations'
+import Image from 'next/image'
 
 interface ApiKeyStatus {
   isConfigured: boolean
@@ -188,7 +189,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
         eventSource.close()
       }
     }
-  }, [])
+  }, [addEvent])
 
   // Fetch ngrok info on mount and periodically
   useEffect(() => {
@@ -202,18 +203,18 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
 
   /**
    * Handles form submission for CDK flow execution.
-   * 
+   *
    * This function:
    * 1. Extracts the selected flow type from the form
    * 2. Calls performCDKFlow() to make the API request to k-ID
    * 3. Receives the URL from the API response
    * 4. Updates the iframe URL via onIframeUrlUpdate callback
-   * 
+   *
    * The URL returned from the API is embedded in an iframe to display
    * the verification interface to the user.
-   * 
+   *
    * @param formData - Form data containing flow type and parameters
-   * 
+   *
    * @see https://docs.k-id.com/cdk/overview - CDK Overview
    * @see https://docs.k-id.com/cdk/age-verification#embedding-the-verification-interface - Embedding the CDK Flow
    */
@@ -239,7 +240,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
       }
 
       if (result.success && result.url) {
-        addEvent('api-response', RequestType.RESPONSE, { 
+        addEvent('api-response', RequestType.RESPONSE, {
           id: result.id,
           url: result.url,
           responseData: result.responseData
@@ -389,7 +390,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
               {Object.values(CDKFlow).sort().map((value, index) => {
                 const flowKey = Object.keys(CDKFlow).find(key => CDKFlow[key as keyof typeof CDKFlow] === value);
                 // Convert ACCESS_AGE_VERIFICATION to accessAgeVerification (camelCase)
-                const translationKey = flowKey 
+                const translationKey = flowKey
                   ? flowKey.toLowerCase().split('_').map((word, i) => i === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)).join('')
                   : '';
                 return (
@@ -513,11 +514,18 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
               <div className="text-center">
                 <p className="text-xs text-gray-600 mb-2">{t('tunnel.scanToAccess')}</p>
                 <div className="flex justify-center relative">
-                  <img src={qrCodeDataUrl} alt="QR Code for ngrok URL" className="border border-gray-300 rounded" />
+                  <Image
+                    src={qrCodeDataUrl}
+                    alt="QR Code for ngrok URL"
+                    width={200}
+                    height={200}
+                    className="border border-gray-300 rounded"
+                    unoptimized
+                  />
                   {/* k-ID Logo overlay */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="bg-white rounded-lg p-2 shadow-sm">
-                      <img src="/logo.svg" alt="k-ID Logo" className="w-8 h-8" />
+                      <Image src="/logo.svg" alt="k-ID Logo" width={32} height={32} />
                     </div>
                   </div>
                 </div>

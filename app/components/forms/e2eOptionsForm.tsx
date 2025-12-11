@@ -3,7 +3,7 @@ import { useTranslation } from '../../utils/translations'
 
 export default function E2EOptionsForm() {
   const { t } = useTranslation();
-  
+
   return (
     <div className="space-y-4">
       <h3 className="text-sm font-medium text-gray-700">{t('widgetOptions.title')}</h3>
