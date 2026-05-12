@@ -59,8 +59,14 @@ export default function DevToolWrapper({ apiKeyStatus }: DevToolWrapperProps) {
     // The iframe sends postMessage events during the verification process
     // Documentation: https://docs.k-id.com/docs/cdk/postmessage
     const handleMessage = (event: MessageEvent) => {
-      // Verify the message is from a k-id.com domain for security
-      if (new URL(event.origin).hostname === 'localhost' || new URL(event.origin).hostname.endsWith('.k-id.com')) {
+      // Verify the message is from a trusted CDK iframe origin (k-id.com, ageapi.org) for security
+      const hostname = new URL(event.origin).hostname
+      if (
+        hostname === 'localhost' ||
+        hostname.endsWith('.k-id.com') ||
+        hostname === 'ageapi.org' ||
+        hostname.endsWith('.ageapi.org')
+      ) {
         try {
           // Extract challengeId from the message
           // The challengeId can be used to query verification status via the API

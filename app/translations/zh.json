@@ -32,7 +32,12 @@
     "kuid": "KUID",
     "locale": "语言环境",
     "sessionId": "会话ID",
-    "trustedAdultEmail": "可信成人电子邮件"
+    "trustedAdultEmail": "可信成人电子邮件",
+    "redirectUrl": "重定向URL",
+    "facialAgeEstimation": "面部年龄估计",
+    "facialAgeEstimationHelp": "设置阈值以控制如何解释面部年龄估计结果。如果估计年龄等于或大于 passIfOver，则验证通过。如果低于 failIfUnder，则验证失败。否则，用户可以重试。",
+    "passIfOver": "通过阈值",
+    "failIfUnder": "失败阈值"
   },
   "placeholders": {
     "enterAge": "输入年龄",
@@ -43,7 +48,10 @@
     "localeExample": "例如: zh-CN",
     "sessionIdExample": "例如: b1a6482d-5242-4b4a-aa88-3fa52595a672",
     "trustedAdultEmailExample": "例如: parent@example.com",
-    "dateFormat": "YYYY-MM-DD"
+    "dateFormat": "YYYY-MM-DD",
+    "enterRedirectUrl": "例如: https://example.com/callback",
+    "passIfOverExample": "例如: 25",
+    "failIfUnderExample": "例如: 12"
   },
   "ageTypes": {
     "age": "年龄",

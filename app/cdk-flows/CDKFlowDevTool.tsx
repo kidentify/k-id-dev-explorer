@@ -39,6 +39,15 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
     CDKFlow.EMAIL_ESTIMATION,
     CDKFlow.AGE_APPEAL,
   ])
+  // Age verification flows that accept the facial age estimation tuning
+  // parameters (options.facialAgeEstimation.passIfOver / failIfUnder).
+  // See https://docs.k-id.com/agekit-plus/waterfall-flow/.
+  const facialAgeEstimationFlows = new Set([
+    CDKFlow.ACCESS_AGE_VERIFICATION,
+    CDKFlow.FACIAL_AGE_ESTIMATION,
+    CDKFlow.TRUSTED_ADULT_VERIFICATION,
+    CDKFlow.AGE_APPEAL,
+  ])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [eventLogs, setEventLogs] = useState<EventLog[]>([])
@@ -110,12 +119,17 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
     }
   }, [])
 
-  // Listen for iframe messages from k-id.com domain, console errors, and webhook events
+  // Listen for iframe messages from k-id.com / ageapi.org, console errors, and webhook events
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      // Check if the message is from a k-id.com domain
+      // Check if the message is from a trusted CDK iframe origin or localhost (for local dev)
       const hostname = new URL(event.origin).hostname;
-      if (hostname.endsWith('.k-id.com')) {
+      if (
+        hostname === 'localhost' ||
+        hostname.endsWith('.k-id.com') ||
+        hostname === 'ageapi.org' ||
+        hostname.endsWith('.ageapi.org')
+      ) {
         addEvent('js-message', RequestType.INFO, event.data)
       }
     }
@@ -401,10 +415,22 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
               })}
             </select>
           </div>
-          {ageCriteriaFlows.has(selectedFlow) && <VerificationForm ageCriteria={{}} />}
-          {selectedFlow === CDKFlow.AGE_GATE && <VerificationForm kuid={{ required: false }} />}
+          {ageCriteriaFlows.has(selectedFlow) && (
+            <VerificationForm
+              ageCriteria={{}}
+              id={{ required: false }}
+              redirectUrl={{ required: false }}
+              facialAgeEstimation={facialAgeEstimationFlows.has(selectedFlow) ? { required: false } : undefined}
+            />
+          )}
+          {selectedFlow === CDKFlow.AGE_GATE && <VerificationForm kuid={{ required: false }} id={{ required: false }} redirectUrl={{ required: false }} />}
           {selectedFlow === CDKFlow.TRUSTED_ADULT_VERIFICATION && (
-            <VerificationForm email={{ title: t('fields.trustedAdultEmail'), required: true }} id={{ required: false }} />
+            <VerificationForm
+              email={{ title: t('fields.trustedAdultEmail'), required: true }}
+              id={{ required: false }}
+              redirectUrl={{ required: false }}
+              facialAgeEstimation={{ required: false }}
+            />
           )}
           {selectedFlow === CDKFlow.END_TO_END && (
             <div className="space-y-4">
@@ -412,11 +438,12 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
                 kuid={{ required: false }}
                 dob={{ required: false }}
                 age={{ required: false }}
+                redirectUrl={{ required: false }}
               />
               <E2EOptionsForm />
             </div>
           )}
-          {selectedFlow === CDKFlow.DIRECT_NOTICES && <VerificationForm />}
+          {selectedFlow === CDKFlow.DIRECT_NOTICES && <VerificationForm id={{ required: false }} redirectUrl={{ required: false }} />}
           {selectedFlow === CDKFlow.MANAGE_SESSION_PERMISSIONS && <ManagePermissionsForm />}
           {/* Submit Button */}
           <button

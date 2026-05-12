@@ -32,7 +32,12 @@
     "kuid": "KUID",
     "locale": "Locale",
     "sessionId": "Session ID",
-    "trustedAdultEmail": "Trusted Adult Email"
+    "trustedAdultEmail": "Trusted Adult Email",
+    "redirectUrl": "Redirect URL",
+    "facialAgeEstimation": "Facial Age Estimation",
+    "facialAgeEstimationHelp": "Set thresholds to control how facial age estimation results are interpreted. If the estimated age is at or above passIfOver, verification passes. If below failIfUnder, it fails. Otherwise the user can retry.",
+    "passIfOver": "Pass if over",
+    "failIfUnder": "Fail if under"
   },
   "placeholders": {
     "enterAge": "Enter age",
@@ -43,7 +48,10 @@
     "localeExample": "e.g. en-GB",
     "sessionIdExample": "e.g. b1a6482d-5242-4b4a-aa88-3fa52595a672",
     "trustedAdultEmailExample": "e.g. parent@example.com",
-    "dateFormat": "YYYY-MM-DD"
+    "dateFormat": "YYYY-MM-DD",
+    "enterRedirectUrl": "e.g. https://example.com/callback",
+    "passIfOverExample": "e.g. 25",
+    "failIfUnderExample": "e.g. 12"
   },
   "ageTypes": {
     "age": "Age",

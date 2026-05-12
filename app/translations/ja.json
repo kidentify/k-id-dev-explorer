@@ -32,7 +32,12 @@
     "kuid": "KUID",
     "locale": "ロケール",
     "sessionId": "セッションID",
-    "trustedAdultEmail": "信頼できる大人のメールアドレス"
+    "trustedAdultEmail": "信頼できる大人のメールアドレス",
+    "redirectUrl": "リダイレクトURL",
+    "facialAgeEstimation": "顔認証による年齢推定",
+    "facialAgeEstimationHelp": "顔認証による年齢推定結果の解釈方法を制御するしきい値を設定します。推定年齢が passIfOver 以上の場合、検証は合格になります。failIfUnder を下回る場合は不合格となります。それ以外の場合、ユーザーは再試行できます。",
+    "passIfOver": "合格しきい値",
+    "failIfUnder": "不合格しきい値"
   },
   "placeholders": {
     "enterAge": "年齢を入力",
@@ -43,7 +48,10 @@
     "localeExample": "例: ja-JP",
     "sessionIdExample": "例: b1a6482d-5242-4b4a-aa88-3fa52595a672",
     "trustedAdultEmailExample": "例: parent@example.com",
-    "dateFormat": "YYYY-MM-DD"
+    "dateFormat": "YYYY-MM-DD",
+    "enterRedirectUrl": "例: https://example.com/callback",
+    "passIfOverExample": "例: 25",
+    "failIfUnderExample": "例: 12"
   },
   "ageTypes": {
     "age": "年齢",
