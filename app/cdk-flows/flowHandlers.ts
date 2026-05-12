@@ -1,4 +1,4 @@
-import { AgeType, CDKFlow, FlowHandler, FormEntryKey, RequestBody, RequestBodySubject } from './types'
+import { AgeType, CDKFlow, FlowHandler, FormEntryKey, RequestBody, RequestBodyE2EOptions, RequestBodyFacialAgeEstimationOptions, RequestBodySubject } from './types'
 import { API_CONFIG } from '../utils/constants'
 import { performVerification } from './verificationActions'
 
@@ -35,6 +35,9 @@ function getBody(formData: FormData): RequestBody {
   const skipVerification = formData.get(FormEntryKey.SKIP_VERIFICATION) === 'true'
   const skipPermissions = formData.get(FormEntryKey.SKIP_PERMISSIONS) === 'true'
   const skipPreferences = formData.get(FormEntryKey.SKIP_PREFERENCES) === 'true'
+  const redirectURL = formData.get(FormEntryKey.REDIRECT_URL) as string
+  const passIfOver = formData.get(FormEntryKey.PASS_IF_OVER) as string
+  const failIfUnder = formData.get(FormEntryKey.FAIL_IF_UNDER) as string
 
   const criteria = ageType ? (ageType === AgeType.AGE ? { age: parseInt(ageCriteria) } : { ageCategory }) : null
 
@@ -85,6 +88,16 @@ function getBody(formData: FormData): RequestBody {
   if (skipVerification) options.skipVerification = true
   if (skipPermissions) options.skipPermissions = true
   if (skipPreferences) options.skipPreferences = true
+  if (redirectURL) options.redirectUrl = redirectURL
+
+  // Build facialAgeEstimation options if any of its fields are set.
+  // See https://docs.k-id.com/agekit-plus/waterfall-flow/ for details.
+  const facialAgeEstimation: RequestBodyFacialAgeEstimationOptions = {}
+  if (passIfOver) facialAgeEstimation.passIfOver = parseInt(passIfOver)
+  if (failIfUnder) facialAgeEstimation.failIfUnder = parseInt(failIfUnder)
+  if (Object.keys(facialAgeEstimation).length > 0) {
+    options.facialAgeEstimation = facialAgeEstimation
+  }
 
   if (Object.keys(options).length > 0) {
     body.options = options
@@ -104,6 +117,7 @@ function getE2EBody(formData: FormData): {
     skipVerification?: boolean
     skipPermissions?: boolean
     skipPreferences?: boolean
+    redirectUrl?: string
   }
 } {
   const jurisdiction = formData.get(FormEntryKey.JURISDICTION) as string
@@ -115,6 +129,7 @@ function getE2EBody(formData: FormData): {
   const skipVerification = formData.get(FormEntryKey.SKIP_VERIFICATION) === 'true'
   const skipPermissions = formData.get(FormEntryKey.SKIP_PERMISSIONS) === 'true'
   const skipPreferences = formData.get(FormEntryKey.SKIP_PREFERENCES) === 'true'
+  const redirectURL = formData.get(FormEntryKey.REDIRECT_URL) as string
 
   const body: {
     jurisdiction: string
@@ -127,6 +142,7 @@ function getE2EBody(formData: FormData): {
       skipVerification?: boolean
       skipPermissions?: boolean
       skipPreferences?: boolean
+      redirectUrl?: string
     }
   } = {
     jurisdiction,
@@ -151,12 +167,14 @@ function getE2EBody(formData: FormData): {
     skipVerification?: boolean
     skipPermissions?: boolean
     skipPreferences?: boolean
+    redirectUrl?: string
   } = {}
   if (skipSteps) options.skipSteps = true
   if (skipDataNotices) options.skipDataNotices = true
   if (skipVerification) options.skipVerification = true
   if (skipPermissions) options.skipPermissions = true
   if (skipPreferences) options.skipPreferences = true
+  if (redirectURL) options.redirectUrl = redirectURL
 
   if (Object.keys(options).length > 0) {
     body.options = options

@@ -55,6 +55,9 @@ export enum FormEntryKey {
   SKIP_VERIFICATION = 'skipVerification',
   SKIP_PERMISSIONS = 'skipPermissions',
   SKIP_PREFERENCES = 'skipPreferences',
+  REDIRECT_URL = 'redirectUrl',
+  PASS_IF_OVER = 'passIfOver',
+  FAIL_IF_UNDER = 'failIfUnder',
 }
 
 export enum CDKFlow {
@@ -84,12 +87,19 @@ export type RequestBodySubject = {
   claimedDateOfBirth?: string
 }
 
+export type RequestBodyFacialAgeEstimationOptions = {
+  passIfOver?: number
+  failIfUnder?: number
+}
+
 export type RequestBodyE2EOptions = {
   skipSteps?: boolean
   skipDataNotices?: boolean
   skipVerification?: boolean
   skipPermissions?: boolean
   skipPreferences?: boolean
+  redirectUrl?: string
+  facialAgeEstimation?: RequestBodyFacialAgeEstimationOptions
 }
 
 export type RequestBody = {

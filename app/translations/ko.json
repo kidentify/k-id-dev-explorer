@@ -32,7 +32,12 @@
     "kuid": "KUID",
     "locale": "로케일",
     "sessionId": "세션 ID",
-    "trustedAdultEmail": "신뢰할 수 있는 성인 이메일"
+    "trustedAdultEmail": "신뢰할 수 있는 성인 이메일",
+    "redirectUrl": "리디렉션 URL",
+    "facialAgeEstimation": "얼굴 인식 연령 추정",
+    "facialAgeEstimationHelp": "얼굴 인식 연령 추정 결과를 해석하는 방법을 제어하는 임계값을 설정합니다. 추정 연령이 passIfOver 이상이면 검증은 통과됩니다. failIfUnder 미만이면 실패합니다. 그 외에는 사용자가 재시도할 수 있습니다.",
+    "passIfOver": "통과 임계값",
+    "failIfUnder": "실패 임계값"
   },
   "placeholders": {
     "enterAge": "나이 입력",
@@ -43,7 +48,10 @@
     "localeExample": "예: ko-KR",
     "sessionIdExample": "예: b1a6482d-5242-4b4a-aa88-3fa52595a672",
     "trustedAdultEmailExample": "예: parent@example.com",
-    "dateFormat": "YYYY-MM-DD"
+    "dateFormat": "YYYY-MM-DD",
+    "enterRedirectUrl": "예: https://example.com/callback",
+    "passIfOverExample": "예: 25",
+    "failIfUnderExample": "예: 12"
   },
   "ageTypes": {
     "age": "나이",

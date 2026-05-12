@@ -32,11 +32,11 @@ export default function IframeDisplay({ iframeUrl }: IframeDisplayProps) {
       {iframeUrl ? (
         // Embed the CDK flow URL in an iframe
         // The URL is obtained from the API response (see performCDKFlow in serverActions.ts)
-        <div className="w-full h-[850px] border border-gray-300 rounded-lg overflow-hidden">
+        <div className="w-full h-[calc(100vh-220px)] min-h-[900px] border border-gray-300 rounded-lg overflow-hidden">
           <iframe
             src={iframeUrl}
             title="CDK Flow"
-            className="w-full h-full"
+            className="block w-full h-full"
             // Required permissions for CDK flows
             // Camera: For facial age estimation and ID verification
             // Autoplay: For media playback during verification

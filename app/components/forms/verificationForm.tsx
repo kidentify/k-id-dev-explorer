@@ -17,6 +17,8 @@ export type VerificationFormProps = {
   id?: FormEntry,
   kuid?: FormEntry,
   locale?: FormEntry,
+  redirectUrl?: FormEntry,
+  facialAgeEstimation?: FormEntry,
 }
 
 export default function VerificationForm(props: VerificationFormProps) {
@@ -132,6 +134,59 @@ export default function VerificationForm(props: VerificationFormProps) {
             placeholder={t('placeholders.localeExample')}
             required={props.locale.required}
           />
+        </div>
+      )}
+      {props.redirectUrl && (
+        <div className="mb-2">
+          <label htmlFor={FormEntryKey.REDIRECT_URL} className="block text-sm font-medium text-gray-700 mb-2">
+            {(props.redirectUrl.title ?? t('fields.redirectUrl')) + (!props.redirectUrl.required ? ` ${t('common.optional')}` : '')}
+          </label>
+          <input
+            type="url"
+            id={FormEntryKey.REDIRECT_URL}
+            name={FormEntryKey.REDIRECT_URL}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            placeholder={t('placeholders.enterRedirectUrl')}
+            required={props.redirectUrl.required}
+          />
+        </div>
+      )}
+      {props.facialAgeEstimation && (
+        <div className="mb-2">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {(props.facialAgeEstimation.title ?? t('fields.facialAgeEstimation')) + (!props.facialAgeEstimation.required ? ` ${t('common.optional')}` : '')}
+          </label>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label htmlFor={FormEntryKey.PASS_IF_OVER} className="block text-xs font-medium text-gray-600 mb-1">
+                {t('fields.passIfOver')}
+              </label>
+              <input
+                type="number"
+                id={FormEntryKey.PASS_IF_OVER}
+                name={FormEntryKey.PASS_IF_OVER}
+                min="0"
+                max="100"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder={t('placeholders.passIfOverExample')}
+              />
+            </div>
+            <div>
+              <label htmlFor={FormEntryKey.FAIL_IF_UNDER} className="block text-xs font-medium text-gray-600 mb-1">
+                {t('fields.failIfUnder')}
+              </label>
+              <input
+                type="number"
+                id={FormEntryKey.FAIL_IF_UNDER}
+                name={FormEntryKey.FAIL_IF_UNDER}
+                min="0"
+                max="100"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder={t('placeholders.failIfUnderExample')}
+              />
+            </div>
+          </div>
+          <p className="text-xs text-gray-500 mt-1">{t('fields.facialAgeEstimationHelp')}</p>
         </div>
       )}
     </div>
