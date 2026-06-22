@@ -37,7 +37,8 @@
     "facialAgeEstimation": "얼굴 인식 연령 추정",
     "facialAgeEstimationHelp": "얼굴 인식 연령 추정 결과를 해석하는 방법을 제어하는 임계값을 설정합니다. 추정 연령이 passIfOver 이상이면 검증은 통과됩니다. failIfUnder 미만이면 실패합니다. 그 외에는 사용자가 재시도할 수 있습니다.",
     "passIfOver": "통과 임계값",
-    "failIfUnder": "실패 임계값"
+    "failIfUnder": "실패 임계값",
+    "permissionName": "권한 이름"
   },
   "placeholders": {
     "enterAge": "나이 입력",
@@ -51,7 +52,8 @@
     "dateFormat": "YYYY-MM-DD",
     "enterRedirectUrl": "예: https://example.com/callback",
     "passIfOverExample": "예: 25",
-    "failIfUnderExample": "예: 12"
+    "failIfUnderExample": "예: 12",
+    "enterPermissionName": "예: loot-boxes-paid-gameplay-impacting"
   },
   "ageTypes": {
     "age": "나이",
@@ -73,7 +75,8 @@
     "endToEnd": "VPC 종단간",
     "directNotices": "직접 알림",
     "manageSessionPermissions": "세션 권한 관리",
-    "ageAppeal": "연령 항소"
+    "ageAppeal": "연령 항소",
+    "sessionUpgradeAgeAssurance": "세션 업그레이드 연령 보증"
   },
   "widgetOptions": {
     "title": "위젯 옵션",

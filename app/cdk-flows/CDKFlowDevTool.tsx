@@ -1,5 +1,5 @@
 import { formatErrorForDisplay } from '../utils/errorUtils'
-import { AddEventMethod, CDKFlow, EventLog, RequestType } from './types'
+import { AddEventMethod, CDKFlow, EventLog, FormEntryKey, RequestType } from './types'
 import { performCDKFlow } from './serverActions'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import QRCode from 'qrcode'
@@ -248,20 +248,25 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
       // Documentation: https://docs.k-id.com/reference/api/overview
       const result = await performCDKFlow(flow, formData)
 
-      // Log the actual API request from the server action
-      if (result.requestData) {
-        addEvent('api-request', RequestType.REQUEST, result.requestData)
+      if (result.steps) {
+        for (const step of result.steps) {
+          addEvent('api-request', RequestType.REQUEST, step.request)
+          addEvent('api-response', RequestType.RESPONSE, { responseData: step.response })
+        }
+      } else {
+        if (result.requestData) {
+          addEvent('api-request', RequestType.REQUEST, result.requestData)
+        }
       }
 
       if (result.success && result.url) {
-        addEvent('api-response', RequestType.RESPONSE, {
-          id: result.id,
-          url: result.url,
-          responseData: result.responseData
-        })
-        // The API response includes a URL that should be embedded in an iframe
-        // This URL points to the k-ID CDK flow interface
-        // Documentation: https://docs.k-id.com/cdk/age-verification#embedding-the-verification-interface
+        if (!result.steps) {
+          addEvent('api-response', RequestType.RESPONSE, {
+            id: result.id,
+            url: result.url,
+            responseData: result.responseData
+          })
+        }
         onIframeUrlUpdate?.(result.url)
       } else {
         const errorData = { error: result.error }
@@ -445,6 +450,25 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
           )}
           {selectedFlow === CDKFlow.DIRECT_NOTICES && <VerificationForm id={{ required: false }} redirectUrl={{ required: false }} />}
           {selectedFlow === CDKFlow.MANAGE_SESSION_PERMISSIONS && <ManagePermissionsForm />}
+          {selectedFlow === CDKFlow.SESSION_UPGRADE_AGE_ASSURANCE && (
+            <div className="space-y-4">
+              <VerificationForm defaultJurisdiction="BR" age={{ required: true, defaultValue: "18" }} redirectUrl={{ required: false }} />
+              <div className="mb-2">
+                <label htmlFor={FormEntryKey.PERMISSION_NAME} className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('fields.permissionName')}
+                </label>
+                <input
+                  type="text"
+                  id={FormEntryKey.PERMISSION_NAME}
+                  name={FormEntryKey.PERMISSION_NAME}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  placeholder={t('placeholders.enterPermissionName')}
+                  defaultValue="loot-boxes-paid-gameplay-impacting"
+                  required
+                />
+              </div>
+            </div>
+          )}
           {/* Submit Button */}
           <button
             type="submit"

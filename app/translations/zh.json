@@ -37,7 +37,8 @@
     "facialAgeEstimation": "面部年龄估计",
     "facialAgeEstimationHelp": "设置阈值以控制如何解释面部年龄估计结果。如果估计年龄等于或大于 passIfOver，则验证通过。如果低于 failIfUnder，则验证失败。否则，用户可以重试。",
     "passIfOver": "通过阈值",
-    "failIfUnder": "失败阈值"
+    "failIfUnder": "失败阈值",
+    "permissionName": "权限名称"
   },
   "placeholders": {
     "enterAge": "输入年龄",
@@ -51,7 +52,8 @@
     "dateFormat": "YYYY-MM-DD",
     "enterRedirectUrl": "例如: https://example.com/callback",
     "passIfOverExample": "例如: 25",
-    "failIfUnderExample": "例如: 12"
+    "failIfUnderExample": "例如: 12",
+    "enterPermissionName": "例如: loot-boxes-paid-gameplay-impacting"
   },
   "ageTypes": {
     "age": "年龄",
@@ -73,7 +75,8 @@
     "endToEnd": "VPC端到端",
     "directNotices": "直接通知",
     "manageSessionPermissions": "管理会话权限",
-    "ageAppeal": "年龄申诉"
+    "ageAppeal": "年龄申诉",
+    "sessionUpgradeAgeAssurance": "会话升级年龄保证"
   },
   "widgetOptions": {
     "title": "小部件选项",

@@ -60,5 +60,13 @@ export const API_CONFIG = {
     // Age Appeal endpoint - allows users to appeal age verification decisions
     // Documentation: https://docs.k-id.com/reference/api/endpoints/age-appeal
     ageAppeal: '/api/v1/age-verification/perform-age-appeal',
+
+    // Age Gate Check endpoint - checks age gate and returns a session
+    // Documentation: https://docs.k-id.com/reference/api/endpoints/age-gate-check
+    ageGateCheck: '/api/v1/age-gate/check',
+
+    // Session Upgrade endpoint - upgrades a session with requested permissions
+    // Documentation: https://docs.k-id.com/reference/api/endpoints/session-upgrade
+    sessionUpgrade: '/api/v1/session/upgrade',
   },
 } as const

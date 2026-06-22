@@ -37,7 +37,8 @@
     "facialAgeEstimation": "Facial Age Estimation",
     "facialAgeEstimationHelp": "Set thresholds to control how facial age estimation results are interpreted. If the estimated age is at or above passIfOver, verification passes. If below failIfUnder, it fails. Otherwise the user can retry.",
     "passIfOver": "Pass if over",
-    "failIfUnder": "Fail if under"
+    "failIfUnder": "Fail if under",
+    "permissionName": "Permission Name"
   },
   "placeholders": {
     "enterAge": "Enter age",
@@ -51,7 +52,8 @@
     "dateFormat": "YYYY-MM-DD",
     "enterRedirectUrl": "e.g. https://example.com/callback",
     "passIfOverExample": "e.g. 25",
-    "failIfUnderExample": "e.g. 12"
+    "failIfUnderExample": "e.g. 12",
+    "enterPermissionName": "e.g. loot-boxes-paid-gameplay-impacting"
   },
   "ageTypes": {
     "age": "Age",
@@ -73,7 +75,8 @@
     "endToEnd": "VPC End-to-End",
     "directNotices": "Direct Notices",
     "manageSessionPermissions": "Manage Session Permissions",
-    "ageAppeal": "Age Appeal"
+    "ageAppeal": "Age Appeal",
+    "sessionUpgradeAgeAssurance": "Session Upgrade Age Assurance"
   },
   "widgetOptions": {
     "title": "Widget Options",

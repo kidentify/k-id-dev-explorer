@@ -40,6 +40,10 @@ export async function performCDKFlow(flow: CDKFlow, formData: FormData): Promise
     // This calls performVerification() which makes the HTTP request to k-ID
     const result = await flowHandlers[flow].performAction(requestData)
 
+    if (result.steps) {
+      return result
+    }
+
     return {
       ...result,
       requestData: {

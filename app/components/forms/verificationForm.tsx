@@ -12,13 +12,14 @@ export type FormEntry = {
 export type VerificationFormProps = {
   ageCriteria?: FormEntry,
   dob?: FormEntry,
-  age?: FormEntry,
+  age?: FormEntry & { defaultValue?: string },
   email?: FormEntry,
   id?: FormEntry,
   kuid?: FormEntry,
   locale?: FormEntry,
   redirectUrl?: FormEntry,
   facialAgeEstimation?: FormEntry,
+  defaultJurisdiction?: string,
 }
 
 export default function VerificationForm(props: VerificationFormProps) {
@@ -27,7 +28,7 @@ export default function VerificationForm(props: VerificationFormProps) {
 
   return (
     <div>
-      <Jurisdiction />
+      <Jurisdiction defaultValue={props.defaultJurisdiction} />
       {props.ageCriteria && <AgeForm value={ageType} onChange={setAgeType} title={props.ageCriteria.title} />}
       {props.dob && (
         <div className="mb-2">
@@ -65,6 +66,7 @@ export default function VerificationForm(props: VerificationFormProps) {
             max="120"
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             placeholder={t('placeholders.enterClaimedAge')}
+            defaultValue={props.age?.defaultValue}
             onChange={(e) => {
               const dobInput = document.getElementById('dob') as HTMLInputElement | null
               if (dobInput) {

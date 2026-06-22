@@ -37,7 +37,8 @@
     "facialAgeEstimation": "顔認証による年齢推定",
     "facialAgeEstimationHelp": "顔認証による年齢推定結果の解釈方法を制御するしきい値を設定します。推定年齢が passIfOver 以上の場合、検証は合格になります。failIfUnder を下回る場合は不合格となります。それ以外の場合、ユーザーは再試行できます。",
     "passIfOver": "合格しきい値",
-    "failIfUnder": "不合格しきい値"
+    "failIfUnder": "不合格しきい値",
+    "permissionName": "パーミッション名"
   },
   "placeholders": {
     "enterAge": "年齢を入力",
@@ -51,7 +52,8 @@
     "dateFormat": "YYYY-MM-DD",
     "enterRedirectUrl": "例: https://example.com/callback",
     "passIfOverExample": "例: 25",
-    "failIfUnderExample": "例: 12"
+    "failIfUnderExample": "例: 12",
+    "enterPermissionName": "例: loot-boxes-paid-gameplay-impacting"
   },
   "ageTypes": {
     "age": "年齢",
@@ -73,7 +75,8 @@
     "endToEnd": "VPCエンドツーエンド",
     "directNotices": "直接通知",
     "manageSessionPermissions": "セッション権限の管理",
-    "ageAppeal": "年齢申し立て"
+    "ageAppeal": "年齢申し立て",
+    "sessionUpgradeAgeAssurance": "セッションアップグレード年齢保証"
   },
   "widgetOptions": {
     "title": "ウィジェットオプション",

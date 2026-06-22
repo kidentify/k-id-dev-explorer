@@ -8,9 +8,9 @@ function getLabelFromEntry(entry: [string, string | string[]]): string {
   return typeof entry[1] === 'string' ? entry[1] : entry[1][0]
 }
 
-export default function Jurisdiction() {
+export default function Jurisdiction({ defaultValue = "US" }: { defaultValue?: string }) {
   const { t } = useTranslation();
-  const [value, setValue] = useState<string>("US")
+  const [value, setValue] = useState<string>(defaultValue)
 
   const sortedJurisdictions = useMemo(() => {
     return Object.entries(jurisdictions).sort((a, b) => {

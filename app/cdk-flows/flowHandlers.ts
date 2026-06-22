@@ -1,6 +1,6 @@
 import { AgeType, CDKFlow, FlowHandler, FormEntryKey, RequestBody, RequestBodyE2EOptions, RequestBodyFacialAgeEstimationOptions, RequestBodySubject } from './types'
 import { API_CONFIG } from '../utils/constants'
-import { performVerification } from './verificationActions'
+import { performVerification, performSessionUpgradeAgeAssurance } from './verificationActions'
 
 /**
  * Builds the request body for CDK flow API calls from form data.
@@ -191,6 +191,25 @@ function getManagePermissionsBody(formData: FormData): { sessionId: string; emai
     sessionId,
     email
   }
+}
+
+function getSessionUpgradeBody(formData: FormData): {
+  jurisdiction: string
+  age: number
+  permissionName: string
+  redirectUrl?: string
+} {
+  const jurisdiction = formData.get(FormEntryKey.JURISDICTION) as string
+  const age = parseInt(formData.get(FormEntryKey.AGE) as string)
+  const permissionName = formData.get(FormEntryKey.PERMISSION_NAME) as string
+  const redirectUrl = formData.get(FormEntryKey.REDIRECT_URL) as string
+
+  const body: { jurisdiction: string; age: number; permissionName: string; redirectUrl?: string } = {
+    jurisdiction, age, permissionName,
+  }
+  if (redirectUrl) body.redirectUrl = redirectUrl
+
+  return body
 }
 
 /**
@@ -461,5 +480,19 @@ export const flowHandlers: Record<CDKFlow, FlowHandler> = {
       }
     },
     performAction: performVerification,
+  },
+  [CDKFlow.SESSION_UPGRADE_AGE_ASSURANCE]: {
+    buildRequestData: (formData: FormData, apiUrl: string, apiKey: string) => {
+      return {
+        method: 'POST',
+        url: `${apiUrl}${API_CONFIG.endpoints.ageGateCheck}`,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: getSessionUpgradeBody(formData),
+      }
+    },
+    performAction: performSessionUpgradeAgeAssurance,
   },
 }
