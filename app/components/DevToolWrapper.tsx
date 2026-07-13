@@ -19,6 +19,8 @@ interface DevToolWrapperProps {
 
 export default function DevToolWrapper({ apiKeyStatus }: DevToolWrapperProps) {
   const [iframeUrl, setIframeUrl] = useState('')
+  const [shortUrl, setShortUrl] = useState<string | undefined>(undefined)
+  const [verificationId, setVerificationId] = useState<string | undefined>(undefined)
   const [challengeId, setChallengeId] = useState<string | null>(null)
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [eventLogs, setEventLogs] = useState<EventLog[]>([])
@@ -102,11 +104,21 @@ export default function DevToolWrapper({ apiKeyStatus }: DevToolWrapperProps) {
    * @param url - The CDK flow URL returned from the API response
    *
    */
-  const handleIframeUrlUpdate = (url: string) => {
+  const handleIframeUrlUpdate = (
+    url: string,
+    newShortUrl?: string,
+    newVerificationId?: string,
+    newChallengeId?: string,
+    newSessionId?: string,
+  ) => {
     setIframeUrl(url)
-    // Reset information when iframe URL changes
-    setChallengeId(null)
-    setSessionId(null)
+    setShortUrl(newShortUrl)
+    setVerificationId(newVerificationId)
+    // Seed challenge / session ids from the response body for server-side CDK
+    // Custom flows (Age Gate Check); otherwise clear so ChallengeControls /
+    // SessionControls unmount and reset.
+    setChallengeId(newChallengeId ?? null)
+    setSessionId(newSessionId ?? null)
   }
 
   // Event handlers for EventsTraffic component
@@ -144,7 +156,13 @@ export default function DevToolWrapper({ apiKeyStatus }: DevToolWrapperProps) {
 
       {/* Middle Column - Iframe */}
       <div className="flex flex-col gap-4">
-        <IframeDisplay iframeUrl={iframeUrl} />
+        <IframeDisplay
+          iframeUrl={iframeUrl}
+          shortUrl={shortUrl}
+          verificationId={verificationId}
+          challengeId={challengeId}
+          addEvent={addEvent}
+        />
         <ChallengeControls challengeId={challengeId} apiKeyStatus={apiKeyStatus} addEvent={addEvent} />
         <SessionControls sessionId={sessionId} apiKeyStatus={apiKeyStatus} addEvent={addEvent} />
       </div>

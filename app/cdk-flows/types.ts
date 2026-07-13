@@ -32,7 +32,10 @@ export interface FlowResultStep {
 export interface FlowResult {
   success: boolean
   url?: string
+  shortUrl?: string
   id?: string
+  challengeId?: string
+  sessionId?: string
   responseData?: unknown
   error?: unknown
   requestData?: {
@@ -45,7 +48,17 @@ export interface FlowResult {
 
 export interface FlowHandler {
   buildRequestData: (formData: FormData, apiUrl: string, apiKey: string) => FlowRequestData
-  performAction: (formData: FlowRequestData) => Promise<{ success: boolean; url?: string; id?: string; responseData?: unknown; error?: unknown; steps?: FlowResultStep[] }>
+  performAction: (formData: FlowRequestData) => Promise<{
+    success: boolean
+    url?: string
+    shortUrl?: string
+    id?: string
+    challengeId?: string
+    sessionId?: string
+    responseData?: unknown
+    error?: unknown
+    steps?: FlowResultStep[]
+  }>
 }
 
 export enum FormEntryKey {
@@ -85,6 +98,7 @@ export enum CDKFlow {
   MANAGE_SESSION_PERMISSIONS = 'Manage Session Permissions',
   AGE_APPEAL = 'Age Appeal',
   SESSION_UPGRADE_AGE_ASSURANCE = 'Session Upgrade Age Assurance',
+  AGE_GATE_CHECK = 'Age Gate Check',
 }
 
 export type RequestBodyCriteria = {

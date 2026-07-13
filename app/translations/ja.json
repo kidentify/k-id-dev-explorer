@@ -76,7 +76,28 @@
     "directNotices": "直接通知",
     "manageSessionPermissions": "セッション権限の管理",
     "ageAppeal": "年齢申し立て",
-    "sessionUpgradeAgeAssurance": "セッションアップグレード年齢保証"
+    "sessionUpgradeAgeAssurance": "セッションアップグレード年齢保証",
+    "ageGateCheck": "年齢ゲートチェック"
+  },
+  "preview": {
+    "device": "デバイス:",
+    "orientation": "向き:",
+    "mobile": "モバイル",
+    "tablet": "タブレット",
+    "portrait": "縦向き",
+    "landscape": "横向き"
+  },
+  "console": {
+    "title": "コンソール",
+    "scanOnPhone": "スマホでスキャン",
+    "shortUrl": "短縮URL",
+    "widgetUrl": "ウィジェットURL",
+    "copyUrl": "URLをコピー",
+    "copied": "コピーしました",
+    "openInNewTab": "新しいタブで開く",
+    "waitingForWebhook": "Verification.Result Webhookを待機中…",
+    "verified": "✓ 確認済み",
+    "notVerified": "✗ 未確認"
   },
   "widgetOptions": {
     "title": "ウィジェットオプション",

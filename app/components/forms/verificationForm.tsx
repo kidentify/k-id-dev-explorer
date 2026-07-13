@@ -132,10 +132,21 @@ export default function VerificationForm(props: VerificationFormProps) {
             type="text"
             id={FormEntryKey.LOCALE}
             name={FormEntryKey.LOCALE}
+            list="locale-suggestions"
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             placeholder={t('placeholders.localeExample')}
             required={props.locale.required}
           />
+          <datalist id="locale-suggestions">
+            <option value="en">English</option>
+            <option value="zh">中文</option>
+            <option value="pt-BR">Português (Brasil)</option>
+            <option value="ja">日本語</option>
+            <option value="ko">한국어</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+          </datalist>
         </div>
       )}
       {props.redirectUrl && (

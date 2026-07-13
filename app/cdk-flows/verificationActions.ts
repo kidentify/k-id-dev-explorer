@@ -21,7 +21,16 @@ import { API_CONFIG } from '../utils/constants'
  */
 export async function performVerification(
   requestData: FlowRequestData,
-): Promise<{ success: boolean; url?: string; id?: string; responseData?: unknown; error?: unknown }> {
+): Promise<{
+  success: boolean
+  url?: string
+  shortUrl?: string
+  id?: string
+  challengeId?: string
+  sessionId?: string
+  responseData?: unknown
+  error?: unknown
+}> {
   try {
     // Serialize the request body to JSON
     const requestBody = JSON.stringify(requestData.body)
@@ -58,19 +67,28 @@ export async function performVerification(
     const data = await response.json()
     console.log('Success Response Body:', JSON.stringify(data, null, 2))
 
-    // The API response includes a URL that should be embedded in an iframe
-    // This URL points to the k-ID CDK flow interface where users complete verification
-    if (data.url) {
-      // Return both URL and ID if available, plus full response data
-      // The URL should be set as the src attribute of an iframe element
+    // The API response may include a top-level `url` (perform-* endpoints) or
+    // a nested `challenge.url` (age-gate/check when age assurance is needed).
+    // Either way we surface the URL so it can be embedded in an iframe. When
+    // the response carries a challenge or session id (server-side CDK Custom
+    // flows), we thread those out so the Console section can poll status.
+    const topUrl: string | undefined = data.url
+    const challengeUrl: string | undefined = data.challenge?.url
+    const url = topUrl ?? challengeUrl
+    const challengeId: string | undefined = data.challenge?.challengeId
+    const sessionId: string | undefined = data.session?.sessionId
+    if (url || challengeId || sessionId) {
       return {
         success: true,
         id: data.id,
-        url: data.url,  // This URL is used to embed the CDK flow in an iframe
-        responseData: data
+        url,
+        shortUrl: data.shortUrl,
+        challengeId,
+        sessionId,
+        responseData: data,
       }
     } else {
-      throw new Error('No URL received from the API')
+      throw new Error('No URL, challenge, or session received from the API')
     }
   } catch (error) {
     console.error('Error calling API:', error)
