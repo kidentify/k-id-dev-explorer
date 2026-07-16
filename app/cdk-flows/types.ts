@@ -6,11 +6,34 @@ export enum RequestType {
   WEBHOOK = 'webhook',
 }
 
+/**
+ * Loosely-typed payload attached to an {@link EventLog}. The shape varies by
+ * event (api-request / api-response / webhook-received / *-error / js-message),
+ * so the commonly-read fields are declared and an index signature keeps
+ * arbitrary writers valid. Declared as typed rather than `unknown` so the event
+ * log/copy/download code can read fields without truthiness narrowing to `{}`.
+ */
+export interface EventDetails {
+  method?: string
+  url?: string
+  body?: unknown
+  headers?: unknown
+  id?: string
+  shortUrl?: string
+  challengeId?: string
+  sessionId?: string
+  responseData?: unknown
+  error?: unknown
+  signatureStatus?: string
+  timestamp?: string
+  [key: string]: unknown
+}
+
 export interface EventLog {
   timestamp: string
   event: string
   type?: RequestType
-  details?: unknown
+  details?: EventDetails
 }
 
 export interface FlowRequestData {
@@ -138,7 +161,7 @@ export type RequestBody = {
   options?: RequestBodyE2EOptions
 }
 
-export type AddEventMethod = (event: string, type: RequestType, details?: unknown) => void
+export type AddEventMethod = (event: string, type: RequestType, details?: EventDetails) => void
 
 export enum AgeType {
   AGE = 'Age',

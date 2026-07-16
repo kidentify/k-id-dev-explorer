@@ -1,5 +1,5 @@
 import { formatErrorForDisplay } from '../utils/errorUtils'
-import { AddEventMethod, CDKFlow, EventLog, FormEntryKey, RequestType } from './types'
+import { AddEventMethod, CDKFlow, EventDetails, EventLog, FormEntryKey, RequestType } from './types'
 import { performCDKFlow } from './serverActions'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import QRCode from 'qrcode'
@@ -61,7 +61,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('')
 
   // Add event to log - use useCallback to ensure the function reference is stable
-  const addEvent = useCallback((event: string, type: RequestType = RequestType.INFO, details?: unknown) => {
+  const addEvent = useCallback((event: string, type: RequestType = RequestType.INFO, details?: EventDetails) => {
     const newEvent: EventLog = {
       timestamp: new Date().toLocaleTimeString(),
       event,
@@ -362,10 +362,10 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
       }
     } else if (event.event === 'api-response') {
       // For API responses, copy the response data
-      textToCopy = JSON.stringify(event.details.responseData, null, 2)
+      textToCopy = JSON.stringify(event.details?.responseData, null, 2)
     } else if (event.event === 'webhook-received') {
       // For webhook events, copy just the body payload
-      textToCopy = JSON.stringify(event.details.body, null, 2)
+      textToCopy = JSON.stringify(event.details?.body, null, 2)
     } else if (event.event === 'js-message') {
       // For JS messages, copy just the message data
       textToCopy = JSON.stringify(event.details, null, 2)

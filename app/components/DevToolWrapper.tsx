@@ -6,7 +6,7 @@ import IframeDisplay from './IframeDisplay'
 import ChallengeControls from './ChallengeControls'
 import SessionControls from './SessionControls'
 import EventsTraffic from './EventsTraffic'
-import { AddEventMethod, EventLog, RequestType } from '../cdk-flows/types'
+import { AddEventMethod, EventDetails, EventLog, RequestType } from '../cdk-flows/types'
 
 interface ApiKeyStatus {
   isConfigured: boolean
@@ -32,7 +32,7 @@ export default function DevToolWrapper({ apiKeyStatus }: DevToolWrapperProps) {
   const copyEventRef = useRef<((event: EventLog) => void) | undefined>(undefined)
 
   // Create a stable event handler function with useCallback
-  const addEvent = useCallback((event: string, type?: string, details?: unknown) => {
+  const addEvent = useCallback((event: string, type?: string, details?: EventDetails) => {
     if (addEventFnRef.current) {
       addEventFnRef.current(event, (type as RequestType) || RequestType.INFO, details)
     }

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { getSessionStatus } from '../cdk-flows/serverActions'
-import { RequestType } from '../cdk-flows/types'
+import { EventDetails, RequestType } from '../cdk-flows/types'
 
 interface ApiKeyStatus {
   isConfigured: boolean
@@ -12,7 +12,7 @@ interface ApiKeyStatus {
 interface SessionControlsProps {
   sessionId: string | null
   apiKeyStatus: ApiKeyStatus
-  addEvent?: (event: string, type?: RequestType, details?: unknown) => void
+  addEvent?: (event: string, type?: RequestType, details?: EventDetails) => void
 }
 
 export default function SessionControls({ sessionId, apiKeyStatus, addEvent }: SessionControlsProps) {
