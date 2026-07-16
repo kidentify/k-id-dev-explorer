@@ -67,14 +67,14 @@
     "accessAgeVerification": "访问年龄验证",
     "facialAgeEstimation": "面部年龄估计",
     "trustedAdultVerification": "可信成人验证",
-    "ageGate": "年龄门控",
+    "ageGate": "年龄门控小部件",
     "idVerification": "ID验证",
     "ageKeyVerification": "AgeKey验证",
     "connectIdVerification": "ConnectID验证",
     "emailEstimation": "电子邮件年龄估计",
-    "endToEnd": "VPC端到端",
-    "directNotices": "直接通知",
-    "manageSessionPermissions": "管理会话权限",
+    "endToEnd": "端到端小部件",
+    "directNotices": "直接通知小部件",
+    "manageSessionPermissions": "管理会话权限小部件",
     "ageAppeal": "年龄申诉",
     "sessionUpgradeAgeAssurance": "会话升级年龄保证",
     "ageGateCheck": "年龄门检查"
@@ -130,6 +130,10 @@
   "errors": {
     "apiKeyNotConfigured": "未配置API密钥。请在.env.local文件中设置K_ID_API_KEY。",
     "anErrorOccurred": "发生错误"
+  },
+  "flowGroups": {
+    "widgets": "小部件",
+    "apiAgeVerification": "API · 年龄验证",
+    "apiAgeGateSession": "API · 年龄门与会话"
   }
 }
-

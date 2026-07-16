@@ -67,14 +67,14 @@
     "accessAgeVerification": "アクセス年齢確認",
     "facialAgeEstimation": "顔認証による年齢推定",
     "trustedAdultVerification": "信頼できる大人の確認",
-    "ageGate": "年齢ゲート",
+    "ageGate": "年齢ゲートウィジェット",
     "idVerification": "ID確認",
     "ageKeyVerification": "AgeKey確認",
     "connectIdVerification": "ConnectID確認",
     "emailEstimation": "メール年齢推定",
-    "endToEnd": "VPCエンドツーエンド",
-    "directNotices": "直接通知",
-    "manageSessionPermissions": "セッション権限の管理",
+    "endToEnd": "エンドツーエンドウィジェット",
+    "directNotices": "直接通知ウィジェット",
+    "manageSessionPermissions": "セッション権限管理ウィジェット",
     "ageAppeal": "年齢申し立て",
     "sessionUpgradeAgeAssurance": "セッションアップグレード年齢保証",
     "ageGateCheck": "年齢ゲートチェック"
@@ -130,6 +130,10 @@
   "errors": {
     "apiKeyNotConfigured": "APIキーが設定されていません。.env.localファイルでK_ID_API_KEYを設定してください。",
     "anErrorOccurred": "エラーが発生しました"
+  },
+  "flowGroups": {
+    "widgets": "ウィジェット",
+    "apiAgeVerification": "API · 年齢確認",
+    "apiAgeGateSession": "API · エイジゲート & セッション"
   }
 }
-

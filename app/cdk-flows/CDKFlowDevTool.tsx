@@ -15,6 +15,53 @@ interface ApiKeyStatus {
   apiUrl: string
 }
 
+/**
+ * Flow selector grouping. The order here (deliberately NOT alphabetical) drives
+ * the dropdown. A native <select> supports a single <optgroup> level, so the L1
+ * split (Widgets vs APIs) is folded into each group label; the L2 sub-category
+ * follows after the middot. Option labels come from the flows.* translations.
+ */
+const FLOW_GROUPS: { labelKey: string; flows: CDKFlow[] }[] = [
+  {
+    labelKey: 'flowGroups.widgets',
+    flows: [
+      CDKFlow.AGE_GATE,
+      CDKFlow.END_TO_END,
+      CDKFlow.DIRECT_NOTICES,
+      CDKFlow.MANAGE_SESSION_PERMISSIONS,
+    ],
+  },
+  {
+    labelKey: 'flowGroups.apiAgeVerification',
+    flows: [
+      CDKFlow.ACCESS_AGE_VERIFICATION,
+      CDKFlow.FACIAL_AGE_ESTIMATION,
+      CDKFlow.ID_VERIFICATION,
+      CDKFlow.AGE_KEY_VERIFICATION,
+      CDKFlow.CONNECT_ID_VERIFICATION,
+      CDKFlow.EMAIL_ESTIMATION,
+      CDKFlow.TRUSTED_ADULT_VERIFICATION,
+      CDKFlow.AGE_APPEAL,
+    ],
+  },
+  {
+    labelKey: 'flowGroups.apiAgeGateSession',
+    flows: [CDKFlow.AGE_GATE_CHECK, CDKFlow.SESSION_UPGRADE_AGE_ASSURANCE],
+  },
+]
+
+// ACCESS_AGE_VERIFICATION -> accessAgeVerification (matches the flows.* keys).
+function flowTranslationKey(flow: CDKFlow): string {
+  const flowKey = (Object.keys(CDKFlow) as (keyof typeof CDKFlow)[]).find((k) => CDKFlow[k] === flow)
+  return flowKey
+    ? flowKey
+        .toLowerCase()
+        .split('_')
+        .map((word, i) => (i === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)))
+        .join('')
+    : ''
+}
+
 interface CDKFlowDevToolProps {
   onIframeUrlUpdate?: (
     url: string,
@@ -427,18 +474,15 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               required
             >
-              {Object.values(CDKFlow).sort().map((value, index) => {
-                const flowKey = Object.keys(CDKFlow).find(key => CDKFlow[key as keyof typeof CDKFlow] === value);
-                // Convert ACCESS_AGE_VERIFICATION to accessAgeVerification (camelCase)
-                const translationKey = flowKey
-                  ? flowKey.toLowerCase().split('_').map((word, i) => i === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)).join('')
-                  : '';
-                return (
-                  <option key={index} value={value}>
-                    {t(`flows.${translationKey}`) || value}
-                  </option>
-                );
-              })}
+              {FLOW_GROUPS.map((group) => (
+                <optgroup key={group.labelKey} label={t(group.labelKey)}>
+                  {group.flows.map((flow) => (
+                    <option key={flow} value={flow}>
+                      {t(`flows.${flowTranslationKey(flow)}`) || flow}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
             </select>
           </div>
           {ageCriteriaFlows.has(selectedFlow) && (

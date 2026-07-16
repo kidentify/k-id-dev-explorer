@@ -67,14 +67,14 @@
     "accessAgeVerification": "접근 연령 확인",
     "facialAgeEstimation": "얼굴 인식 연령 추정",
     "trustedAdultVerification": "신뢰할 수 있는 성인 확인",
-    "ageGate": "연령 게이트",
+    "ageGate": "연령 게이트 위젯",
     "idVerification": "ID 확인",
     "ageKeyVerification": "AgeKey 확인",
     "connectIdVerification": "ConnectID 확인",
     "emailEstimation": "이메일 연령 추정",
-    "endToEnd": "VPC 종단간",
-    "directNotices": "직접 알림",
-    "manageSessionPermissions": "세션 권한 관리",
+    "endToEnd": "종단간 위젯",
+    "directNotices": "직접 알림 위젯",
+    "manageSessionPermissions": "세션 권한 관리 위젯",
     "ageAppeal": "연령 항소",
     "sessionUpgradeAgeAssurance": "세션 업그레이드 연령 보증",
     "ageGateCheck": "연령 게이트 체크"
@@ -130,6 +130,10 @@
   "errors": {
     "apiKeyNotConfigured": "API 키가 구성되지 않았습니다. .env.local 파일에서 K_ID_API_KEY를 설정하세요.",
     "anErrorOccurred": "오류가 발생했습니다"
+  },
+  "flowGroups": {
+    "widgets": "위젯",
+    "apiAgeVerification": "API · 연령 확인",
+    "apiAgeGateSession": "API · 에이지 게이트 & 세션"
   }
 }
-
