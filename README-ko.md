@@ -109,19 +109,28 @@ k-ID Dev Explorer는 k-ID CDK 플로우를 테스트하는 대화형 방법을 �
 
 5. **플로우 단계별 진행**: iframe에 포함된 CDK 플로우와 상호 작용합니다. 확인 단계를 진행하면서 이벤트 창에 나타나는 이벤트를 관찰합니다.
 
-6. **트래픽 로그 다운로드**: Events & API Traffic 섹션의 **Download** 버튼을 클릭하여 모든 API 트래픽의 복사본을 텍스트 파일로 저장하여 분석 또는 디버깅에 사용합니다.
+6. **다양한 기기에서 미리보기**: iframe 위의 **기기**(모바일 / 태블릿) 및 **방향**(세로 / 가로) 토글을 사용하여 위젯 자체의 반응형 레이아웃이 어떻게 적응하는지 확인할 수 있습니다. iframe은 열에 맞도록 스케일되지만 내부 뷰포트는 대상 기기의 크기로 보고됩니다.
+
+7. **콘솔로 실제 기기로 전달**: iframe 아래의 **콘솔** 패널에는 위젯의 짧은 URL이 QR 코드로 표시되며, **Copy URL**과 **Open in new tab** 버튼이 함께 나옵니다. 휴대폰으로 QR을 스캔하여 실제 기기에서 플로우를 계속할 수 있습니다. Compliance Studio가 ngrok URL로 웹훅을 보내도록 구성되어 있으면 `Verification.Result` / `Challenge.StateChange` 웹훅이 도착하는 순간 QR이 **PASS ✓** / **FAIL ✗** 오버레이로 전환됩니다.
+
+8. **트래픽 로그 다운로드**: Events & API Traffic 섹션의 **Download** 버튼을 클릭하여 모든 API 트래픽의 복사본을 텍스트 파일로 저장하여 분석 또는 디버깅에 사용합니다.
 
 ### 사용 가능한 CDK 플로우
 
 - **Access Age Verification**: 액세스 권한 부여 전에 사용자의 연령을 확인
 - **Age Gate**: 사용자에게 연령 확인 옵션 제공
+- **Age Gate Check**: 서버 사이드 CDK 커스텀 플로우로, 연령 게이트 요구 사항을 확인하고 연령 보증이 필요할 때 챌린지를 반환
 - **Facial Age Estimation**: 얼굴 인식을 사용하여 연령 추정
 - **ID Verification**: 정부 발급 신분증을 사용하여 신원 확인
+- **AgeKey Verification**: 패스키를 사용한 연령 확인
+- **ConnectID Verification**: ConnectID를 사용한 연령 확인
+- **Email Age Estimation**: 이메일 주소로 연령 추정
 - **Trusted Adult Verification**: 신뢰할 수 있는 성인 확인을 통해 확인
 - **Age Appeal**: 사용자가 연령 확인 결정에 대해 이의를 제기할 수 있도록 허용
 - **VPC End-to-End**: 완전한 확인, 동의 및 권한 플로우
 - **Direct Notices**: 컴플라이언스 공지를 직접 표시
 - **Manage Session Permissions**: 기존 세션의 권한 관리
+- **Session Upgrade Age Assurance**: 연령 보증이 필요한 권한으로 기존 세션 업그레이드
 
 각 플로우에 대한 자세한 문서는 [k-ID Developer Hub](https://docs.k-id.com)를 방문하세요.
 

@@ -213,6 +213,32 @@ function getSessionUpgradeBody(formData: FormData): {
 }
 
 /**
+ * Builds the request body for the CDK Custom Age Gate Check flow.
+ *
+ * POST /age-gate/check with jurisdiction + optional DOB / age. The response
+ * carries either a session (if the check comes back ACTIVE) or a challenge
+ * (with a challengeId + a widget URL) when age assurance is required. See
+ * https://docs.k-id.com/reference/api/endpoints/age-gate-check.
+ */
+function getAgeGateCheckBody(formData: FormData): {
+  jurisdiction?: string
+  dateOfBirth?: string
+  age?: number
+} {
+  const jurisdiction = formData.get(FormEntryKey.JURISDICTION) as string
+  const dob = (formData.get(FormEntryKey.DOB) as string | null)?.trim() || ''
+  const ageRaw = (formData.get(FormEntryKey.AGE) as string | null)?.trim() || ''
+  const body: { jurisdiction?: string; dateOfBirth?: string; age?: number } = {}
+  if (jurisdiction) body.jurisdiction = jurisdiction
+  if (dob) body.dateOfBirth = dob
+  if (ageRaw) {
+    const age = parseInt(ageRaw, 10)
+    if (Number.isFinite(age)) body.age = age
+  }
+  return body
+}
+
+/**
  * Flow handlers for different CDK flow types.
  *
  * Each flow type has a handler that:
@@ -494,5 +520,26 @@ export const flowHandlers: Record<CDKFlow, FlowHandler> = {
       }
     },
     performAction: performSessionUpgradeAgeAssurance,
+  },
+  /**
+   * Age Gate Check (CDK Custom) flow handler.
+   *
+   * Direct server-side call to /age-gate/check. When AA is needed the
+   * response's `challenge` object carries the challengeId + widget URL;
+   * otherwise the response includes a session that can be used immediately.
+   */
+  [CDKFlow.AGE_GATE_CHECK]: {
+    buildRequestData: (formData: FormData, apiUrl: string, apiKey: string) => {
+      return {
+        method: 'POST',
+        url: `${apiUrl}${API_CONFIG.endpoints.ageGateCheck}`,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: getAgeGateCheckBody(formData),
+      }
+    },
+    performAction: performVerification,
   },
 }

@@ -111,19 +111,28 @@ The k-ID Dev Explorer provides an interactive way to test k-ID CDK flows:
 
 5. **Step Through the Flow**: Interact with the embedded CDK flow in the iframe. As you progress through the verification steps, observe the events appearing in the event window.
 
-6. **Download Traffic Logs**: Click the **Download** button in the Events & API Traffic section to save a copy of all API traffic as a text file for analysis or debugging.
+6. **Preview on Different Devices**: Use the **Device** (Mobile / Tablet) and **Orientation** (Portrait / Landscape) toggle above the iframe to see how the widget's own responsive layout adapts. The iframe is scaled to fit the column while its internal viewport reports the target device size.
+
+7. **Hand Off to a Real Phone via the Console**: Below the iframe, the **Console** panel shows the widget's short URL as a QR code, plus **Copy URL** and **Open in new tab** buttons. Scan the QR from your phone to continue the flow on a real device. If Compliance Studio is configured to send webhooks to your ngrok URL, the QR flips to a **PASS ✓** / **FAIL ✗** overlay when the `Verification.Result` / `Challenge.StateChange` webhook arrives.
+
+8. **Download Traffic Logs**: Click the **Download** button in the Events & API Traffic section to save a copy of all API traffic as a text file for analysis or debugging.
 
 ### Available CDK Flows
 
 - **Access Age Verification**: Verify a user's age before granting access
 - **Age Gate**: Present age verification options to users
+- **Age Gate Check**: Server-side CDK Custom flow that checks age gate requirements and returns a challenge when age assurance is needed
 - **Facial Age Estimation**: Estimate age using facial recognition
 - **ID Verification**: Verify identity using government-issued ID
+- **AgeKey Verification**: Passkey-based age verification
+- **ConnectID Verification**: Verify age using ConnectID
+- **Email Age Estimation**: Estimate age from an email address
 - **Trusted Adult Verification**: Verify through trusted adult confirmation
 - **Age Appeal**: Allow users to appeal an age verification decision
 - **VPC End-to-End**: Complete verification, consent, and permission flow
 - **Direct Notices**: Display compliance notices directly
 - **Manage Session Permissions**: Manage permissions for an existing session
+- **Session Upgrade Age Assurance**: Upgrade an existing session with permissions that require age assurance
 
 For detailed documentation on each flow, visit the [k-ID Developer Hub](https://docs.k-id.com).
 

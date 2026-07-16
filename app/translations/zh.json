@@ -76,7 +76,28 @@
     "directNotices": "直接通知",
     "manageSessionPermissions": "管理会话权限",
     "ageAppeal": "年龄申诉",
-    "sessionUpgradeAgeAssurance": "会话升级年龄保证"
+    "sessionUpgradeAgeAssurance": "会话升级年龄保证",
+    "ageGateCheck": "年龄门检查"
+  },
+  "preview": {
+    "device": "设备:",
+    "orientation": "方向:",
+    "mobile": "手机",
+    "tablet": "平板",
+    "portrait": "竖屏",
+    "landscape": "横屏"
+  },
+  "console": {
+    "title": "控制台",
+    "scanOnPhone": "用手机扫描",
+    "shortUrl": "短链接",
+    "widgetUrl": "小部件 URL",
+    "copyUrl": "复制 URL",
+    "copied": "已复制",
+    "openInNewTab": "在新标签页中打开",
+    "waitingForWebhook": "等待 Verification.Result Webhook…",
+    "verified": "✓ 已验证",
+    "notVerified": "✗ 未验证"
   },
   "widgetOptions": {
     "title": "小部件选项",

@@ -16,7 +16,13 @@ interface ApiKeyStatus {
 }
 
 interface CDKFlowDevToolProps {
-  onIframeUrlUpdate?: (url: string) => void
+  onIframeUrlUpdate?: (
+    url: string,
+    shortUrl?: string,
+    verificationId?: string,
+    challengeId?: string,
+    sessionId?: string,
+  ) => void
   apiKeyStatus: ApiKeyStatus
   onAddEvent?: (addEventFn: AddEventMethod) => void
   onEventLogsChange?: (eventLogs: EventLog[]) => void
@@ -259,16 +265,25 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
         }
       }
 
-      if (result.success && result.url) {
+      if (result.success && (result.url || result.challengeId || result.sessionId)) {
         if (!result.steps) {
           addEvent('api-response', RequestType.RESPONSE, {
             id: result.id,
             url: result.url,
+            shortUrl: result.shortUrl,
+            challengeId: result.challengeId,
+            sessionId: result.sessionId,
             responseData: result.responseData
           })
         }
-        onIframeUrlUpdate?.(result.url)
-      } else {
+        onIframeUrlUpdate?.(
+          result.url ?? '',
+          result.shortUrl,
+          result.id,
+          result.challengeId,
+          result.sessionId,
+        )
+      } else if (!result.success) {
         const errorData = { error: result.error }
         addEvent('api-error', RequestType.ERROR, errorData)
         setError(formatErrorForDisplay(result.error || t('errors.anErrorOccurred')))
@@ -392,7 +407,13 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
       {/* Combined Flow Selection and Configuration Form */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('widget.inputFields')}</h2>
-        <form action={handleSubmit} className="space-y-4">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            handleSubmit(new FormData(e.currentTarget))
+          }}
+          className="space-y-4"
+        >
           {/* Flow Selection */}
           <div>
             <label htmlFor="flow" className="block text-sm font-medium text-gray-700 mb-2">
@@ -468,6 +489,12 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
                 />
               </div>
             </div>
+          )}
+          {selectedFlow === CDKFlow.AGE_GATE_CHECK && (
+            <VerificationForm
+              dob={{ required: false }}
+              age={{ required: false }}
+            />
           )}
           {/* Submit Button */}
           <button

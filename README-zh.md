@@ -109,19 +109,28 @@ k-ID Dev Explorer 提供了一种交互式方法来测试 k-ID CDK 流程：
 
 5. **逐步执行流程**：与 iframe 中嵌入的 CDK 流程进行交互。当您逐步完成验证步骤时，观察事件窗口中出现的事件。
 
-6. **下载流量日志**：点击 Events & API Traffic 部分中的 **Download** 按钮，将所有 API 流量的副本保存为文本文件，用于分析或调试。
+6. **在不同设备上预览**：使用 iframe 上方的**设备**（手机 / 平板）和**方向**（竖屏 / 横屏）切换按钮，查看小部件自身的响应式布局如何适应。iframe 会被缩放以适应列宽，但其内部视口报告为目标设备的尺寸。
+
+7. **通过控制台交给真机**：iframe 下方的**控制台**面板将小部件的短链接显示为二维码，并附带 **Copy URL** 和 **Open in new tab** 按钮。用手机扫描二维码即可在真机上继续该流程。如果 Compliance Studio 已配置将 webhook 发送到 ngrok URL，那么当 `Verification.Result` / `Challenge.StateChange` webhook 到达时，二维码会切换为 **PASS ✓** / **FAIL ✗** 覆盖层。
+
+8. **下载流量日志**：点击 Events & API Traffic 部分中的 **Download** 按钮，将所有 API 流量的副本保存为文本文件，用于分析或调试。
 
 ### 可用的 CDK 流程
 
 - **Access Age Verification**：在授予访问权限之前验证用户的年龄
 - **Age Gate**：向用户展示年龄验证选项
+- **Age Gate Check**：服务端 CDK 自定义流程，检查年龄门要求；需要年龄保证时返回一个 challenge
 - **Facial Age Estimation**：使用面部识别估计年龄
 - **ID Verification**：使用政府颁发的身份证件验证身份
+- **AgeKey Verification**：基于通行密钥的年龄验证
+- **ConnectID Verification**：使用 ConnectID 验证年龄
+- **Email Age Estimation**：根据电子邮件地址估计年龄
 - **Trusted Adult Verification**：通过受信任的成人确认进行验证
 - **Age Appeal**：允许用户对年龄验证决定提出申诉
 - **VPC End-to-End**：完整的验证、同意和权限流程
 - **Direct Notices**：直接显示合规通知
 - **Manage Session Permissions**：管理现有会话的权限
+- **Session Upgrade Age Assurance**：使用需要年龄保证的权限升级现有会话
 
 每个流程的详细文档，请访问 [k-ID Developer Hub](https://docs.k-id.com)。
 

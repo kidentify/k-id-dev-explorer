@@ -76,7 +76,28 @@
     "directNotices": "직접 알림",
     "manageSessionPermissions": "세션 권한 관리",
     "ageAppeal": "연령 항소",
-    "sessionUpgradeAgeAssurance": "세션 업그레이드 연령 보증"
+    "sessionUpgradeAgeAssurance": "세션 업그레이드 연령 보증",
+    "ageGateCheck": "연령 게이트 체크"
+  },
+  "preview": {
+    "device": "기기:",
+    "orientation": "방향:",
+    "mobile": "모바일",
+    "tablet": "태블릿",
+    "portrait": "세로",
+    "landscape": "가로"
+  },
+  "console": {
+    "title": "콘솔",
+    "scanOnPhone": "휴대폰으로 스캔",
+    "shortUrl": "짧은 URL",
+    "widgetUrl": "위젯 URL",
+    "copyUrl": "URL 복사",
+    "copied": "복사됨",
+    "openInNewTab": "새 탭에서 열기",
+    "waitingForWebhook": "Verification.Result 웹훅 대기 중…",
+    "verified": "✓ 확인됨",
+    "notVerified": "✗ 확인되지 않음"
   },
   "widgetOptions": {
     "title": "위젯 옵션",

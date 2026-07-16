@@ -76,7 +76,28 @@
     "directNotices": "Direct Notices",
     "manageSessionPermissions": "Manage Session Permissions",
     "ageAppeal": "Age Appeal",
-    "sessionUpgradeAgeAssurance": "Session Upgrade Age Assurance"
+    "sessionUpgradeAgeAssurance": "Session Upgrade Age Assurance",
+    "ageGateCheck": "Age Gate Check"
+  },
+  "preview": {
+    "device": "Device:",
+    "orientation": "Orientation:",
+    "mobile": "Mobile",
+    "tablet": "Tablet",
+    "portrait": "Portrait",
+    "landscape": "Landscape"
+  },
+  "console": {
+    "title": "Console",
+    "scanOnPhone": "Scan on phone",
+    "shortUrl": "Short URL",
+    "widgetUrl": "Widget URL",
+    "copyUrl": "Copy URL",
+    "copied": "Copied",
+    "openInNewTab": "Open in new tab",
+    "waitingForWebhook": "Waiting for Verification.Result webhook…",
+    "verified": "✓ verified",
+    "notVerified": "✗ not verified"
   },
   "widgetOptions": {
     "title": "Widget Options",
