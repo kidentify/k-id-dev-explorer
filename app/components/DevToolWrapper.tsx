@@ -96,6 +96,49 @@ export default function DevToolWrapper({ apiKeyStatus }: DevToolWrapperProps) {
   }, [])
 
   /**
+   * Subscribe to the shared webhook SSE stream so completions that arrive via
+   * webhook (rather than iframe postMessage) still populate challengeId /
+   * sessionId. This is what surfaces the session after a CDK Custom Age Gate
+   * Check challenge completes on the user's phone — the widget can't post to
+   * us, but Compliance Studio's webhook can.
+   */
+  useEffect(() => {
+    const es = new EventSource('/api/webhook/events')
+    es.onmessage = (evt) => {
+      try {
+        const parsed = JSON.parse(evt.data)
+        if (parsed?.type !== 'webhook') return
+        const body = parsed.data?.body as Record<string, unknown> | undefined
+        if (!body || typeof body !== 'object') return
+        const eventType = (body.eventType ?? body.type) as string | undefined
+        const data = (body.data ?? {}) as Record<string, unknown>
+        // Look for challengeId in common locations.
+        const candidateChallengeId =
+          (body.challengeId as string | undefined) ??
+          (data.challengeId as string | undefined) ??
+          (eventType && /challenge/i.test(eventType) ? (data.id as string | undefined) : undefined)
+        if (typeof candidateChallengeId === 'string' && candidateChallengeId) {
+          setChallengeId(candidateChallengeId)
+        }
+        // sessionId can come nested under `data` on any completion event
+        // (Verification.Result / Challenge.StateChange / Session.*).
+        const candidateSessionId =
+          (body.sessionId as string | undefined) ??
+          (data.sessionId as string | undefined) ??
+          (eventType && /session/i.test(eventType) ? (data.id as string | undefined) : undefined)
+        if (typeof candidateSessionId === 'string' && candidateSessionId) {
+          setSessionId(candidateSessionId)
+        }
+      } catch {
+        // ignore non-JSON frames / heartbeats
+      }
+    }
+    return () => {
+      es.close()
+    }
+  }, [])
+
+  /**
    * Callback to handle when a new CDK flow URL is received from the API.
    *
    * This is called after performCDKFlow() successfully returns a URL from the
