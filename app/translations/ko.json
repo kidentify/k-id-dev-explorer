@@ -77,7 +77,8 @@
     "manageSessionPermissions": "세션 권한 관리 위젯",
     "ageAppeal": "연령 항소",
     "sessionUpgradeAgeAssurance": "세션 업그레이드 연령 보증",
-    "ageGateCheck": "연령 게이트 체크"
+    "ageGateCheck": "연령 게이트 체크",
+    "creditCardVerification": "신용카드 확인"
   },
   "preview": {
     "device": "기기:",
@@ -130,6 +131,62 @@
   "errors": {
     "apiKeyNotConfigured": "API 키가 구성되지 않았습니다. .env.local 파일에서 K_ID_API_KEY를 설정하세요.",
     "anErrorOccurred": "오류가 발생했습니다"
+  },
+  "specialized": {
+    "navLink": "전문 수단 데모",
+    "pageTitle": "전문 연령 확인 수단",
+    "pageSubtitle": "제공할 전문 수단을 맞춤 설정한 뒤 최종 사용자 선택 플로우를 미리 봅니다.",
+    "backToExplorer": "← CDK 플로우로 돌아가기",
+    "customizeTitle": "수단 맞춤 설정",
+    "customizeHelp": "포함할 전문 연령 확인 수단을 선택하고 각 수단에 적용할 공통 매개변수를 설정하세요.",
+    "methodsLabel": "수단",
+    "sharedParams": "공통 매개변수",
+    "ageInput": "나이 또는 생년월일",
+    "contextLabel": "각 수단에 적용됨",
+    "ageMode": {
+      "none": "설정 안 함",
+      "age": "나이",
+      "dob": "생년월일"
+    },
+    "methods": {
+      "facialTitle": "얼굴 나이 추정",
+      "facialDesc": "셀카 스캔으로 나이를 추정합니다.",
+      "idTitle": "신분증 서류 확인",
+      "idDesc": "정부 발급 신분증으로 연령을 확인합니다.",
+      "agekeyTitle": "AgeKey 확인",
+      "agekeyDesc": "기존에 확인된 AgeKey를 재사용합니다.",
+      "connectidTitle": "ConnectID 확인",
+      "connectidDesc": "ConnectID로 확인합니다(호주 전용).",
+      "creditcardTitle": "신용카드 확인",
+      "creditcardDesc": "신용카드로 성인 여부를 확인합니다.",
+      "trustedadultTitle": "신뢰할 수 있는 성인 확인",
+      "trustedadultDesc": "보호자가 사용자를 대신해 확인합니다. 이메일이 필요합니다.",
+      "inferenceTitle": "이메일 나이 추정",
+      "inferenceDesc": "이메일 주소와 배경 신호로 나이를 추정합니다. 이메일이 필요합니다."
+    },
+    "criteria": "확인 기준",
+    "criteriaHelp": "각 수단이 사용자를 확인하는 최소 연령(또는 카테고리)입니다.",
+    "settingsTitle": "설정",
+    "settingsHelp": "선택 화면에 표시할 수단과 k-ID로 전송할 매개변수를 설정하세요.",
+    "nativeSimTitle": "커스텀 UI",
+    "nativeSimHelp": "앱이 사용자에게 보여주는 화면입니다. 수단을 탭하면 k-ID 화면이 로드됩니다.",
+    "native": {
+      "title": "연령 확인",
+      "subtitle": "연령을 확인하는 방법이 몇 가지 있습니다. 본인에게 맞는 방법을 선택하세요.",
+      "empty": "설정에서 수단을 활성화하면 선택 화면이 미리 표시됩니다.",
+      "methods": {
+        "facial": "얼굴 스캔 사용",
+        "id": "사진 신분증 사용",
+        "agekey": "AgeKey",
+        "connectid": "ConnectID 사용",
+        "creditcard": "신용카드 사용",
+        "trustedadult": "신뢰할 수 있는 성인에게 요청",
+        "inference": "이메일로 확인"
+      }
+    },
+    "emailRequired": "이 수단에는 이메일이 필요합니다. 설정에서 입력하세요.",
+    "emailHint": "(신뢰할 수 있는 성인·추론에 필수)",
+    "faeOptions": "얼굴 나이 추정 옵션"
   },
   "flowGroups": {
     "widgets": "위젯",

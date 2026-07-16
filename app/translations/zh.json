@@ -77,7 +77,8 @@
     "manageSessionPermissions": "管理会话权限小部件",
     "ageAppeal": "年龄申诉",
     "sessionUpgradeAgeAssurance": "会话升级年龄保证",
-    "ageGateCheck": "年龄门检查"
+    "ageGateCheck": "年龄门检查",
+    "creditCardVerification": "信用卡验证"
   },
   "preview": {
     "device": "设备:",
@@ -130,6 +131,62 @@
   "errors": {
     "apiKeyNotConfigured": "未配置API密钥。请在.env.local文件中设置K_ID_API_KEY。",
     "anErrorOccurred": "发生错误"
+  },
+  "specialized": {
+    "navLink": "专用方式演示",
+    "pageTitle": "专用年龄验证方式",
+    "pageSubtitle": "自定义要提供的专用方式，然后预览最终用户的选择流程。",
+    "backToExplorer": "← 返回 CDK 流程",
+    "customizeTitle": "自定义方式",
+    "customizeHelp": "选择要包含的专用年龄验证方式，然后设置应用于每种方式的共享参数。",
+    "methodsLabel": "方式",
+    "sharedParams": "共享参数",
+    "ageInput": "年龄或出生日期",
+    "contextLabel": "应用于每种方式",
+    "ageMode": {
+      "none": "未设置",
+      "age": "年龄",
+      "dob": "出生日期"
+    },
+    "methods": {
+      "facialTitle": "面部年龄估计",
+      "facialDesc": "通过自拍扫描估计年龄。",
+      "idTitle": "证件文件验证",
+      "idDesc": "使用政府颁发的证件验证年龄。",
+      "agekeyTitle": "AgeKey 验证",
+      "agekeyDesc": "复用已验证的 AgeKey。",
+      "connectidTitle": "ConnectID 验证",
+      "connectidDesc": "通过 ConnectID 验证（仅限澳大利亚）。",
+      "creditcardTitle": "信用卡验证",
+      "creditcardDesc": "通过信用卡确认成年身份。",
+      "trustedadultTitle": "受信任成人验证",
+      "trustedadultDesc": "由家长或监护人代为验证。需要邮箱。",
+      "inferenceTitle": "邮箱年龄估计",
+      "inferenceDesc": "根据邮箱地址和背景信号估计年龄。需要邮箱。"
+    },
+    "criteria": "验证标准",
+    "criteriaHelp": "每种方式用于验证用户的最低年龄（或类别）。",
+    "settingsTitle": "设置",
+    "settingsHelp": "配置选择器中显示的方式以及发送给 k-ID 的参数。",
+    "nativeSimTitle": "自定义 UI",
+    "nativeSimHelp": "您的应用向用户展示的界面。点击某个方式即可加载 k-ID 的界面。",
+    "native": {
+      "title": "验证您的年龄",
+      "subtitle": "有几种方式可以验证您的年龄，请选择适合您的一种！",
+      "empty": "在设置中启用某个方式即可预览选择器。",
+      "methods": {
+        "facial": "使用面部扫描",
+        "id": "使用照片证件",
+        "agekey": "AgeKey",
+        "connectid": "使用 ConnectID",
+        "creditcard": "使用信用卡",
+        "trustedadult": "请求受信任成人",
+        "inference": "通过邮箱验证"
+      }
+    },
+    "emailRequired": "此方式需要邮箱，请在设置中填写。",
+    "emailHint": "（受信任成人和推断式验证必填）",
+    "faeOptions": "面部年龄估计选项"
   },
   "flowGroups": {
     "widgets": "小部件",

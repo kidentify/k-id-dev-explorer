@@ -1,5 +1,6 @@
 import DevToolWrapper from './components/DevToolWrapper';
 import Image from 'next/image';
+import Link from 'next/link';
 import { t } from './utils/translations';
 
 export default function Home() {
@@ -38,6 +39,17 @@ export default function Home() {
                 </a>
               </p>
             </div>
+          </div>
+          <div className="mt-4">
+            <Link
+              href="/specialized"
+              className="inline-flex items-center gap-2 text-sm font-medium text-[#745eee] hover:text-[#5a45d6] border border-[#745eee] hover:bg-[#f4f2fe] rounded-lg px-4 py-2 transition-colors"
+            >
+              {t('specialized.navLink')}
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
           </div>
         </div>
 

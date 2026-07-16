@@ -334,6 +334,26 @@ export const flowHandlers: Record<CDKFlow, FlowHandler> = {
     performAction: performVerification,
   },
   /**
+   * Credit Card Verification flow handler.
+   *
+   * Confirms the user is an adult via a credit card check. Returns a URL for the
+   * credit card verification interface that can be embedded in an iframe.
+   */
+  [CDKFlow.CREDIT_CARD_VERIFICATION]: {
+    buildRequestData(formData: FormData, apiUrl: string, apiKey: string) {
+      return {
+        method: 'POST',
+        url: `${apiUrl}${API_CONFIG.endpoints.creditCardVerification}`,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: getBody(formData),
+      }
+    },
+    performAction: performVerification,
+  },
+  /**
    * AgeKey Verification flow handler.
    *
    * Performs an AgeKey verification for a user. This flow returns a URL for the

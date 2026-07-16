@@ -33,6 +33,10 @@ export const API_CONFIG = {
     // Documentation: https://docs.k-id.com/reference/api/endpoints/id-verification
     idVerification: '/api/v1/age-verification/perform-id-verification',
 
+    // Credit Card Verification endpoint
+    // Documentation: https://docs.k-id.com/api/endpoints/perform-credit-card-verification
+    creditCardVerification: '/api/v1/age-verification/perform-credit-card-verification',
+
     // AgeKey Verification endpoint
     // Documentation: https://docs.k-id.com/api/endpoints/perform-age-key-verification
     ageKeyVerification: '/api/v1/age-verification/perform-age-key-verification',

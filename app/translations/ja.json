@@ -77,7 +77,8 @@
     "manageSessionPermissions": "セッション権限管理ウィジェット",
     "ageAppeal": "年齢申し立て",
     "sessionUpgradeAgeAssurance": "セッションアップグレード年齢保証",
-    "ageGateCheck": "年齢ゲートチェック"
+    "ageGateCheck": "年齢ゲートチェック",
+    "creditCardVerification": "クレジットカード確認"
   },
   "preview": {
     "device": "デバイス:",
@@ -130,6 +131,62 @@
   "errors": {
     "apiKeyNotConfigured": "APIキーが設定されていません。.env.localファイルでK_ID_API_KEYを設定してください。",
     "anErrorOccurred": "エラーが発生しました"
+  },
+  "specialized": {
+    "navLink": "専用手段のデモ",
+    "pageTitle": "専用の年齢確認手段",
+    "pageSubtitle": "提供する専用手段をカスタマイズし、エンドユーザーの選択フローをプレビューします。",
+    "backToExplorer": "← CDK フローに戻る",
+    "customizeTitle": "手段をカスタマイズ",
+    "customizeHelp": "含める専用の年齢確認手段を選択し、各手段に適用する共通パラメーターを設定します。",
+    "methodsLabel": "手段",
+    "sharedParams": "共通パラメーター",
+    "ageInput": "年齢または生年月日",
+    "contextLabel": "各手段に適用",
+    "ageMode": {
+      "none": "未設定",
+      "age": "年齢",
+      "dob": "生年月日"
+    },
+    "methods": {
+      "facialTitle": "顔年齢推定",
+      "facialDesc": "セルフィーのスキャンで年齢を推定します。",
+      "idTitle": "ID書類確認",
+      "idDesc": "政府発行の身分証明書で年齢を確認します。",
+      "agekeyTitle": "AgeKey確認",
+      "agekeyDesc": "既存の確認済みAgeKeyを再利用します。",
+      "connectidTitle": "ConnectID確認",
+      "connectidDesc": "ConnectIDで確認します（オーストラリアのみ）。",
+      "creditcardTitle": "クレジットカード確認",
+      "creditcardDesc": "クレジットカードで成人であることを確認します。",
+      "trustedadultTitle": "信頼できる大人による確認",
+      "trustedadultDesc": "保護者がユーザーに代わって確認します。メールアドレスが必要です。",
+      "inferenceTitle": "メール年齢推定",
+      "inferenceDesc": "メールアドレスと背景情報から年齢を推定します。メールアドレスが必要です。"
+    },
+    "criteria": "確認基準",
+    "criteriaHelp": "各手段がユーザーを確認する最低年齢（またはカテゴリー）です。",
+    "settingsTitle": "設定",
+    "settingsHelp": "ピッカーに表示する手段と、k-ID に送信するパラメーターを設定します。",
+    "nativeSimTitle": "カスタム UI",
+    "nativeSimHelp": "アプリがユーザーに表示する画面です。手段をタップすると k-ID の画面が読み込まれます。",
+    "native": {
+      "title": "年齢を確認",
+      "subtitle": "年齢を確認する方法はいくつかあります。ご自身に合ったものをお選びください。",
+      "empty": "設定で手段を有効にするとピッカーがプレビューされます。",
+      "methods": {
+        "facial": "顔スキャンを使用",
+        "id": "写真付きIDを使用",
+        "agekey": "AgeKey",
+        "connectid": "ConnectIDを使用",
+        "creditcard": "クレジットカードを使用",
+        "trustedadult": "信頼できる大人に依頼",
+        "inference": "メールで確認"
+      }
+    },
+    "emailRequired": "この手段にはメールアドレスが必要です。設定で入力してください。",
+    "emailHint": "（信頼できる大人・推論に必須）",
+    "faeOptions": "顔年齢推定オプション"
   },
   "flowGroups": {
     "widgets": "ウィジェット",

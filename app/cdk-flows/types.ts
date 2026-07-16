@@ -113,6 +113,7 @@ export enum CDKFlow {
   TRUSTED_ADULT_VERIFICATION = 'Trusted Adult Verification',
   AGE_GATE = 'Age Gate',
   ID_VERIFICATION = 'ID Verification',
+  CREDIT_CARD_VERIFICATION = 'Credit Card Verification',
   AGE_KEY_VERIFICATION = 'AgeKey Verification',
   CONNECT_ID_VERIFICATION = 'ConnectID Verification',
   EMAIL_ESTIMATION = 'Email Age Estimation',

@@ -77,7 +77,8 @@
     "manageSessionPermissions": "Manage Session Permissions Widget",
     "ageAppeal": "Age Appeal",
     "sessionUpgradeAgeAssurance": "Session Upgrade Age Assurance",
-    "ageGateCheck": "Age Gate Check"
+    "ageGateCheck": "Age Gate Check",
+    "creditCardVerification": "Credit Card Verification"
   },
   "preview": {
     "device": "Device:",
@@ -130,6 +131,62 @@
   "errors": {
     "apiKeyNotConfigured": "API key not configured. Please set K_ID_API_KEY in your .env.local file.",
     "anErrorOccurred": "An error occurred"
+  },
+  "specialized": {
+    "navLink": "Specialized Methods Demo",
+    "pageTitle": "Specialized Age Verification Methods",
+    "pageSubtitle": "Customize which specialized methods to offer, then preview the end-user selection flow.",
+    "backToExplorer": "← Back to CDK Flows",
+    "customizeTitle": "Customize methods",
+    "customizeHelp": "Select which specialized age verification methods to include, then set the shared parameters applied to each.",
+    "methodsLabel": "Methods",
+    "sharedParams": "Shared parameters",
+    "ageInput": "Age or date of birth",
+    "contextLabel": "Applied to each method",
+    "ageMode": {
+      "none": "Not set",
+      "age": "Age",
+      "dob": "Date of birth"
+    },
+    "methods": {
+      "facialTitle": "Facial Age Estimation",
+      "facialDesc": "Estimate age from a selfie scan.",
+      "idTitle": "ID Document Verification",
+      "idDesc": "Verify age with a government-issued ID document.",
+      "agekeyTitle": "AgeKey Verification",
+      "agekeyDesc": "Reuse an existing verified AgeKey.",
+      "connectidTitle": "ConnectID Verification",
+      "connectidDesc": "Verify via ConnectID (Australia only).",
+      "creditcardTitle": "Credit Card Verification",
+      "creditcardDesc": "Confirm adulthood with a credit card check.",
+      "trustedadultTitle": "Trusted Adult Verification",
+      "trustedadultDesc": "A parent or guardian verifies on the user's behalf. Needs an email.",
+      "inferenceTitle": "Email Age Estimation",
+      "inferenceDesc": "Estimate age from an email address and background signals. Needs an email."
+    },
+    "criteria": "Verification criteria",
+    "criteriaHelp": "The minimum age (or category) each method verifies the user against.",
+    "settingsTitle": "Settings",
+    "settingsHelp": "Configure which methods appear in the picker and the parameters sent to k-ID.",
+    "nativeSimTitle": "Custom UI",
+    "nativeSimHelp": "What your app shows the user. Tap a method to load k-ID's screen.",
+    "native": {
+      "title": "Verify My Age",
+      "subtitle": "There are a few ways you can verify your age. Pick the one that makes sense for you!",
+      "empty": "Enable a method in Settings to preview the picker.",
+      "methods": {
+        "facial": "Use Facial Scan",
+        "id": "Use Photo ID",
+        "agekey": "AgeKey",
+        "connectid": "Use ConnectID",
+        "creditcard": "Use Credit Card",
+        "trustedadult": "Ask a Trusted Adult",
+        "inference": "Verify by Email"
+      }
+    },
+    "emailRequired": "This method needs an email. Add one in Settings.",
+    "emailHint": "(required for trusted adult & inference)",
+    "faeOptions": "Facial age estimation options"
   },
   "flowGroups": {
     "widgets": "Widgets",
