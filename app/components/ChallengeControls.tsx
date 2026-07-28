@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { getChallengeStatus } from '../cdk-flows/serverActions'
-import { RequestType } from '../cdk-flows/types'
+import { EventDetails, RequestType } from '../cdk-flows/types'
 
 interface ApiKeyStatus {
   isConfigured: boolean
@@ -12,7 +12,7 @@ interface ApiKeyStatus {
 interface ChallengeControlsProps {
   challengeId: string | null
   apiKeyStatus: ApiKeyStatus
-  addEvent?: (event: string, type?: RequestType, details?: unknown) => void
+  addEvent?: (event: string, type?: RequestType, details?: EventDetails) => void
 }
 
 export default function ChallengeControls({ challengeId, apiKeyStatus, addEvent }: ChallengeControlsProps) {

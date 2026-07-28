@@ -1,5 +1,5 @@
 import { formatErrorForDisplay } from '../utils/errorUtils'
-import { AddEventMethod, CDKFlow, EventLog, FormEntryKey, RequestType } from './types'
+import { AddEventMethod, CDKFlow, EventDetails, EventLog, FormEntryKey, RequestType } from './types'
 import { performCDKFlow } from './serverActions'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import QRCode from 'qrcode'
@@ -13,6 +13,54 @@ import Image from 'next/image'
 interface ApiKeyStatus {
   isConfigured: boolean
   apiUrl: string
+}
+
+/**
+ * Flow selector grouping. The order here (deliberately NOT alphabetical) drives
+ * the dropdown, split into AgeKit+ API (age assurance methods), CDK API
+ * (server-side CDK endpoints), and CDK Widgets (hosted widget URLs). A native
+ * <select> supports a single <optgroup> level, so each group renders as one
+ * <optgroup>; option labels come from the flows.* translations.
+ */
+const FLOW_GROUPS: { labelKey: string; flows: CDKFlow[] }[] = [
+  {
+    labelKey: 'flowGroups.agekitApi',
+    flows: [
+      CDKFlow.ACCESS_AGE_VERIFICATION,
+      CDKFlow.FACIAL_AGE_ESTIMATION,
+      CDKFlow.ID_VERIFICATION,
+      CDKFlow.AGE_KEY_VERIFICATION,
+      CDKFlow.CONNECT_ID_VERIFICATION,
+      CDKFlow.EMAIL_ESTIMATION,
+      CDKFlow.TRUSTED_ADULT_VERIFICATION,
+      CDKFlow.AGE_APPEAL,
+    ],
+  },
+  {
+    labelKey: 'flowGroups.cdkApi',
+    flows: [CDKFlow.AGE_GATE_CHECK, CDKFlow.SESSION_UPGRADE_AGE_ASSURANCE],
+  },
+  {
+    labelKey: 'flowGroups.cdkWidgets',
+    flows: [
+      CDKFlow.AGE_GATE,
+      CDKFlow.END_TO_END,
+      CDKFlow.DIRECT_NOTICES,
+      CDKFlow.MANAGE_SESSION_PERMISSIONS,
+    ],
+  },
+]
+
+// ACCESS_AGE_VERIFICATION -> accessAgeVerification (matches the flows.* keys).
+function flowTranslationKey(flow: CDKFlow): string {
+  const flowKey = (Object.keys(CDKFlow) as (keyof typeof CDKFlow)[]).find((k) => CDKFlow[k] === flow)
+  return flowKey
+    ? flowKey
+        .toLowerCase()
+        .split('_')
+        .map((word, i) => (i === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)))
+        .join('')
+    : ''
 }
 
 interface CDKFlowDevToolProps {
@@ -61,7 +109,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('')
 
   // Add event to log - use useCallback to ensure the function reference is stable
-  const addEvent = useCallback((event: string, type: RequestType = RequestType.INFO, details?: unknown) => {
+  const addEvent = useCallback((event: string, type: RequestType = RequestType.INFO, details?: EventDetails) => {
     const newEvent: EventLog = {
       timestamp: new Date().toLocaleTimeString(),
       event,
@@ -362,10 +410,10 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
       }
     } else if (event.event === 'api-response') {
       // For API responses, copy the response data
-      textToCopy = JSON.stringify(event.details.responseData, null, 2)
+      textToCopy = JSON.stringify(event.details?.responseData, null, 2)
     } else if (event.event === 'webhook-received') {
       // For webhook events, copy just the body payload
-      textToCopy = JSON.stringify(event.details.body, null, 2)
+      textToCopy = JSON.stringify(event.details?.body, null, 2)
     } else if (event.event === 'js-message') {
       // For JS messages, copy just the message data
       textToCopy = JSON.stringify(event.details, null, 2)
@@ -427,18 +475,15 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               required
             >
-              {Object.values(CDKFlow).sort().map((value, index) => {
-                const flowKey = Object.keys(CDKFlow).find(key => CDKFlow[key as keyof typeof CDKFlow] === value);
-                // Convert ACCESS_AGE_VERIFICATION to accessAgeVerification (camelCase)
-                const translationKey = flowKey
-                  ? flowKey.toLowerCase().split('_').map((word, i) => i === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)).join('')
-                  : '';
-                return (
-                  <option key={index} value={value}>
-                    {t(`flows.${translationKey}`) || value}
-                  </option>
-                );
-              })}
+              {FLOW_GROUPS.map((group) => (
+                <optgroup key={group.labelKey} label={t(group.labelKey)}>
+                  {group.flows.map((flow) => (
+                    <option key={flow} value={flow}>
+                      {t(`flows.${flowTranslationKey(flow)}`) || flow}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
             </select>
           </div>
           {ageCriteriaFlows.has(selectedFlow) && (

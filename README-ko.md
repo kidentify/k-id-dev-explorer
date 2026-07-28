@@ -90,7 +90,7 @@ npm run dev
 
 k-ID Dev Explorer는 k-ID CDK 플로우를 테스트하는 대화형 방법을 제공합니다:
 
-1. **플로우 선택**: 드롭다운 메뉴에서 CDK 플로우 타입을 선택합니다(예: Age Gate, Access Age Verification, Age Appeal 등)
+1. **플로우 선택**: 드롭다운 메뉴에서 CDK 플로우 타입을 선택합니다(예: Age Gate Widget, Access Age Verification, Age Appeal 등)
 
 2. **필수 필드 입력**: 선택한 플로우에 필요한 필드를 입력합니다:
    - **관할권**: 대부분의 플로우에 필요합니다(예: "US-CA", "GB")
@@ -117,9 +117,11 @@ k-ID Dev Explorer는 k-ID CDK 플로우를 테스트하는 대화형 방법을 �
 
 ### 사용 가능한 CDK 플로우
 
+선택기는 플로우를 **AgeKit+ API**(연령 보증 수단), **CDK API**(서버 사이드 CDK 엔드포인트), **CDK 위젯**(iframe에 임베드되는 생성된 위젯 URL)으로 분류합니다.
+
+**AgeKit+ API**
+
 - **Access Age Verification**: 액세스 권한 부여 전에 사용자의 연령을 확인
-- **Age Gate**: 사용자에게 연령 확인 옵션 제공
-- **Age Gate Check**: 서버 사이드 CDK 커스텀 플로우로, 연령 게이트 요구 사항을 확인하고 연령 보증이 필요할 때 챌린지를 반환
 - **Facial Age Estimation**: 얼굴 인식을 사용하여 연령 추정
 - **ID Verification**: 정부 발급 신분증을 사용하여 신원 확인
 - **AgeKey Verification**: 패스키를 사용한 연령 확인
@@ -127,10 +129,18 @@ k-ID Dev Explorer는 k-ID CDK 플로우를 테스트하는 대화형 방법을 �
 - **Email Age Estimation**: 이메일 주소로 연령 추정
 - **Trusted Adult Verification**: 신뢰할 수 있는 성인 확인을 통해 확인
 - **Age Appeal**: 사용자가 연령 확인 결정에 대해 이의를 제기할 수 있도록 허용
-- **VPC End-to-End**: 완전한 확인, 동의 및 권한 플로우
-- **Direct Notices**: 컴플라이언스 공지를 직접 표시
-- **Manage Session Permissions**: 기존 세션의 권한 관리
+
+**CDK API**
+
+- **Age Gate Check**: 서버 사이드 CDK 커스텀 플로우로, 연령 게이트 요구 사항을 확인하고 연령 보증이 필요할 때 챌린지를 반환
 - **Session Upgrade Age Assurance**: 연령 보증이 필요한 권한으로 기존 세션 업그레이드
+
+**CDK 위젯**
+
+- **Age Gate Widget**: 사용자에게 연령 확인 옵션 제공
+- **End-to-End Widget**: 완전한 확인, 동의 및 권한 플로우 (VPC)
+- **Direct Notices Widget**: 컴플라이언스 공지를 직접 표시
+- **Manage Session Permissions Widget**: 기존 세션의 권한 관리
 
 각 플로우에 대한 자세한 문서는 [k-ID Developer Hub](https://docs.k-id.com)를 방문하세요.
 

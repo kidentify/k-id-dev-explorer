@@ -90,7 +90,7 @@ npm run dev
 
 k-ID Dev Explorer 提供了一种交互式方法来测试 k-ID CDK 流程：
 
-1. **选择流程**：从下拉菜单中选择 CDK 流程类型（例如：Age Gate、Access Age Verification、Age Appeal 等）
+1. **选择流程**：从下拉菜单中选择 CDK 流程类型（例如：Age Gate Widget、Access Age Verification、Age Appeal 等）
 
 2. **输入必填字段**：为所选流程填写必要的字段：
    - **管辖区**：大多数流程需要（例如："US-CA"、"GB"）
@@ -117,9 +117,11 @@ k-ID Dev Explorer 提供了一种交互式方法来测试 k-ID CDK 流程：
 
 ### 可用的 CDK 流程
 
+选择器将流程分为 **AgeKit+ API**（年龄保证方式）、**CDK API**（服务端 CDK 端点）和 **CDK 小部件**（嵌入 iframe 的生成式部件 URL）：
+
+**AgeKit+ API**
+
 - **Access Age Verification**：在授予访问权限之前验证用户的年龄
-- **Age Gate**：向用户展示年龄验证选项
-- **Age Gate Check**：服务端 CDK 自定义流程，检查年龄门要求；需要年龄保证时返回一个 challenge
 - **Facial Age Estimation**：使用面部识别估计年龄
 - **ID Verification**：使用政府颁发的身份证件验证身份
 - **AgeKey Verification**：基于通行密钥的年龄验证
@@ -127,10 +129,18 @@ k-ID Dev Explorer 提供了一种交互式方法来测试 k-ID CDK 流程：
 - **Email Age Estimation**：根据电子邮件地址估计年龄
 - **Trusted Adult Verification**：通过受信任的成人确认进行验证
 - **Age Appeal**：允许用户对年龄验证决定提出申诉
-- **VPC End-to-End**：完整的验证、同意和权限流程
-- **Direct Notices**：直接显示合规通知
-- **Manage Session Permissions**：管理现有会话的权限
+
+**CDK API**
+
+- **Age Gate Check**：服务端 CDK 自定义流程，检查年龄门要求；需要年龄保证时返回一个 challenge
 - **Session Upgrade Age Assurance**：使用需要年龄保证的权限升级现有会话
+
+**CDK 小部件**
+
+- **Age Gate Widget**：向用户展示年龄验证选项
+- **End-to-End Widget**：完整的验证、同意和权限流程（VPC）
+- **Direct Notices Widget**：直接显示合规通知
+- **Manage Session Permissions Widget**：管理现有会话的权限
 
 每个流程的详细文档，请访问 [k-ID Developer Hub](https://docs.k-id.com)。
 

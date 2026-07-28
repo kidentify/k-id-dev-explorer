@@ -90,7 +90,7 @@ npm run dev
 
 k-ID Dev Explorerは、k-ID CDKフローをテストするためのインタラクティブな方法を提供します：
 
-1. **フローを選択**: ドロップダウンメニューからCDKフロータイプを選択します（例：Age Gate、Access Age Verification、Age Appealなど）
+1. **フローを選択**: ドロップダウンメニューからCDKフロータイプを選択します（例：Age Gate Widget、Access Age Verification、Age Appealなど）
 
 2. **必要なフィールドを入力**: 選択したフローに必要なフィールドを入力します：
    - **管轄区域**: ほとんどのフローで必要です（例：「US-CA」、「GB」）
@@ -117,9 +117,11 @@ k-ID Dev Explorerは、k-ID CDKフローをテストするためのインタラ�
 
 ### 利用可能なCDKフロー
 
+セレクターはフローを **AgeKit+ API**（年齢保証手段）、**CDK API**（サーバーサイド CDK エンドポイント）、**CDK ウィジェット**（iframe に埋め込む生成済みウィジェット URL）に分類します。
+
+**AgeKit+ API**
+
 - **Access Age Verification**: アクセス許可前にユーザーの年齢を確認
-- **Age Gate**: ユーザーに年齢確認オプションを提示
-- **Age Gate Check**: サーバーサイドCDKカスタムフロー。年齢ゲート要件をチェックし、年齢保証が必要な場合はチャレンジを返す
 - **Facial Age Estimation**: 顔認識を使用して年齢を推定
 - **ID Verification**: 政府発行の身分証明書で身元を確認
 - **AgeKey Verification**: パスキーによる年齢確認
@@ -127,10 +129,18 @@ k-ID Dev Explorerは、k-ID CDKフローをテストするためのインタラ�
 - **Email Age Estimation**: メールアドレスから年齢を推定
 - **Trusted Adult Verification**: 信頼できる成人の確認を通じて確認
 - **Age Appeal**: ユーザーが年齢確認決定に異議を申し立てることを許可
-- **VPC End-to-End**: 完全な検証、同意、および許可フロー
-- **Direct Notices**: コンプライアンス通知を直接表示
-- **Manage Session Permissions**: 既存セッションの権限を管理
+
+**CDK API**
+
+- **Age Gate Check**: サーバーサイドCDKカスタムフロー。年齢ゲート要件をチェックし、年齢保証が必要な場合はチャレンジを返す
 - **Session Upgrade Age Assurance**: 年齢保証が必要な権限で既存のセッションをアップグレード
+
+**CDK ウィジェット**
+
+- **Age Gate Widget**: ユーザーに年齢確認オプションを提示
+- **End-to-End Widget**: 完全な検証、同意、および許可フロー（VPC）
+- **Direct Notices Widget**: コンプライアンス通知を直接表示
+- **Manage Session Permissions Widget**: 既存セッションの権限を管理
 
 各フローの詳細なドキュメントについては、[k-ID Developer Hub](https://docs.k-id.com)をご覧ください。
 

@@ -67,14 +67,14 @@
     "accessAgeVerification": "Access Age Verification",
     "facialAgeEstimation": "Facial Age Estimation",
     "trustedAdultVerification": "Trusted Adult Verification",
-    "ageGate": "Age Gate",
+    "ageGate": "Age Gate Widget",
     "idVerification": "ID Verification",
     "ageKeyVerification": "AgeKey Verification",
     "connectIdVerification": "ConnectID Verification",
     "emailEstimation": "Email Age Estimation",
-    "endToEnd": "VPC End-to-End",
-    "directNotices": "Direct Notices",
-    "manageSessionPermissions": "Manage Session Permissions",
+    "endToEnd": "End-to-End Widget",
+    "directNotices": "Direct Notices Widget",
+    "manageSessionPermissions": "Manage Session Permissions Widget",
     "ageAppeal": "Age Appeal",
     "sessionUpgradeAgeAssurance": "Session Upgrade Age Assurance",
     "ageGateCheck": "Age Gate Check"
@@ -130,6 +130,10 @@
   "errors": {
     "apiKeyNotConfigured": "API key not configured. Please set K_ID_API_KEY in your .env.local file.",
     "anErrorOccurred": "An error occurred"
+  },
+  "flowGroups": {
+    "agekitApi": "AgeKit+ API",
+    "cdkApi": "CDK API",
+    "cdkWidgets": "CDK Widgets"
   }
 }
-

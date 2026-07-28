@@ -92,7 +92,7 @@ When developing locally, **age key creation and validation will not work** unles
 
 The k-ID Dev Explorer provides an interactive way to test k-ID CDK flows:
 
-1. **Select a Flow**: Choose a CDK flow type from the dropdown menu (e.g., Age Gate, Access Age Verification, Age Appeal, etc.)
+1. **Select a Flow**: Choose a CDK flow type from the dropdown menu (e.g., Age Gate Widget, Access Age Verification, Age Appeal, etc.)
 
 2. **Enter Required Fields**: Fill in the necessary fields for the selected flow:
    - **Jurisdiction**: Required for most flows (e.g., "US-CA", "GB")
@@ -119,9 +119,11 @@ The k-ID Dev Explorer provides an interactive way to test k-ID CDK flows:
 
 ### Available CDK Flows
 
+The selector groups flows into **AgeKit+ API** (age assurance methods), **CDK API** (server-side CDK endpoints), and **CDK Widgets** (hosted widget URLs embedded in the iframe):
+
+**AgeKit+ API**
+
 - **Access Age Verification**: Verify a user's age before granting access
-- **Age Gate**: Present age verification options to users
-- **Age Gate Check**: Server-side CDK Custom flow that checks age gate requirements and returns a challenge when age assurance is needed
 - **Facial Age Estimation**: Estimate age using facial recognition
 - **ID Verification**: Verify identity using government-issued ID
 - **AgeKey Verification**: Passkey-based age verification
@@ -129,10 +131,18 @@ The k-ID Dev Explorer provides an interactive way to test k-ID CDK flows:
 - **Email Age Estimation**: Estimate age from an email address
 - **Trusted Adult Verification**: Verify through trusted adult confirmation
 - **Age Appeal**: Allow users to appeal an age verification decision
-- **VPC End-to-End**: Complete verification, consent, and permission flow
-- **Direct Notices**: Display compliance notices directly
-- **Manage Session Permissions**: Manage permissions for an existing session
+
+**CDK API**
+
+- **Age Gate Check**: Server-side CDK Custom flow that checks age gate requirements and returns a challenge when age assurance is needed
 - **Session Upgrade Age Assurance**: Upgrade an existing session with permissions that require age assurance
+
+**CDK Widgets**
+
+- **Age Gate Widget**: Present age verification options to users
+- **End-to-End Widget**: Complete verification, consent, and permission flow (VPC)
+- **Direct Notices Widget**: Display compliance notices directly
+- **Manage Session Permissions Widget**: Manage permissions for an existing session
 
 For detailed documentation on each flow, visit the [k-ID Developer Hub](https://docs.k-id.com).
 
