@@ -133,7 +133,7 @@ k-ID Dev Explorer 提供了一种交互式方法来测试 k-ID CDK 流程：
 **CDK API**
 
 - **Age Gate Check**：服务端 CDK 自定义流程，检查年龄门要求；需要年龄保证时返回一个 challenge
-- **Session Upgrade Age Assurance**：使用需要年龄保证的权限升级现有会话
+- **Session Upgrade**：使用一个或多个请求的权限升级会话；返回年龄保证或 VPC/家长同意质询（若直接授予则无质询）
 
 **CDK 小部件**
 

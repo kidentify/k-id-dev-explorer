@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
 import { NgrokInfo } from '../../types/webhook';
+import { fetchWithTimeout } from '../../utils/fetchWithTimeout';
 
 export async function GET() {
   try {
-    // Try to get ngrok tunnel information from the ngrok API
-    const response = await fetch('http://127.0.0.1:4040/api/tunnels');
+    // Fetch ngrok tunnel info from ngrok's local API. 5s abort timeout so a
+    // stalled ngrok API can't hang this route; the client polls it every 10s.
+    const response = await fetchWithTimeout('http://127.0.0.1:4040/api/tunnels', {}, 5000);
 
     if (!response.ok) {
       return NextResponse.json<NgrokInfo>({

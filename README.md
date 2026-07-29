@@ -135,7 +135,7 @@ The selector groups flows into **AgeKit+ API** (age assurance methods), **CDK AP
 **CDK API**
 
 - **Age Gate Check**: Server-side CDK Custom flow that checks age gate requirements and returns a challenge when age assurance is needed
-- **Session Upgrade Age Assurance**: Upgrade an existing session with permissions that require age assurance
+- **Session Upgrade**: Upgrade a session with one or more requested permissions; returns an age-assurance or VPC / parental-consent challenge (or none, if granted directly)
 
 **CDK Widgets**
 

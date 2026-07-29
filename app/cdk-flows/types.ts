@@ -58,6 +58,7 @@ export interface FlowResult {
   shortUrl?: string
   id?: string
   challengeId?: string
+  challengeType?: string
   sessionId?: string
   responseData?: unknown
   error?: unknown
@@ -77,6 +78,7 @@ export interface FlowHandler {
     shortUrl?: string
     id?: string
     challengeId?: string
+    challengeType?: string
     sessionId?: string
     responseData?: unknown
     error?: unknown
@@ -120,7 +122,7 @@ export enum CDKFlow {
   DIRECT_NOTICES = 'Direct Notices',
   MANAGE_SESSION_PERMISSIONS = 'Manage Session Permissions',
   AGE_APPEAL = 'Age Appeal',
-  SESSION_UPGRADE_AGE_ASSURANCE = 'Session Upgrade Age Assurance',
+  SESSION_UPGRADE = 'Session Upgrade',
   AGE_GATE_CHECK = 'Age Gate Check',
 }
 

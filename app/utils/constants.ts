@@ -68,5 +68,10 @@ export const API_CONFIG = {
     // Session Upgrade endpoint - upgrades a session with requested permissions
     // Documentation: https://docs.k-id.com/reference/api/endpoints/session-upgrade
     sessionUpgrade: '/api/v1/session/upgrade',
+
+    // Challenge Send Email endpoint - sends the consent email for a challenge
+    // that resolves via a parent / trusted adult (VPC / parental consent).
+    // Documentation: https://docs.k-id.com/api/endpoints/send-challenge-email
+    challengeSendEmail: '/api/v1/challenge/send-email',
   },
 } as const

@@ -133,7 +133,7 @@ k-ID Dev Explorer는 k-ID CDK 플로우를 테스트하는 대화형 방법을 �
 **CDK API**
 
 - **Age Gate Check**: 서버 사이드 CDK 커스텀 플로우로, 연령 게이트 요구 사항을 확인하고 연령 보증이 필요할 때 챌린지를 반환
-- **Session Upgrade Age Assurance**: 연령 보증이 필요한 권한으로 기존 세션 업그레이드
+- **Session Upgrade**: 요청한 하나 이상의 권한으로 세션을 업그레이드. 연령 보증 또는 VPC/보호자 동의 챌린지를 반환(직접 부여되면 챌린지 없음)
 
 **CDK 위젯**
 

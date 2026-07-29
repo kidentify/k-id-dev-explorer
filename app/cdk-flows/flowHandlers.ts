@@ -1,6 +1,6 @@
 import { AgeType, CDKFlow, FlowHandler, FormEntryKey, RequestBody, RequestBodyE2EOptions, RequestBodyFacialAgeEstimationOptions, RequestBodySubject } from './types'
 import { API_CONFIG } from '../utils/constants'
-import { performVerification, performSessionUpgradeAgeAssurance } from './verificationActions'
+import { performVerification, performSessionUpgrade } from './verificationActions'
 
 /**
  * Builds the request body for CDK flow API calls from form data.
@@ -194,20 +194,26 @@ function getManagePermissionsBody(formData: FormData): { sessionId: string; emai
 }
 
 function getSessionUpgradeBody(formData: FormData): {
-  jurisdiction: string
-  age: number
-  permissionName: string
-  redirectUrl?: string
+  sessionId: string
+  requestedPermissions: { name: string }[]
+  options?: { redirectUrl: string }
 } {
-  const jurisdiction = formData.get(FormEntryKey.JURISDICTION) as string
-  const age = parseInt(formData.get(FormEntryKey.AGE) as string)
-  const permissionName = formData.get(FormEntryKey.PERMISSION_NAME) as string
-  const redirectUrl = formData.get(FormEntryKey.REDIRECT_URL) as string
+  // Upgrade an existing session — the sessionId is supplied (auto-filled from a
+  // prior flow / webhook, or pasted), not minted here.
+  const sessionId = ((formData.get(FormEntryKey.SESSION_ID) as string | null) ?? '').trim()
+  // The permission field carries one or more comma-separated permission names.
+  const requestedPermissions = ((formData.get(FormEntryKey.PERMISSION_NAME) as string | null) ?? '')
+    .split(',')
+    .map((name) => name.trim())
+    .filter(Boolean)
+    .map((name) => ({ name }))
+  const redirectUrl = ((formData.get(FormEntryKey.REDIRECT_URL) as string | null) ?? '').trim()
 
-  const body: { jurisdiction: string; age: number; permissionName: string; redirectUrl?: string } = {
-    jurisdiction, age, permissionName,
+  const body: { sessionId: string; requestedPermissions: { name: string }[]; options?: { redirectUrl: string } } = {
+    sessionId,
+    requestedPermissions,
   }
-  if (redirectUrl) body.redirectUrl = redirectUrl
+  if (redirectUrl) body.options = { redirectUrl }
 
   return body
 }
@@ -507,11 +513,11 @@ export const flowHandlers: Record<CDKFlow, FlowHandler> = {
     },
     performAction: performVerification,
   },
-  [CDKFlow.SESSION_UPGRADE_AGE_ASSURANCE]: {
+  [CDKFlow.SESSION_UPGRADE]: {
     buildRequestData: (formData: FormData, apiUrl: string, apiKey: string) => {
       return {
         method: 'POST',
-        url: `${apiUrl}${API_CONFIG.endpoints.ageGateCheck}`,
+        url: `${apiUrl}${API_CONFIG.endpoints.sessionUpgrade}`,
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${apiKey}`,
@@ -519,7 +525,7 @@ export const flowHandlers: Record<CDKFlow, FlowHandler> = {
         body: getSessionUpgradeBody(formData),
       }
     },
-    performAction: performSessionUpgradeAgeAssurance,
+    performAction: performSessionUpgrade,
   },
   /**
    * Age Gate Check (CDK Custom) flow handler.

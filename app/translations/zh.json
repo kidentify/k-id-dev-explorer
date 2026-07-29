@@ -38,7 +38,9 @@
     "facialAgeEstimationHelp": "设置阈值以控制如何解释面部年龄估计结果。如果估计年龄等于或大于 passIfOver，则验证通过。如果低于 failIfUnder，则验证失败。否则，用户可以重试。",
     "passIfOver": "通过阈值",
     "failIfUnder": "失败阈值",
-    "permissionName": "权限名称"
+    "requestedPermissions": "请求的权限",
+    "requestedPermissionsHelp": "以逗号分隔。根据会话，升级会返回同意/年龄保证质询，或直接授予权限。",
+    "sessionUpgradeSessionIdHelp": "自动填入当前会话（例如运行年龄门检查后），也可粘贴现有会话 ID。"
   },
   "placeholders": {
     "enterAge": "输入年龄",
@@ -53,7 +55,8 @@
     "enterRedirectUrl": "例如: https://example.com/callback",
     "passIfOverExample": "例如: 25",
     "failIfUnderExample": "例如: 12",
-    "enterPermissionName": "例如: loot-boxes-paid-gameplay-impacting"
+    "enterSessionId": "输入或粘贴会话 ID",
+    "requestedPermissions": "以逗号分隔，例如：loot-boxes-paid-gameplay-impacting"
   },
   "ageTypes": {
     "age": "年龄",
@@ -76,8 +79,8 @@
     "directNotices": "直接通知小部件",
     "manageSessionPermissions": "管理会话权限小部件",
     "ageAppeal": "年龄申诉",
-    "sessionUpgradeAgeAssurance": "会话升级年龄保证",
-    "ageGateCheck": "年龄门检查"
+    "ageGateCheck": "年龄门检查",
+    "sessionUpgrade": "会话升级"
   },
   "preview": {
     "device": "设备:",
