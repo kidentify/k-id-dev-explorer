@@ -7,6 +7,7 @@ import ChallengeControls from './ChallengeControls'
 import SessionControls from './SessionControls'
 import EventsTraffic from './EventsTraffic'
 import { AddEventMethod, EventDetails, EventLog, RequestType } from '../cdk-flows/types'
+import { subscribeWebhookEvents } from '../utils/webhookEvents'
 
 interface ApiKeyStatus {
   isConfigured: boolean
@@ -22,6 +23,7 @@ export default function DevToolWrapper({ apiKeyStatus }: DevToolWrapperProps) {
   const [shortUrl, setShortUrl] = useState<string | undefined>(undefined)
   const [verificationId, setVerificationId] = useState<string | undefined>(undefined)
   const [challengeId, setChallengeId] = useState<string | null>(null)
+  const [challengeType, setChallengeType] = useState<string | undefined>(undefined)
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [eventLogs, setEventLogs] = useState<EventLog[]>([])
   // Store the addEvent function using useRef to avoid re-renders
@@ -103,39 +105,31 @@ export default function DevToolWrapper({ apiKeyStatus }: DevToolWrapperProps) {
    * us, but Compliance Studio's webhook can.
    */
   useEffect(() => {
-    const es = new EventSource('/api/webhook/events')
-    es.onmessage = (evt) => {
-      try {
-        const parsed = JSON.parse(evt.data)
-        if (parsed?.type !== 'webhook') return
-        const body = parsed.data?.body as Record<string, unknown> | undefined
-        if (!body || typeof body !== 'object') return
-        const eventType = (body.eventType ?? body.type) as string | undefined
-        const data = (body.data ?? {}) as Record<string, unknown>
-        // Look for challengeId in common locations.
-        const candidateChallengeId =
-          (body.challengeId as string | undefined) ??
-          (data.challengeId as string | undefined) ??
-          (eventType && /challenge/i.test(eventType) ? (data.id as string | undefined) : undefined)
-        if (typeof candidateChallengeId === 'string' && candidateChallengeId) {
-          setChallengeId(candidateChallengeId)
-        }
-        // sessionId can come nested under `data` on any completion event
-        // (Verification.Result / Challenge.StateChange / Session.*).
-        const candidateSessionId =
-          (body.sessionId as string | undefined) ??
-          (data.sessionId as string | undefined) ??
-          (eventType && /session/i.test(eventType) ? (data.id as string | undefined) : undefined)
-        if (typeof candidateSessionId === 'string' && candidateSessionId) {
-          setSessionId(candidateSessionId)
-        }
-      } catch {
-        // ignore non-JSON frames / heartbeats
+    return subscribeWebhookEvents((payload) => {
+      const parsed = payload as { type?: string; data?: { body?: Record<string, unknown> } }
+      if (parsed?.type !== 'webhook') return
+      const body = parsed.data?.body
+      if (!body || typeof body !== 'object') return
+      const eventType = (body.eventType ?? body.type) as string | undefined
+      const data = (body.data ?? {}) as Record<string, unknown>
+      // Look for challengeId in common locations.
+      const candidateChallengeId =
+        (body.challengeId as string | undefined) ??
+        (data.challengeId as string | undefined) ??
+        (eventType && /challenge/i.test(eventType) ? (data.id as string | undefined) : undefined)
+      if (typeof candidateChallengeId === 'string' && candidateChallengeId) {
+        setChallengeId(candidateChallengeId)
       }
-    }
-    return () => {
-      es.close()
-    }
+      // sessionId can come nested under `data` on any completion event
+      // (Verification.Result / Challenge.StateChange / Session.*).
+      const candidateSessionId =
+        (body.sessionId as string | undefined) ??
+        (data.sessionId as string | undefined) ??
+        (eventType && /session/i.test(eventType) ? (data.id as string | undefined) : undefined)
+      if (typeof candidateSessionId === 'string' && candidateSessionId) {
+        setSessionId(candidateSessionId)
+      }
+    })
   }, [])
 
   /**
@@ -153,6 +147,7 @@ export default function DevToolWrapper({ apiKeyStatus }: DevToolWrapperProps) {
     newVerificationId?: string,
     newChallengeId?: string,
     newSessionId?: string,
+    newChallengeType?: string,
   ) => {
     setIframeUrl(url)
     setShortUrl(newShortUrl)
@@ -161,6 +156,7 @@ export default function DevToolWrapper({ apiKeyStatus }: DevToolWrapperProps) {
     // Custom flows (Age Gate Check); otherwise clear so ChallengeControls /
     // SessionControls unmount and reset.
     setChallengeId(newChallengeId ?? null)
+    setChallengeType(newChallengeType)
     setSessionId(newSessionId ?? null)
   }
 
@@ -189,6 +185,7 @@ export default function DevToolWrapper({ apiKeyStatus }: DevToolWrapperProps) {
         <CDKFlowDevTool
           onIframeUrlUpdate={handleIframeUrlUpdate}
           apiKeyStatus={apiKeyStatus}
+          currentSessionId={sessionId}
           onAddEvent={handleAddEvent}
           onEventLogsChange={handleEventLogsChange}
           onDownloadEventLogRef={(fn) => { downloadEventLogRef.current = fn; }}
@@ -206,7 +203,7 @@ export default function DevToolWrapper({ apiKeyStatus }: DevToolWrapperProps) {
           challengeId={challengeId}
           addEvent={addEvent}
         />
-        <ChallengeControls challengeId={challengeId} apiKeyStatus={apiKeyStatus} addEvent={addEvent} />
+        <ChallengeControls challengeId={challengeId} challengeType={challengeType} apiKeyStatus={apiKeyStatus} addEvent={addEvent} />
         <SessionControls sessionId={sessionId} apiKeyStatus={apiKeyStatus} addEvent={addEvent} />
       </div>
 

@@ -38,7 +38,9 @@
     "facialAgeEstimationHelp": "顔認証による年齢推定結果の解釈方法を制御するしきい値を設定します。推定年齢が passIfOver 以上の場合、検証は合格になります。failIfUnder を下回る場合は不合格となります。それ以外の場合、ユーザーは再試行できます。",
     "passIfOver": "合格しきい値",
     "failIfUnder": "不合格しきい値",
-    "permissionName": "パーミッション名"
+    "requestedPermissions": "リクエストする権限",
+    "requestedPermissionsHelp": "カンマ区切り。セッションに応じて、アップグレードは同意／年齢保証チャレンジを返すか、権限を直接付与します。",
+    "sessionUpgradeSessionIdHelp": "現在のセッション（例: エイジゲートチェック実行後）から自動入力されます。既存のセッション ID を貼り付けることもできます。"
   },
   "placeholders": {
     "enterAge": "年齢を入力",
@@ -53,7 +55,8 @@
     "enterRedirectUrl": "例: https://example.com/callback",
     "passIfOverExample": "例: 25",
     "failIfUnderExample": "例: 12",
-    "enterPermissionName": "例: loot-boxes-paid-gameplay-impacting"
+    "enterSessionId": "セッション ID を入力または貼り付け",
+    "requestedPermissions": "カンマ区切り、例: loot-boxes-paid-gameplay-impacting"
   },
   "ageTypes": {
     "age": "年齢",
@@ -76,8 +79,8 @@
     "directNotices": "直接通知ウィジェット",
     "manageSessionPermissions": "セッション権限管理ウィジェット",
     "ageAppeal": "年齢申し立て",
-    "sessionUpgradeAgeAssurance": "セッションアップグレード年齢保証",
-    "ageGateCheck": "年齢ゲートチェック"
+    "ageGateCheck": "年齢ゲートチェック",
+    "sessionUpgrade": "セッションアップグレード"
   },
   "preview": {
     "device": "デバイス:",

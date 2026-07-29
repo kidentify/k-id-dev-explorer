@@ -1,7 +1,7 @@
 'use server'
 
-import { FlowRequestData, FlowResultStep } from './types'
-import { API_CONFIG } from '../utils/constants'
+import { FlowRequestData } from './types'
+import { fetchWithTimeout } from '../utils/fetchWithTimeout'
 
 /**
  * Performs a CDK flow API call to the k-ID API.
@@ -27,6 +27,7 @@ export async function performVerification(
   shortUrl?: string
   id?: string
   challengeId?: string
+  challengeType?: string
   sessionId?: string
   responseData?: unknown
   error?: unknown
@@ -41,7 +42,7 @@ export async function performVerification(
     console.log('Body:', requestBody)
 
     // Make the API call to k-ID
-    const response = await fetch(requestData.url, {
+    const response = await fetchWithTimeout(requestData.url, {
       method: requestData.method,
       headers: requestData.headers,
       body: requestBody,
@@ -76,6 +77,7 @@ export async function performVerification(
     const challengeUrl: string | undefined = data.challenge?.url
     const url = topUrl ?? challengeUrl
     const challengeId: string | undefined = data.challenge?.challengeId
+    const challengeType: string | undefined = data.challenge?.type
     const sessionId: string | undefined = data.session?.sessionId
     if (url || challengeId || sessionId) {
       return {
@@ -84,6 +86,7 @@ export async function performVerification(
         url,
         shortUrl: data.shortUrl,
         challengeId,
+        challengeType,
         sessionId,
         responseData: data,
       }
@@ -97,116 +100,57 @@ export async function performVerification(
 }
 
 /**
- * Two-step server action for the Session Upgrade Age Assurance flow.
+ * Server action for the Session Upgrade flow.
  *
- * Step 1: POST /age-gate/check with { jurisdiction, age } to obtain a session.
- * Step 2: POST /session/upgrade with { sessionId, requestedPermissions } to get
- *         a CHALLENGE_SESSION_UPGRADE_BY_AGE_ASSURANCE challenge whose URL is
- *         embedded in the iframe.
+ * POST /session/upgrade with { sessionId, requestedPermissions } to upgrade an
+ * EXISTING session with the requested permission(s). The session is not minted
+ * here — the caller supplies a sessionId (auto-filled from a prior flow /
+ * webhook, or pasted in).
  *
- * The `permissionName` field is expected in requestData.body alongside the
- * age-gate/check payload; it is consumed only by step 2.
+ * A session upgrade is not necessarily age assurance — depending on the
+ * session's age/jurisdiction and the requested permissions, the response may
+ * carry an age-assurance challenge, a VPC / parental-consent challenge, or no
+ * challenge at all. Any challenge URL is surfaced for iframe embedding; "no
+ * challenge" is treated as a successful plain upgrade (permissions granted).
  */
-export async function performSessionUpgradeAgeAssurance(
+export async function performSessionUpgrade(
   requestData: FlowRequestData,
-): Promise<{ success: boolean; url?: string; id?: string; responseData?: unknown; error?: unknown; steps?: FlowResultStep[] }> {
-  const body = requestData.body as Record<string, unknown>
-  const permissionName = body.permissionName as string
-  const baseUrl = requestData.url.replace(API_CONFIG.endpoints.ageGateCheck, '')
-  const steps: FlowResultStep[] = []
+): Promise<{ success: boolean; url?: string; id?: string; challengeId?: string; challengeType?: string; responseData?: unknown; error?: unknown }> {
+  try {
+    const response = await fetchWithTimeout(requestData.url, {
+      method: requestData.method,
+      headers: requestData.headers,
+      body: JSON.stringify(requestData.body),
+    })
 
-  // --- Step 1: age-gate/check ---
-  const ageGateBody = { jurisdiction: body.jurisdiction, age: body.age }
-  const ageGateRequest = { method: 'POST', url: requestData.url, body: ageGateBody }
+    const text = await response.text()
+    let data: unknown
+    try { data = text ? JSON.parse(text) : {} } catch { data = text }
 
-  const ageGateResponse = await fetch(requestData.url, {
-    method: 'POST',
-    headers: requestData.headers,
-    body: JSON.stringify(ageGateBody),
-  })
-
-  if (!ageGateResponse.ok) {
-    const errorText = await ageGateResponse.text()
-    let errorData: unknown
-    try { errorData = JSON.parse(errorText) } catch { errorData = errorText }
-    steps.push({ request: ageGateRequest, response: errorData })
-    return { success: false, error: errorData, steps }
-  }
-
-  const ageGateData = await ageGateResponse.json()
-  steps.push({ request: ageGateRequest, response: ageGateData })
-
-  if (ageGateData.challenge) {
-    return {
-      success: false,
-      error: 'Age assurance not required — age-gate returned a challenge (minor/consent path). Adjust the age parameter.',
-      steps,
+    if (!response.ok) {
+      return { success: false, error: data }
     }
-  }
 
-  if (!ageGateData.session?.sessionId) {
-    return {
-      success: false,
-      error: `Unexpected age-gate response — no session returned (status: ${ageGateData.status}).`,
-      steps,
+    const challenge = (data as Record<string, unknown>).challenge as
+      | { url?: string; challengeId?: string; type?: string }
+      | undefined
+
+    // Any challenge type (age assurance, VPC / parental consent, …) with a URL
+    // is embedded in the iframe. No challenge = the permission(s) were granted
+    // directly — a successful "plain" session upgrade.
+    if (challenge?.url) {
+      return {
+        success: true,
+        url: challenge.url,
+        id: challenge.challengeId,
+        challengeId: challenge.challengeId,
+        challengeType: challenge.type,
+        responseData: data,
+      }
     }
-  }
 
-  const sessionId: string = ageGateData.session.sessionId
-  const redirectUrl = body.redirectUrl as string | undefined
-
-  // --- Step 2: session/upgrade ---
-  const upgradeUrl = `${baseUrl}${API_CONFIG.endpoints.sessionUpgrade}`
-  const upgradeBody: Record<string, unknown> = {
-    sessionId,
-    requestedPermissions: [{ name: permissionName }],
-  }
-  if (redirectUrl) {
-    upgradeBody.options = { redirectUrl }
-  }
-  const upgradeRequest = { method: 'POST', url: upgradeUrl, body: upgradeBody }
-
-  const upgradeResponse = await fetch(upgradeUrl, {
-    method: 'POST',
-    headers: requestData.headers,
-    body: JSON.stringify(upgradeBody),
-  })
-
-  if (!upgradeResponse.ok) {
-    const errorText = await upgradeResponse.text()
-    let errorData: unknown
-    try { errorData = JSON.parse(errorText) } catch { errorData = errorText }
-    steps.push({ request: upgradeRequest, response: errorData })
-    return { success: false, error: errorData, steps }
-  }
-
-  const upgradeData = await upgradeResponse.json()
-  steps.push({ request: upgradeRequest, response: upgradeData })
-
-  const challenge = upgradeData.challenge
-  if (
-    challenge?.type?.toUpperCase() === 'CHALLENGE_SESSION_UPGRADE_BY_AGE_ASSURANCE' &&
-    challenge.url
-  ) {
-    return {
-      success: true,
-      url: challenge.url,
-      id: challenge.challengeId,
-      steps,
-    }
-  }
-
-  if (!challenge) {
-    return {
-      success: false,
-      error: 'Age assurance not required — session/upgrade returned no challenge. The permission may already be enabled.',
-      steps,
-    }
-  }
-
-  return {
-    success: false,
-    error: `Unexpected challenge type: ${challenge.type}. Expected CHALLENGE_SESSION_UPGRADE_BY_AGE_ASSURANCE.`,
-    steps,
+    return { success: true, responseData: data }
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' }
   }
 }

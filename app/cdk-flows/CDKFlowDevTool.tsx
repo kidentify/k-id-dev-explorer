@@ -8,6 +8,7 @@ import VerificationForm from '../components/forms/verificationForm'
 import E2EOptionsForm from '../components/forms/e2eOptionsForm'
 import ManagePermissionsForm from '../components/forms/managePermissionsForm'
 import { useTranslation } from '../utils/translations'
+import { subscribeWebhookEvents } from '../utils/webhookEvents'
 import Image from 'next/image'
 
 interface ApiKeyStatus {
@@ -38,7 +39,7 @@ const FLOW_GROUPS: { labelKey: string; flows: CDKFlow[] }[] = [
   },
   {
     labelKey: 'flowGroups.cdkApi',
-    flows: [CDKFlow.AGE_GATE_CHECK, CDKFlow.SESSION_UPGRADE_AGE_ASSURANCE],
+    flows: [CDKFlow.AGE_GATE_CHECK, CDKFlow.SESSION_UPGRADE],
   },
   {
     labelKey: 'flowGroups.cdkWidgets',
@@ -70,8 +71,11 @@ interface CDKFlowDevToolProps {
     verificationId?: string,
     challengeId?: string,
     sessionId?: string,
+    challengeType?: string,
   ) => void
   apiKeyStatus: ApiKeyStatus
+  /** The session currently known to the tool (from a prior flow / webhook); used to auto-fill Session Upgrade. */
+  currentSessionId?: string | null
   onAddEvent?: (addEventFn: AddEventMethod) => void
   onEventLogsChange?: (eventLogs: EventLog[]) => void
   onDownloadEventLogRef?: (fn: () => void) => void
@@ -79,9 +83,15 @@ interface CDKFlowDevToolProps {
   onCopyEventRef?: (fn: (event: EventLog) => void) => void
 }
 
-export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddEvent, onEventLogsChange, onDownloadEventLogRef, onClearLogsRef, onCopyEventRef }: CDKFlowDevToolProps) {
+export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, currentSessionId, onAddEvent, onEventLogsChange, onDownloadEventLogRef, onClearLogsRef, onCopyEventRef }: CDKFlowDevToolProps) {
   const { t } = useTranslation();
   const [selectedFlow, setSelectedFlow] = useState(CDKFlow.ACCESS_AGE_VERIFICATION)
+  // Session Upgrade operates on an existing session. Auto-fill the field with
+  // the session the tool has captured from a prior flow / webhook; still editable.
+  const [sessionUpgradeSessionId, setSessionUpgradeSessionId] = useState('')
+  useEffect(() => {
+    if (currentSessionId) setSessionUpgradeSessionId(currentSessionId)
+  }, [currentSessionId])
 
   // Flows that use the standard age criteria form (jurisdiction + age/ageCategory)
   const ageCriteriaFlows = new Set([
@@ -205,44 +215,32 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
       })
     }
 
-    // Set up Server-Sent Events connection for webhook events
-    let eventSource: EventSource | null = null
-
-    try {
-      eventSource = new EventSource('/api/webhook/events')
-
-      eventSource.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data)
-          if (data.type === 'webhook') {
-            addEvent('webhook-received', RequestType.WEBHOOK, {
-              method: data.data.method,
-              url: data.data.url,
-              headers: data.data.headers,
-              body: data.data.body,
-              timestamp: data.data.timestamp,
-              id: data.data.id,
-              signatureStatus: data.data.signatureStatus,
-            })
-          }
-          // Silently handle 'connected', 'heartbeat', and 'test' events - don't add to event log
-        } catch (error) {
-          console.error('Error parsing SSE data:', error)
+    // Subscribe to the shared webhook SSE stream. A single EventSource is shared
+    // across all components (see utils/webhookEvents) so we don't exhaust the
+    // browser's per-origin connection pool.
+    const unsubscribeWebhook = subscribeWebhookEvents(
+      (payload) => {
+        const msg = payload as { type?: string; data?: EventDetails }
+        if (msg.type === 'webhook' && msg.data) {
+          const d = msg.data
+          addEvent('webhook-received', RequestType.WEBHOOK, {
+            method: d.method,
+            url: d.url,
+            headers: d.headers,
+            body: d.body,
+            timestamp: d.timestamp,
+            id: d.id,
+            signatureStatus: d.signatureStatus,
+          })
         }
-      }
-
-      eventSource.onerror = (error) => {
+        // 'connected' / 'heartbeat' / 'test' events are ignored.
+      },
+      () => {
         addEvent('webhook-stream-error', RequestType.ERROR, {
           error: 'Failed to connect to webhook event stream',
-          details: error,
         })
-      }
-    } catch (error) {
-      addEvent('webhook-stream-error', RequestType.ERROR, {
-        error: 'Failed to initialize webhook event stream',
-        details: error,
-      })
-    }
+      },
+    )
 
     window.addEventListener('message', handleMessage)
     window.addEventListener('error', handleError)
@@ -252,10 +250,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
       window.removeEventListener('message', handleMessage)
       window.removeEventListener('error', handleError)
       window.removeEventListener('unhandledrejection', handleUnhandledRejection)
-
-      if (eventSource) {
-        eventSource.close()
-      }
+      unsubscribeWebhook()
     }
   }, [addEvent])
 
@@ -320,6 +315,7 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
             url: result.url,
             shortUrl: result.shortUrl,
             challengeId: result.challengeId,
+            challengeType: result.challengeType,
             sessionId: result.sessionId,
             responseData: result.responseData
           })
@@ -330,8 +326,16 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
           result.id,
           result.challengeId,
           result.sessionId,
+          result.challengeType,
         )
-      } else if (!result.success) {
+      } else if (result.success) {
+        // Success with no challenge / session / url — e.g. a plain session
+        // upgrade where the permissions were granted directly. Log the response
+        // so the outcome is visible even though there's nothing to embed.
+        if (!result.steps) {
+          addEvent('api-response', RequestType.RESPONSE, { responseData: result.responseData })
+        }
+      } else {
         const errorData = { error: result.error }
         addEvent('api-error', RequestType.ERROR, errorData)
         setError(formatErrorForDisplay(result.error || t('errors.anErrorOccurred')))
@@ -516,21 +520,48 @@ export default function CDKFlowDevTool({ onIframeUrlUpdate, apiKeyStatus, onAddE
           )}
           {selectedFlow === CDKFlow.DIRECT_NOTICES && <VerificationForm id={{ required: false }} redirectUrl={{ required: false }} />}
           {selectedFlow === CDKFlow.MANAGE_SESSION_PERMISSIONS && <ManagePermissionsForm />}
-          {selectedFlow === CDKFlow.SESSION_UPGRADE_AGE_ASSURANCE && (
+          {selectedFlow === CDKFlow.SESSION_UPGRADE && (
             <div className="space-y-4">
-              <VerificationForm defaultJurisdiction="BR" age={{ required: true, defaultValue: "18" }} redirectUrl={{ required: false }} />
+              <div className="mb-2">
+                <label htmlFor={FormEntryKey.SESSION_ID} className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('fields.sessionId')}
+                </label>
+                <input
+                  type="text"
+                  id={FormEntryKey.SESSION_ID}
+                  name={FormEntryKey.SESSION_ID}
+                  value={sessionUpgradeSessionId}
+                  onChange={(e) => setSessionUpgradeSessionId(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm font-mono text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  placeholder={t('placeholders.enterSessionId')}
+                  required
+                />
+                <p className="text-xs text-gray-500 mt-1">{t('fields.sessionUpgradeSessionIdHelp')}</p>
+              </div>
               <div className="mb-2">
                 <label htmlFor={FormEntryKey.PERMISSION_NAME} className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('fields.permissionName')}
+                  {t('fields.requestedPermissions')}
                 </label>
                 <input
                   type="text"
                   id={FormEntryKey.PERMISSION_NAME}
                   name={FormEntryKey.PERMISSION_NAME}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder={t('placeholders.enterPermissionName')}
-                  defaultValue="loot-boxes-paid-gameplay-impacting"
+                  placeholder={t('placeholders.requestedPermissions')}
                   required
+                />
+                <p className="text-xs text-gray-500 mt-1">{t('fields.requestedPermissionsHelp')}</p>
+              </div>
+              <div className="mb-2">
+                <label htmlFor={FormEntryKey.REDIRECT_URL} className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('fields.redirectUrl')} {t('common.optional')}
+                </label>
+                <input
+                  type="url"
+                  id={FormEntryKey.REDIRECT_URL}
+                  name={FormEntryKey.REDIRECT_URL}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  placeholder={t('placeholders.enterRedirectUrl')}
                 />
               </div>
             </div>

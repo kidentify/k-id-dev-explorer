@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import QrCode from './QrCode';
 import { AddEventMethod, RequestType } from '../cdk-flows/types';
 import { useTranslation } from '../utils/translations';
+import { subscribeWebhookEvents } from '../utils/webhookEvents';
 
 interface IframeDisplayProps {
   iframeUrl: string;
@@ -93,42 +94,34 @@ export default function IframeDisplay({
   // pointing at the ngrok URL).
   useEffect(() => {
     if (!verificationId && !challengeId) return;
-    const es = new EventSource('/api/webhook/events');
-    es.onmessage = (evt) => {
-      try {
-        const parsed = JSON.parse(evt.data);
-        if (parsed?.type !== 'webhook') return;
-        const body = parsed.data?.body;
-        const ids = extractIds(body);
-        const matchesVerification = !!verificationId && ids.verificationId === verificationId;
-        const matchesChallenge = !!challengeId && ids.challengeId === challengeId;
-        if (!matchesVerification && !matchesChallenge) return;
-        const data = (body?.data ?? {}) as Record<string, unknown>;
-        const rawStatus = data.status as string | undefined;
-        const kind: ResultKind = (rawStatus ?? '').toUpperCase() === 'FAIL' ? 'fail' : 'pass';
-        setResult({
-          kind,
-          status: rawStatus,
-          age: data.age as { low?: number; high?: number } | undefined,
-          ageCategory: data.ageCategory as string | undefined,
-          method: data.method as string | undefined,
-          failureReason: (data.failureReason ?? data.reason) as string | undefined,
-          sessionId: data.sessionId as string | undefined,
-          approverEmail: data.approverEmail as string | undefined,
-        });
-        addEvent?.('webhook-result', RequestType.INFO, {
-          matched: matchesVerification ? 'verificationId' : 'challengeId',
-          verificationId: matchesVerification ? verificationId : undefined,
-          challengeId: matchesChallenge ? challengeId : undefined,
-          ...data,
-        });
-      } catch {
-        // ignore non-JSON frames / heartbeats
-      }
-    };
-    return () => {
-      es.close();
-    };
+    return subscribeWebhookEvents((payload) => {
+      const parsed = payload as { type?: string; data?: { body?: unknown } };
+      if (parsed?.type !== 'webhook') return;
+      const body = parsed.data?.body;
+      const ids = extractIds(body);
+      const matchesVerification = !!verificationId && ids.verificationId === verificationId;
+      const matchesChallenge = !!challengeId && ids.challengeId === challengeId;
+      if (!matchesVerification && !matchesChallenge) return;
+      const data = ((body as { data?: unknown } | undefined)?.data ?? {}) as Record<string, unknown>;
+      const rawStatus = data.status as string | undefined;
+      const kind: ResultKind = (rawStatus ?? '').toUpperCase() === 'FAIL' ? 'fail' : 'pass';
+      setResult({
+        kind,
+        status: rawStatus,
+        age: data.age as { low?: number; high?: number } | undefined,
+        ageCategory: data.ageCategory as string | undefined,
+        method: data.method as string | undefined,
+        failureReason: (data.failureReason ?? data.reason) as string | undefined,
+        sessionId: data.sessionId as string | undefined,
+        approverEmail: data.approverEmail as string | undefined,
+      });
+      addEvent?.('webhook-result', RequestType.INFO, {
+        matched: matchesVerification ? 'verificationId' : 'challengeId',
+        verificationId: matchesVerification ? verificationId : undefined,
+        challengeId: matchesChallenge ? challengeId : undefined,
+        ...data,
+      });
+    });
   }, [verificationId, challengeId, addEvent]);
 
   const handleCopy = () => {

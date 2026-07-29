@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { getChallengeStatus } from '../cdk-flows/serverActions'
+import { getChallengeStatus, sendChallengeEmail } from '../cdk-flows/serverActions'
 import { EventDetails, RequestType } from '../cdk-flows/types'
 
 interface ApiKeyStatus {
@@ -11,13 +11,61 @@ interface ApiKeyStatus {
 
 interface ChallengeControlsProps {
   challengeId: string | null
+  /** The challenge type (e.g. CHALLENGE_SESSION_UPGRADE_BY_AGE_ASSURANCE), when known. */
+  challengeType?: string
   apiKeyStatus: ApiKeyStatus
   addEvent?: (event: string, type?: RequestType, details?: EventDetails) => void
 }
 
-export default function ChallengeControls({ challengeId, apiKeyStatus, addEvent }: ChallengeControlsProps) {
+/**
+ * A challenge resolves via email only when a parent / trusted adult is
+ * contacted — verifiable parental consent (VPC) or trusted-adult verification.
+ * Age-assurance challenges (facial / ID / AgeKey / …) are completed in-widget
+ * by the same user, so they never use email.
+ */
+function isEmailCapableChallenge(type?: string): boolean {
+  if (!type) return false
+  return /CONSENT|PARENTAL|GUARDIAN|VPC|TRUSTED[_ ]?ADULT/i.test(type)
+}
+
+export default function ChallengeControls({ challengeId, challengeType, apiKeyStatus, addEvent }: ChallengeControlsProps) {
   const [challengeStatus, setChallengeStatus] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [email, setEmail] = useState('')
+  const [isSendingEmail, setIsSendingEmail] = useState(false)
+  const [emailResult, setEmailResult] = useState<string | null>(null)
+
+  const handleSendEmail = async () => {
+    if (!challengeId || !email.trim() || !apiKeyStatus.isConfigured) return
+
+    setIsSendingEmail(true)
+    setEmailResult(null)
+
+    addEvent?.('api-request', RequestType.REQUEST, {
+      method: 'POST',
+      url: `${apiKeyStatus.apiUrl}/api/v1/challenge/send-email`,
+      body: { challengeId, email: email.trim() },
+    })
+
+    try {
+      const result = await sendChallengeEmail(challengeId, email.trim())
+      if (result.success) {
+        setEmailResult(`Sent to ${email.trim()}`)
+        addEvent?.('api-response', RequestType.RESPONSE, { success: true, responseData: result.data })
+      } else {
+        const msg = typeof result.error === 'string' ? result.error : JSON.stringify(result.error)
+        setEmailResult('Error: ' + msg)
+        addEvent?.('api-error', RequestType.ERROR, { error: result.error })
+      }
+    } catch (error) {
+      setEmailResult('Error: failed to send challenge email')
+      addEvent?.('api-error', RequestType.ERROR, {
+        error: error instanceof Error ? error.message : 'Unknown error',
+      })
+    } finally {
+      setIsSendingEmail(false)
+    }
+  }
 
   const fetchChallengeStatus = async () => {
     if (!challengeId || !apiKeyStatus.isConfigured) return
@@ -87,6 +135,11 @@ export default function ChallengeControls({ challengeId, apiKeyStatus, addEvent 
             </svg>
           </button>
         </p>
+        {challengeType && (
+          <p className="text-xs text-gray-500 mt-1">
+            Type: <span className="font-mono">{challengeType}</span>
+          </p>
+        )}
       </div>
 
       <div className="flex flex-row gap-3">
@@ -134,6 +187,46 @@ export default function ChallengeControls({ challengeId, apiKeyStatus, addEvent 
         >
           {challengeStatus}
         </pre>
+      )}
+
+      {isEmailCapableChallenge(challengeType) && (
+        <div className="mt-4 pt-4 border-t border-gray-200">
+          <p className="text-sm font-medium text-gray-700">Send consent email</p>
+          <p className="text-xs text-gray-500 mt-1 mb-2">
+            This challenge is resolved by a parent / trusted adult. Send them the consent email to complete it.
+          </p>
+          <div className="flex flex-row gap-2">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="parent@example.com"
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            />
+            <button
+              onClick={handleSendEmail}
+              disabled={isSendingEmail || !email.trim() || !apiKeyStatus.isConfigured}
+              className={`px-4 py-2 rounded-md text-white text-sm font-medium whitespace-nowrap ${
+                !apiKeyStatus.isConfigured || !email.trim()
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : isSendingEmail
+                    ? 'bg-purple-400 cursor-wait'
+                    : 'bg-purple-600 hover:bg-purple-700'
+              }`}
+            >
+              {isSendingEmail ? 'Sending…' : 'Send challenge email'}
+            </button>
+          </div>
+          {emailResult && (
+            <p
+              className={`mt-2 text-xs ${
+                emailResult.startsWith('Error') ? 'text-red-700' : 'text-green-700'
+              }`}
+            >
+              {emailResult}
+            </p>
+          )}
+        </div>
       )}
     </div>
   )

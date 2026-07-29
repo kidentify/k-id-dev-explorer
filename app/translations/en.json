@@ -38,7 +38,9 @@
     "facialAgeEstimationHelp": "Set thresholds to control how facial age estimation results are interpreted. If the estimated age is at or above passIfOver, verification passes. If below failIfUnder, it fails. Otherwise the user can retry.",
     "passIfOver": "Pass if over",
     "failIfUnder": "Fail if under",
-    "permissionName": "Permission Name"
+    "requestedPermissions": "Requested Permissions",
+    "requestedPermissionsHelp": "Comma-separated. Depending on the session, the upgrade returns a consent / age-assurance challenge, or grants the permissions directly.",
+    "sessionUpgradeSessionIdHelp": "Auto-filled from the current session (e.g. after running Age Gate Check), or paste an existing session ID."
   },
   "placeholders": {
     "enterAge": "Enter age",
@@ -53,7 +55,8 @@
     "enterRedirectUrl": "e.g. https://example.com/callback",
     "passIfOverExample": "e.g. 25",
     "failIfUnderExample": "e.g. 12",
-    "enterPermissionName": "e.g. loot-boxes-paid-gameplay-impacting"
+    "enterSessionId": "Enter or paste a session ID",
+    "requestedPermissions": "Comma-separated, e.g. loot-boxes-paid-gameplay-impacting"
   },
   "ageTypes": {
     "age": "Age",
@@ -76,8 +79,8 @@
     "directNotices": "Direct Notices Widget",
     "manageSessionPermissions": "Manage Session Permissions Widget",
     "ageAppeal": "Age Appeal",
-    "sessionUpgradeAgeAssurance": "Session Upgrade Age Assurance",
-    "ageGateCheck": "Age Gate Check"
+    "ageGateCheck": "Age Gate Check",
+    "sessionUpgrade": "Session Upgrade"
   },
   "preview": {
     "device": "Device:",

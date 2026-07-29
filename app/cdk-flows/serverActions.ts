@@ -2,6 +2,8 @@
 
 import { CDKFlow, FlowResult } from './types'
 import { flowHandlers } from './flowHandlers'
+import { API_CONFIG } from '../utils/constants'
+import { fetchWithTimeout } from '../utils/fetchWithTimeout'
 
 /**
  * Server action to perform a CDK flow.
@@ -96,7 +98,7 @@ export async function getChallengeStatus(challengeId: string): Promise<Challenge
       Authorization: `Bearer ${apiKey}`,
     }
 
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       method: 'GET',
       headers,
     })
@@ -153,7 +155,7 @@ export async function getSessionStatus(sessionId: string): Promise<ChallengeStat
       Authorization: `Bearer ${apiKey}`,
     }
 
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       method: 'GET',
       headers,
     })
@@ -181,6 +183,70 @@ export async function getSessionStatus(sessionId: string): Promise<ChallengeStat
         method: 'GET',
         url: `${process.env.K_ID_API_URL || 'https://game-api.test.k-id.com'}/api/v1/session/get?sessionId=${encodeURIComponent(sessionId)}`,
       },
+    }
+  }
+}
+
+interface SendChallengeEmailResult {
+  success: boolean
+  data?: unknown
+  error?: unknown
+  requestData?: {
+    method: string
+    url: string
+    body: Record<string, unknown>
+  }
+}
+
+/**
+ * Sends the consent email for a challenge that resolves via a parent / trusted
+ * adult (verifiable parental consent, trusted-adult verification). The email is
+ * addressed to the trusted adult; the k-ID API looks up the challenge by id and
+ * dispatches the appropriate consent email. Age-assurance challenges (facial /
+ * ID / AgeKey / etc.) don't use this — the same user completes them in-widget.
+ *
+ * @param challengeId - The challenge id from a CDK API response (age-gate/check
+ *                      or session/upgrade)
+ * @param email - The recipient (parent / trusted adult) email address
+ * @see https://docs.k-id.com/api/endpoints/send-challenge-email
+ */
+export async function sendChallengeEmail(
+  challengeId: string,
+  email: string,
+): Promise<SendChallengeEmailResult> {
+  const apiUrl = process.env.K_ID_API_URL || 'https://game-api.test.k-id.com'
+  const url = `${apiUrl}${API_CONFIG.endpoints.challengeSendEmail}`
+  const body: Record<string, unknown> = { challengeId, email }
+
+  try {
+    const apiKey = process.env.K_ID_API_KEY
+    if (!apiKey || apiKey === 'your_api_key_here') {
+      throw new Error('API key not configured. Please set K_ID_API_KEY in your .env.local file.')
+    }
+
+    const response = await fetchWithTimeout(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify(body),
+    })
+
+    const text = await response.text()
+    let data: unknown
+    try { data = text ? JSON.parse(text) : {} } catch { data = text }
+
+    if (!response.ok) {
+      return { success: false, error: data, requestData: { method: 'POST', url, body } }
+    }
+
+    return { success: true, data, requestData: { method: 'POST', url, body } }
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'An error occurred',
+      requestData: { method: 'POST', url, body },
     }
   }
 }
